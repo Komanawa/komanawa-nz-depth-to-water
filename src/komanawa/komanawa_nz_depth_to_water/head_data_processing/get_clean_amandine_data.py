@@ -6,7 +6,8 @@ on: 22/06/2023
 """ This Python script gets and cleans the data passed on from Amandine"""
 
 import pandas as pd
-from project_base import project_dir, groundwater_data, amandine_data, unbacked_dir, gis_data
+from komanawa.komanawa_nz_depth_to_water.project_base import project_dir, groundwater_data, amandine_data, unbacked_dir, \
+    gis_data
 from pandas.api.types import is_string_dtype, is_float_dtype, is_datetime64_any_dtype
 
 
@@ -36,6 +37,7 @@ def get_clean_chch_gwl_data(recalc=False):
 
     return clean_chch_well_df
 
+
 def get_all_chch_gwl_data(recalc=False):
     """
     This function reads in the well data for ChCh, as provided by Amandine.
@@ -61,6 +63,7 @@ def get_all_chch_gwl_data(recalc=False):
 
     return all_chch_well_df
 
+
 def get_all_wells_metadata():
     """
     This reads in the All Wells ECan layer
@@ -79,6 +82,7 @@ def get_all_wells_metadata():
     all_wells_metadata['well_no'] = all_wells_metadata['well_no'].str.replace('/', '_')
 
     return all_wells_metadata
+
 
 def clean_chch_wells_metadata():
     """
@@ -106,6 +110,7 @@ def clean_chch_wells_metadata():
 
     return clean_chch_wells_metadata
 
+
 def all_chch_wells_metadata():
     """ This subsets the all wells metadata based on Amandine's all ChCh well data (i.e. not just the cleaned data)
     :return: dataframe, the subsetted metadata for Amandine's all ChCh well data
@@ -130,6 +135,3 @@ def all_chch_wells_metadata():
     all_chch_wells_metadata.to_csv(save_path)
 
     return all_chch_wells_metadata
-
-
-

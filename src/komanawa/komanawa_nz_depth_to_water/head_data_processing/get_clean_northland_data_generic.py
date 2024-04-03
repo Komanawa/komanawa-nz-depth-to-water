@@ -7,12 +7,20 @@ on: 20/06/2023
 import numpy as np
 import pandas as pd
 
-from data_processing_functions import (find_overlapping_files, copy_with_prompt,
-                                       _get_summary_stats, append_to_other, needed_cols_and_types, data_checks,
-                                       metadata_checks, renew_hdf5_store, get_hdf5_store_keys, pull_tethys_data_store,
-                                       assign_flags_based_on_null_values, aggregate_water_data)
-from merge_rows import merge_rows_if_possible
-from project_base import groundwater_data, unbacked_dir
+from komanawa.komanawa_nz_depth_to_water.head_data_processing.data_processing_functions import (find_overlapping_files,
+                                                                                                copy_with_prompt,
+                                                                                                _get_summary_stats,
+                                                                                                append_to_other,
+                                                                                                needed_cols_and_types,
+                                                                                                data_checks,
+                                                                                                metadata_checks,
+                                                                                                renew_hdf5_store,
+                                                                                                get_hdf5_store_keys,
+                                                                                                pull_tethys_data_store,
+                                                                                                assign_flags_based_on_null_values,
+                                                                                                aggregate_water_data)
+from komanawa.komanawa_nz_depth_to_water.head_data_processing.merge_rows import merge_rows_if_possible
+from komanawa.komanawa_nz_depth_to_water.project_base import groundwater_data, unbacked_dir
 
 
 def _get_northland_tethys_data(local_paths, meta_data_requirements, recalc=False):
@@ -298,7 +306,7 @@ def _get_all_bores_northland_metadata(local_paths, meta_data_requirements):
     return {'all_bores_northland_metadata': concatenated, 'nrc_gw_depth_data': nrc_gw_depth_data}
 
 
-def output(local_paths, meta_data_requirements, recalc= False):  #
+def output(local_paths, meta_data_requirements, recalc=False):  #
     """This function combines the two sets of metadata and cleans it
     :return: dataframe"""
 
@@ -333,7 +341,6 @@ def output(local_paths, meta_data_requirements, recalc= False):  #
         nrc_gw_data['data_source'] = 'nrc'
         nrc_gw_data['elevation_datum'] = nrc_gw_data['elevation_datum'].astype(str)
 
-
         combined_water_data = pd.concat([tethys_gw_data, nrc_gw_data], ignore_index=True)
         combined_water_data['date'] = pd.to_datetime(combined_water_data['date']).dt.date
         combined_water_data['date'] = pd.to_datetime(combined_water_data['date'])
@@ -345,7 +352,6 @@ def output(local_paths, meta_data_requirements, recalc= False):  #
         nrc_metadata['start_date'] = pd.to_datetime(nrc_metadata['start_date'])
         nrc_metadata['end_date'] = pd.to_datetime(nrc_metadata['end_date'])
         # combining the two metadata sets
-
 
         combined_metadata = pd.concat([tetheys_metadata, nrc_metadata], ignore_index=True).sort_values(by='well_name')
         combined_metadata.reset_index(inplace=True, drop=True)
@@ -361,15 +367,15 @@ def output(local_paths, meta_data_requirements, recalc= False):  #
         # Create a list of columns to skip, which are of string type
         skip_cols = [col for col in combined_metadata.columns
                      if
-                     combined_metadata[col].dtype == object or pd.api.types.is_datetime64_any_dtype(combined_metadata[col])]
+                     combined_metadata[col].dtype == object or pd.api.types.is_datetime64_any_dtype(
+                         combined_metadata[col])]
 
         aggregation_functions = {col: np.nanmean for col in precisions}
 
         combined_metadata = merge_rows_if_possible(combined_metadata, on='well_name', precision=precisions,
-                                                              skip_cols=skip_cols, actions=aggregation_functions)
+                                                   skip_cols=skip_cols, actions=aggregation_functions)
         combined_metadata = combined_metadata.sort_values(by='well_name')
         combined_metadata = combined_metadata.reset_index(drop=True)
-
 
         stats = _get_summary_stats(combined_water_data)
         stats = stats.set_index('well_name')
@@ -387,16 +393,17 @@ def output(local_paths, meta_data_requirements, recalc= False):  #
         if 'other' not in combined_metadata.columns:
             combined_metadata['other'] = ''
 
-        combined_metadata = append_to_other(df=combined_metadata, needed_columns=meta_data_requirements["needed_columns"])
+        combined_metadata = append_to_other(df=combined_metadata,
+                                            needed_columns=meta_data_requirements["needed_columns"])
 
         combined_metadata.drop(columns=[col for col in combined_metadata.columns if
                                         col not in meta_data_requirements["needed_columns"] and col != 'other'],
                                inplace=True)
 
         data_checks(combined_water_data)
-        #check wl site has an entry in metadata and retun list otherwise
+        # check wl site has an entry in metadata and retun list otherwise
         external_column = pd.Series(combined_water_data['well_name'].unique())
-        metadata_checks(data= combined_metadata, external_column= external_column)
+        metadata_checks(data=combined_metadata, external_column=external_column)
 
         # drop extra sites in metadata not in water level data
         combined_metadata = combined_metadata[combined_metadata['well_name'].isin(external_column)]
@@ -475,11 +482,13 @@ def _get_folder_and_local_paths(source_dir, local_dir, redownload=False):
 
     return local_paths
 
+
 def get_nrc_data(recalc=False, redownload=False):
     local_paths = _get_folder_and_local_paths(source_dir=groundwater_data.joinpath('gwl_northland'),
-                                              local_dir=unbacked_dir.joinpath('northland_working/'), redownload=redownload)
+                                              local_dir=unbacked_dir.joinpath('northland_working/'),
+                                              redownload=redownload)
     meta_data_requirements = needed_cols_and_types('NRC')
-    return output(local_paths, meta_data_requirements, recalc= recalc)
+    return output(local_paths, meta_data_requirements, recalc=recalc)
 
 
 if __name__ == '__main__':

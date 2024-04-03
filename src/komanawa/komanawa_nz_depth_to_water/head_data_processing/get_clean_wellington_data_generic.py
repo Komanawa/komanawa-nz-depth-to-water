@@ -8,12 +8,13 @@ on: 8-2-2024
 import numpy as np
 import pandas as pd
 
-from data_processing_functions import find_overlapping_files, copy_with_prompt, \
+from komanawa.komanawa_nz_depth_to_water.head_data_processing.data_processing_functions import find_overlapping_files, \
+    copy_with_prompt, \
     _get_summary_stats, needed_cols_and_types, metadata_checks, \
     data_checks, get_hdf5_store_keys, pull_tethys_data_store, append_to_other, renew_hdf5_store, parse_and_identify, \
     assign_flags_based_on_null_values, aggregate_water_data
-from project_base import groundwater_data, unbacked_dir
-from merge_rows import merge_rows_if_possible
+from komanawa.komanawa_nz_depth_to_water.project_base import groundwater_data, unbacked_dir
+from komanawa.komanawa_nz_depth_to_water.head_data_processing.merge_rows import merge_rows_if_possible
 
 
 def _get_wellington_tethys_data(local_paths, meta_data_requirements):

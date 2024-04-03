@@ -14,9 +14,13 @@ import numpy as np
 import pandas as pd
 from dateutil import parser
 
-from data_processing_functions import (_get_summary_stats, renew_hdf5_store, assign_flags_based_on_null_values,
-                                       metadata_checks, data_checks, needed_cols_and_types)
-from project_base import groundwater_data, unbacked_dir
+from komanawa.komanawa_nz_depth_to_water.head_data_processing.data_processing_functions import (_get_summary_stats,
+                                                                                                renew_hdf5_store,
+                                                                                                assign_flags_based_on_null_values,
+                                                                                                metadata_checks,
+                                                                                                data_checks,
+                                                                                                needed_cols_and_types)
+from komanawa.komanawa_nz_depth_to_water.project_base import groundwater_data, unbacked_dir
 
 
 def _get_metadata(file_path, skiprows=0):
@@ -122,6 +126,7 @@ def _rename_duplicates(df, suffix):
                                                          range(1, sum(cols == dup) + 1)]
     df.columns = cols
     return df
+
 
 def process_st_wl(st_wl, data_source, metadata):
     """

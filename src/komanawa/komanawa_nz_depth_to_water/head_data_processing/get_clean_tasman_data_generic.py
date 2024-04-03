@@ -4,14 +4,22 @@ on: 2/10/2023
 """
 """ This script cleans and processes the Tasman GWL data"""
 import pandas as pd
-from project_base import groundwater_data, unbacked_dir
+from komanawa.komanawa_nz_depth_to_water.project_base import groundwater_data, unbacked_dir
 
-from data_processing_functions import (find_overlapping_files, copy_with_prompt, \
-    _get_summary_stats, append_to_other, needed_cols_and_types, data_checks, \
-    metadata_checks, renew_hdf5_store,pull_tethys_data_store, get_hdf5_store_keys, aggregate_water_data,
-                                       assign_flags_based_on_null_values)
+from komanawa.komanawa_nz_depth_to_water.head_data_processing.data_processing_functions import (find_overlapping_files,
+                                                                                                copy_with_prompt, \
+                                                                                                _get_summary_stats,
+                                                                                                append_to_other,
+                                                                                                needed_cols_and_types,
+                                                                                                data_checks, \
+                                                                                                metadata_checks,
+                                                                                                renew_hdf5_store,
+                                                                                                pull_tethys_data_store,
+                                                                                                get_hdf5_store_keys,
+                                                                                                aggregate_water_data,
+                                                                                                assign_flags_based_on_null_values)
 import numpy as np
-from merge_rows import merge_rows_if_possible
+from komanawa.komanawa_nz_depth_to_water.head_data_processing.merge_rows import merge_rows_if_possible
 import datetime
 
 
@@ -41,12 +49,11 @@ def _get_tasman_tethys_data(meta_data_requirements):
     tethys_metadata_dtw_24h = tethys_metadata['/Tasman District Council_groundwater_depth_24H_metadata']
 
     tethys_data_dtw_24h = tethys_data['/Tasman District Council_groundwater_depth_24H']
-    #keynote cant be depth to water as the water level is deeper than borehole
+    # keynote cant be depth to water as the water level is deeper than borehole
     tethys_data_dtw_24h['gw_elevation'] = tethys_data_dtw_24h['groundwater_depth']
 
     tethys_data_dtw = tethys_data_dtw_24h[needed_gw_columns]
     tethys_data_dtw['data_source'] = "tethys"
-
 
     assign_flags_based_on_null_values(tethys_data_dtw, 'depth_to_water', 'dtw_flag', 1, 0)
     assign_flags_based_on_null_values(tethys_data_dtw, 'gw_elevation', 'water_elev_flag', 1, 0)
@@ -120,9 +127,9 @@ def _get_sporadic_tasman_data(local_paths):
     sporadic_gwl_data_tasman['data_source'] = "TRC"
     sporadic_gwl_data_tasman['elevation_datum'] = None
 
-
     sporadic_gwl_data_tasman['well_name'] = np.where(pd.notnull(sporadic_gwl_data_tasman['well_name']),
-                                     sporadic_gwl_data_tasman['well_name'], sporadic_gwl_data_tasman['alt_well_name'])
+                                                     sporadic_gwl_data_tasman['well_name'],
+                                                     sporadic_gwl_data_tasman['alt_well_name'])
 
     sporadic_gwl_data_tasman = append_to_other(df=sporadic_gwl_data_tasman, needed_columns=needed_gw_columns)
     sporadic_gwl_data_tasman = sporadic_gwl_data_tasman[needed_gw_columns]
@@ -151,10 +158,10 @@ def _get_sporadic_tasman_metadata(local_paths, meta_data_requirements):
                  'Screen1 set': 'screen1_depth', 'Screen2 Set': 'screen2_depth',
                  'Screen3 Set': 'screen3_depth', 'Comments': 'comments'}
     metadata.rename(columns=new_names, inplace=True)
-    metadata['dist_mp_to_ground_level'] = (metadata["RIM Level"]/1000
-                                           - metadata["ground_elevation"])*-1
+    metadata['dist_mp_to_ground_level'] = (metadata["RIM Level"] / 1000
+                                           - metadata["ground_elevation"]) * -1
     metadata["ground_elevation"] = np.where(pd.notnull(metadata["ground_elevation"]),
-                                           metadata["ground_elevation"], metadata["RIM Level"]/1000)
+                                            metadata["ground_elevation"], metadata["RIM Level"] / 1000)
 
     metadata.drop(columns=['RIM Level', 'RTS', 'RLWL'], inplace=True)
 
@@ -225,7 +232,7 @@ def split_range(value):
         return None, None
 
 
-def output(local_paths, meta_data_requirements, recalc= False):
+def output(local_paths, meta_data_requirements, recalc=False):
     """This function combines the two sets of metadata and cleans it
     :return: dataframe"""
     water_data_store_path = local_paths['save_path']
@@ -238,7 +245,8 @@ def output(local_paths, meta_data_requirements, recalc= False):
         combined_metadata = pd.read_hdf(water_data_store_path, store_key_metadata)
 
     else:
-        needed_gw_columns_type = {'well_name': "str", 'depth_to_water': "float", 'gw_elevation': "float", 'dtw_flag': "int",
+        needed_gw_columns_type = {'well_name': "str", 'depth_to_water': "float", 'gw_elevation': "float",
+                                  'dtw_flag': "int",
                                   'water_elev_flag': 'int',
                                   'data_source': 'str', 'elevation_datum': "str", 'other': "str"}
 
@@ -248,12 +256,12 @@ def output(local_paths, meta_data_requirements, recalc= False):
         tethy_gw_data['well_name'] = np.where(pd.notnull(tethy_gw_data['well_name_x']),
                                               tethy_gw_data['well_name_x'], tethy_gw_data['well_name'])
         tethy_gw_data['date'] = pd.to_datetime(tethy_gw_data['date'])
-        tethy_gw_data= tethy_gw_data.drop(columns=['well_name_x'])
+        tethy_gw_data = tethy_gw_data.drop(columns=['well_name_x'])
 
         tetheys_metadata = tethys_data['tethys_metadata_combined']
         tetheys_metadata['well_name_x'] = tetheys_metadata["well_name"].astype(str).str.extract(r'([A-Za-z]+\s\d+)')
         tetheys_metadata['well_name'] = np.where(pd.notnull(tetheys_metadata['well_name_x']),
-                                              tetheys_metadata['well_name_x'], tetheys_metadata['well_name'])
+                                                 tetheys_metadata['well_name_x'], tetheys_metadata['well_name'])
         tetheys_metadata = tetheys_metadata.drop(columns=['well_name_x'])
 
         tdc_metadata = _get_sporadic_tasman_metadata(local_paths=local_paths,
@@ -261,7 +269,6 @@ def output(local_paths, meta_data_requirements, recalc= False):
 
         tdc_gw_data = _get_sporadic_tasman_data(local_paths=local_paths)
         tdc_gw_data['well_name'] = tdc_gw_data['well_name'].str.replace('\.0$', '', regex=True)
-
 
         combined_water_data = pd.concat([tethy_gw_data, tdc_gw_data], ignore_index=True)
         combined_water_data['date'] = pd.to_datetime(combined_water_data['date']).dt.date
@@ -283,10 +290,9 @@ def output(local_paths, meta_data_requirements, recalc= False):
         for column, dtype in needed_gw_columns_type.items():
             combined_water_data[column] = combined_water_data[column].astype(dtype)
 
-        combined_water_data['temp_name']= combined_water_data['well_name'] + combined_water_data['date'].astype(str)
-        dups= combined_water_data[combined_water_data.duplicated(subset=['temp_name'], keep=False)]
+        combined_water_data['temp_name'] = combined_water_data['well_name'] + combined_water_data['date'].astype(str)
+        dups = combined_water_data[combined_water_data.duplicated(subset=['temp_name'], keep=False)]
         dups = dups.drop(dups[dups['depth_to_water'] > 100].index)
-
 
         def handle_group(group):
             # Check if any row in the group has 'dtw_flag' equal to 1
@@ -305,12 +311,12 @@ def output(local_paths, meta_data_requirements, recalc= False):
 
         # Group by 'temp_name' and apply the 'handle_group' function to each group
         deduped = pd.concat([handle_group(group) for _, group in dups.groupby('temp_name')])
-        deduped['dtw_flag']= np.where(pd.isnull(deduped['dtw_flag']), 3, deduped['dtw_flag'])
+        deduped['dtw_flag'] = np.where(pd.isnull(deduped['dtw_flag']), 3, deduped['dtw_flag'])
         # Reset index if necessary
         deduped.reset_index(drop=True, inplace=True)
-        combined_water_data = pd.concat([combined_water_data.copy().drop_duplicates(subset=['temp_name'], keep=False),deduped])
-        combined_water_data =combined_water_data.drop(columns=['temp_name'])
-
+        combined_water_data = pd.concat(
+            [combined_water_data.copy().drop_duplicates(subset=['temp_name'], keep=False), deduped])
+        combined_water_data = combined_water_data.drop(columns=['temp_name'])
 
         tdc_metadata['start_date'] = pd.to_datetime(tdc_metadata['start_date'])
         tdc_metadata['end_date'] = pd.to_datetime(tdc_metadata['end_date'])
@@ -318,7 +324,6 @@ def output(local_paths, meta_data_requirements, recalc= False):
         tetheys_metadata['start_date'] = pd.to_datetime(tetheys_metadata['start_date'])
         tetheys_metadata['end_date'] = pd.to_datetime(tetheys_metadata['end_date'])
         tetheys_metadata['well_depth'] = tetheys_metadata['well_depth'].astype(float)
-
 
         combined_metadata = pd.merge(tetheys_metadata, tdc_metadata, how='outer')
         default_precision = 0.1  # for example, default precision is 2 decimal places
@@ -332,7 +337,8 @@ def output(local_paths, meta_data_requirements, recalc= False):
         # Create a list of columns to skip, which are of string type
         skip_cols = [col for col in combined_metadata.columns
                      if
-                     combined_metadata[col].dtype == object or pd.api.types.is_datetime64_any_dtype(combined_metadata[col])]
+                     combined_metadata[col].dtype == object or pd.api.types.is_datetime64_any_dtype(
+                         combined_metadata[col])]
 
         aggregation_functions = {col: np.nanmean for col in precisions}
 
@@ -359,7 +365,8 @@ def output(local_paths, meta_data_requirements, recalc= False):
         if 'other' not in combined_metadata.columns:
             combined_metadata['other'] = ''
 
-        combined_metadata = append_to_other(df=combined_metadata, needed_columns=meta_data_requirements["needed_columns"])
+        combined_metadata = append_to_other(df=combined_metadata,
+                                            needed_columns=meta_data_requirements["needed_columns"])
 
         combined_metadata.drop(columns=[col for col in combined_metadata.columns if
                                         col not in meta_data_requirements["needed_columns"] and col != 'other'],
@@ -429,13 +436,14 @@ def _get_folder_and_local_paths(source_dir, local_dir, redownload=False):
 
     return local_paths
 
+
 def get_tdc_data(recalc=False, redownload=False):
     local_paths = _get_folder_and_local_paths(source_dir=groundwater_data.joinpath('gwl_tasman'),
                                               local_dir=unbacked_dir.joinpath('tasman_working/'), redownload=redownload)
     meta_data_requirements = needed_cols_and_types('TDC')
-    return output(local_paths, meta_data_requirements, recalc= recalc)
+    return output(local_paths, meta_data_requirements, recalc=recalc)
 
 
 if __name__ == '__main__':
-    data= get_tdc_data(recalc= True)
+    data = get_tdc_data(recalc=True)
     pass

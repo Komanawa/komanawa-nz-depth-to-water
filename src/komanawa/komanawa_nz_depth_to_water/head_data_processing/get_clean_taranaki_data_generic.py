@@ -8,14 +8,15 @@ import numpy
 
 import os
 import pandas as pd
-from project_base import groundwater_data, unbacked_dir
-from data_processing_functions import find_overlapping_files, copy_with_prompt, \
+from komanawa.komanawa_nz_depth_to_water.project_base import groundwater_data, unbacked_dir
+from komanawa.komanawa_nz_depth_to_water.head_data_processing.data_processing_functions import find_overlapping_files, \
+    copy_with_prompt, \
     _get_summary_stats, append_to_other, needed_cols_and_types, data_checks, \
     metadata_checks, renew_hdf5_store, get_hdf5_store_keys, pull_tethys_data_store, aggregate_water_data, \
     assign_flags_based_on_null_values
 import numpy as np
 from pathlib import Path
-from merge_rows import merge_rows_if_possible
+from komanawa.komanawa_nz_depth_to_water.head_data_processing.merge_rows import merge_rows_if_possible
 
 
 # todo fix random bore numbers from tethys (datrequest sent), fix sign of said bores when data known
@@ -329,7 +330,7 @@ def _get_taranaki_metadata(local_paths, meta_data_requirements):
     return {'metadata': metadata, 'gw_depth_data': gw_depth_data}
 
 
-def output(local_paths, meta_data_requirements, recalc = False):
+def output(local_paths, meta_data_requirements, recalc=False):
     """This function combines the two sets of metadata and groundwater cleans it
     :return: dataframe and writes to hdf"""
 
@@ -362,7 +363,7 @@ def output(local_paths, meta_data_requirements, recalc = False):
         tethys_gw_data['well_name'] = tethys_gw_data['well_name'].fillna(tethys_gw_data['old_name'])
         tethys_gw_data = tethys_gw_data.drop(columns=['old_name'])
 
-        tethys_gw_data.loc[tethys_gw_data['well_name'] =='10923 at Pukeone Rd bore', 'well_name'] = 'GNDxxx'
+        tethys_gw_data.loc[tethys_gw_data['well_name'] == '10923 at Pukeone Rd bore', 'well_name'] = 'GNDxxx'
         tethys_gw_data.loc[tethys_gw_data['well_name'] == '10627 at Peat Rd bore', 'well_name'] = 'GNDxxx'
 
         # todo this once we know the bore numbers
@@ -424,7 +425,8 @@ def output(local_paths, meta_data_requirements, recalc = False):
             if column in sporadic_data.columns:
                 sporadic_data[col] = sporadic_data[col].astype(dtype)
 
-        combined_water_data= pd.concat([tethys_gw_data, trc_gw_data, trc_discrete_gw_levels, sporadic_data], ignore_index=True)
+        combined_water_data = pd.concat([tethys_gw_data, trc_gw_data, trc_discrete_gw_levels, sporadic_data],
+                                        ignore_index=True)
         combined_water_data['date'] = pd.to_datetime(combined_water_data['date']).dt.date
         combined_water_data['date'] = pd.to_datetime(combined_water_data['date'])
         combined_water_data = aggregate_water_data(combined_water_data)
@@ -432,8 +434,7 @@ def output(local_paths, meta_data_requirements, recalc = False):
         combined_water_data['data_source'] = np.where(combined_water_data['data_source'].isna(), 'TRC',
                                                       combined_water_data['data_source'])
 
-
-            # Ensure 'date' is in datetime format
+        # Ensure 'date' is in datetime format
         combined_water_data['date'] = pd.to_datetime(combined_water_data['date'])
         for column, dtype in needed_gw_columns_type.items():
             combined_water_data[column] = combined_water_data[column].astype(dtype)
@@ -462,16 +463,14 @@ def output(local_paths, meta_data_requirements, recalc = False):
                                                    skip_cols=skip_cols, actions=aggregation_functions)
         combined_metadata = combined_metadata.sort_values(by='well_name')
 
-        #do one bore numbers for tethys 10627, 10923 are known
-        #combined_metadata = pd.merge(combined_metadata, sites_with_data, how='inner', on='well_name')
+        # do one bore numbers for tethys 10627, 10923 are known
+        # combined_metadata = pd.merge(combined_metadata, sites_with_data, how='inner', on='well_name')
 
         stats = _get_summary_stats(combined_water_data)
         stats = stats.set_index('well_name')
         combined_metadata = combined_metadata.set_index('well_name')
         combined_metadata = combined_metadata.combine_first(stats)
         combined_metadata = combined_metadata.reset_index()
-
-
 
         combined_metadata = combined_metadata.sort_values(by=['nztm_y', 'nztm_x'], ascending=[True, True])
         combined_metadata["artesian"] = np.where(
@@ -483,7 +482,8 @@ def output(local_paths, meta_data_requirements, recalc = False):
         if 'other' not in combined_metadata.columns:
             combined_metadata['other'] = ''
 
-        combined_metadata = append_to_other(df=combined_metadata, needed_columns=meta_data_requirements["needed_columns"])
+        combined_metadata = append_to_other(df=combined_metadata,
+                                            needed_columns=meta_data_requirements["needed_columns"])
 
         combined_metadata.drop(columns=[col for col in combined_metadata.columns if
                                         col not in meta_data_requirements["needed_columns"] and col != 'other'],
@@ -554,11 +554,13 @@ def _get_folder_and_local_paths(source_dir, local_dir, redownload=False):
 
     return local_paths
 
-def get_trc_data(recalc= False, redownload=False):
+
+def get_trc_data(recalc=False, redownload=False):
     local_paths = _get_folder_and_local_paths(source_dir=groundwater_data.joinpath('gwl_taranaki'),
-                                              local_dir=unbacked_dir.joinpath('taranaki_working/'), redownload=redownload)
+                                              local_dir=unbacked_dir.joinpath('taranaki_working/'),
+                                              redownload=redownload)
     meta_data_requirements = needed_cols_and_types('TRC')
-    return output(local_paths, meta_data_requirements, recalc= recalc)
+    return output(local_paths, meta_data_requirements, recalc=recalc)
 
 
 if __name__ == '__main__':

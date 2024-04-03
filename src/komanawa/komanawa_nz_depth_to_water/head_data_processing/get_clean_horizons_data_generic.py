@@ -11,13 +11,15 @@ import numpy as np
 import pandas as pd
 import pyproj
 
-import merge_rows
-from data_processing_functions import \
+import komanawa.komanawa_nz_depth_to_water.head_data_processing.merge_rows
+from komanawa.komanawa_nz_depth_to_water.head_data_processing.data_processing_functions import \
     (find_overlapping_files, copy_with_prompt, \
      _get_summary_stats, append_to_other, needed_cols_and_types, data_checks, \
      metadata_checks, renew_hdf5_store, get_hdf5_store_keys, pull_tethys_data_store, assign_flags_based_on_null_values,
      aggregate_water_data)
-from project_base import groundwater_data, unbacked_dir
+from komanawa.komanawa_nz_depth_to_water.project_base import groundwater_data, unbacked_dir
+
+
 # keynote not gw_elevation, all depth_to_water -confirmed with horizons
 
 def _get_horizons_tethys_data(local_paths, meta_data_requirements):
@@ -497,7 +499,7 @@ def output(local_paths, meta_data_requirements, recalc=False):
                                                      combined_metadata['tethys_elevation'],
                                                      combined_metadata['rl_elevation'])
         combined_metadata['rl_source'] = np.where(pd.isnull(combined_metadata['rl_source']), 'tethys',
-                                               combined_metadata['rl_source'])
+                                                  combined_metadata['rl_source'])
 
         stats = _get_summary_stats(combined_water_data)
         stats = stats.set_index('well_name')

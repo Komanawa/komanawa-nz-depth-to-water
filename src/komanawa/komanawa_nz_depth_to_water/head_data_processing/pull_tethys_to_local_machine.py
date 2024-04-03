@@ -7,8 +7,9 @@ on: 15/02/24
 import os
 import pandas as pd
 import numpy as np
-from project_base import groundwater_data, unbacked_dir
-from data_processing_functions import renew_hdf5_store, process_hdf5_data
+from komanawa.komanawa_nz_depth_to_water.project_base import groundwater_data, unbacked_dir
+from komanawa.komanawa_nz_depth_to_water.head_data_processing.data_processing_functions import renew_hdf5_store, \
+    process_hdf5_data
 import shutil
 import subprocess
 from pathlib import Path
@@ -359,8 +360,8 @@ def additional_processing_hdf5_metadata_individual(data_store_path, original_met
     print("Processing complete.")
 
 
-
-def get_tethys_store_paths(recalc=False, redownload=False, recalc_download=False, recalc_rename=False, recalc_create_db=False,
+def get_tethys_store_paths(recalc=False, redownload=False, recalc_download=False, recalc_rename=False,
+                           recalc_create_db=False,
                            recalc_process_data=False, recalc_process_metadata=False, recalc_additional_processing=False,
                            recalc_additional_metadata_processing=False):
     """
@@ -435,8 +436,6 @@ def get_tethys_store_paths(recalc=False, redownload=False, recalc_download=False
     shutil.copy(unbacked_dir.joinpath('tetheys_2024_all', 'tethys_meta_fully_processed.hdf'), save_path_meta)
     shutil.copy(unbacked_dir.joinpath('tetheys_2024_all', 'tethys_fully_processed.hdf'), save_path_data)
     return save_path_meta, save_path_data
-
-
 
 
 if __name__ == '__main__':

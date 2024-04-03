@@ -7,10 +7,11 @@ on: 30/05/2023
 import os
 import numpy as np
 import pandas as pd
-from data_processing_functions import find_overlapping_files, copy_with_prompt, \
+from komanawa.komanawa_nz_depth_to_water.head_data_processing.data_processing_functions import find_overlapping_files, \
+    copy_with_prompt, \
     _get_summary_stats, append_to_other, needed_cols_and_types, data_checks, \
     metadata_checks, renew_hdf5_store, assign_flags_based_on_null_values
-from project_base import groundwater_data, unbacked_dir
+from komanawa.komanawa_nz_depth_to_water.project_base import groundwater_data, unbacked_dir
 import re
 
 needed_gw_columns = ['well_name', 'date', 'depth_to_water', 'gw_elevation', 'dtw_flag', 'water_elev_flag',
@@ -67,7 +68,6 @@ def _get_akl_gwl_data(local_paths, recalc=False):
                 # Add the missing column and initialize with NaNs or another suitable default value
                 combined_data[column] = np.nan
 
-
         renew_hdf5_store(new_data=combined_data, old_path=save_path, store_key=store_key)
 
     return combined_data
@@ -93,7 +93,8 @@ def _get_wq_akl_data(local_paths):
                        'Comment of sampling ', 'Status (Excluded; Incomplete; Unconfirmed; Confirmed) (-1; 0; 1; 2)']
     akl_wq_sites.drop(columns=columns_to_drop, inplace=True)
 
-    akl_wq_sites = akl_wq_sites.rename(columns={'Station name': 'alt_well_name', 'Station number': 'well_name', 'Date': 'date',
+    akl_wq_sites = akl_wq_sites.rename(
+        columns={'Station name': 'alt_well_name', 'Station number': 'well_name', 'Date': 'date',
                  'Value': 'depth_to_water'})
     # adding in data source
     for column in needed_gw_columns:
@@ -114,15 +115,15 @@ def _get_hydstra_akl_data(local_paths):
 
     # reading in the first file
     read_path = local_paths['local_path'] / '230501 hydstra GWL sites 110.CSV'
-    akl_hydstra_sites_110 = pd.read_csv(read_path, skiprows=[1,2,3])
+    akl_hydstra_sites_110 = pd.read_csv(read_path, skiprows=[1, 2, 3])
 
     # turning the dataframe from wide to long
     #  keynote this is depth to water data
     melted_akl_hydstra_sites_110 = pd.melt(akl_hydstra_sites_110, id_vars=['Time'], var_name='well_name',
-                                          value_name='depth_to_water')
+                                           value_name='depth_to_water')
     # renaming the time/date column
     melted_akl_hydstra_sites_110 = melted_akl_hydstra_sites_110.rename(columns={'Time': 'date'})
-    melted_akl_hydstra_sites_110= melted_akl_hydstra_sites_110.dropna(subset='depth_to_water')
+    melted_akl_hydstra_sites_110 = melted_akl_hydstra_sites_110.dropna(subset='depth_to_water')
 
     # now reading in the second file
     file_path_1 = local_paths['local_path'] / '230501 hydstra GWL sites 115.CSV'
@@ -134,12 +135,12 @@ def _get_hydstra_akl_data(local_paths):
 
     # renaming the time/date column
     melted_akl_hydstra_sites_115 = melted_akl_hydstra_sites_115.rename(columns={'Time': 'date'})
-    melted_akl_hydstra_sites_115= melted_akl_hydstra_sites_115.dropna(subset='gw_elevation')
+    melted_akl_hydstra_sites_115 = melted_akl_hydstra_sites_115.dropna(subset='gw_elevation')
     # combining the two dataframes
     combined_data = pd.concat([melted_akl_hydstra_sites_110, melted_akl_hydstra_sites_115],
-                                          ignore_index=True)
+                              ignore_index=True)
 
-    combined_data['date'] = pd.to_datetime(combined_data['date'], dayfirst= True, format= 'mixed')
+    combined_data['date'] = pd.to_datetime(combined_data['date'], dayfirst=True, format='mixed')
     combined_data['year'] = combined_data['date'].dt.year
     combined_data['month'] = combined_data['date'].dt.month
     combined_data['day'] = combined_data['date'].dt.day
@@ -184,7 +185,7 @@ def _get_akl_metadata(local_paths, meta_data_requirements):
         if col not in metadata.columns:
             metadata[col] = meta_data_requirements['default_values'].get(col)
 
-    metadata['dist_mp_to_ground_level'] = metadata['mp_elevation_NZVD']- metadata['ground_elevation']
+    metadata['dist_mp_to_ground_level'] = metadata['mp_elevation_NZVD'] - metadata['ground_elevation']
     metadata['rl_elevation'] = np.where(pd.notnull(metadata['mp_elevation_NZVD']), metadata['mp_elevation_NZVD'],
                                         metadata['ground_elevation'])
 
@@ -201,7 +202,7 @@ def _get_akl_metadata(local_paths, meta_data_requirements):
     return metadata
 
 
-def output(local_paths, meta_data_requirements, recalc= False):  #
+def output(local_paths, meta_data_requirements, recalc=False):  #
     """This function combines the two sets of metadata and cleans it
     :return: dataframe
     dtw_flag = 0= no_data, 1= logger, 2= manual, 3= static_oneoff, 4= calculated frm gw_elevation, 5= aquifer test, 6= other
@@ -216,11 +217,11 @@ def output(local_paths, meta_data_requirements, recalc= False):  #
         combined_water_data = pd.read_hdf(water_data_store_path, store_key_water_data)
         combined_metadata = pd.read_hdf(water_data_store_path, store_key_metadata)
     else:
-        needed_gw_columns_type = {'well_name': "str", 'depth_to_water': "float", 'gw_elevation': "float", 'dtw_flag': "int",
+        needed_gw_columns_type = {'well_name': "str", 'depth_to_water': "float", 'gw_elevation': "float",
+                                  'dtw_flag': "int",
                                   'water_elev_flag': 'int',
                                   'data_source': 'str', 'elevation_datum': "str", 'other': "str"}
         akl_metadata = _get_akl_metadata(local_paths, meta_data_requirements)
-
 
         akl_hydrstra = _get_hydstra_akl_data(local_paths)
         assign_flags_based_on_null_values(akl_hydrstra, 'depth_to_water', 'dtw_flag', 1, 0)
@@ -230,12 +231,11 @@ def output(local_paths, meta_data_requirements, recalc= False):  #
         # dtw for wql sites looks to be ~1m accuracy....
         assign_flags_based_on_null_values(akl_wq, 'depth_to_water', 'dtw_flag', 6, 0)
         assign_flags_based_on_null_values(akl_wq, 'gw_elevation', 'water_elev_flag', 5, 0)
-        akl_wq= akl_wq.drop(columns=['alt_well_name'])
+        akl_wq = akl_wq.drop(columns=['alt_well_name'])
 
         akl_gwl = _get_akl_gwl_data(local_paths, recalc=False)
         assign_flags_based_on_null_values(akl_gwl, 'depth_to_water', 'dtw_flag', 1, 0)
         assign_flags_based_on_null_values(akl_gwl, 'gw_elevation', 'water_elev_flag', 1, 0)
-
 
         combined_water_data = pd.concat([akl_wq, akl_hydrstra, akl_gwl], ignore_index=True)
         combined_water_data['data_source'] = 'GARC'
@@ -250,7 +250,8 @@ def output(local_paths, meta_data_requirements, recalc= False):  #
         combined_water_data['dtw_flag'] = np.where(condition, 4, combined_water_data['dtw_flag'])
         combined_water_data['elevation_datum'] = combined_water_data['rl_datum']
         combined_water_data = combined_water_data.drop(columns=['rl_elevation', 'rl_datum'])
-        combined_water_data = combined_water_data.sort_values(by=['well_name', 'depth_to_water'], ascending=[True, True])
+        combined_water_data = combined_water_data.sort_values(by=['well_name', 'depth_to_water'],
+                                                              ascending=[True, True])
         combined_water_data['well_name'] = combined_water_data['well_name'].astype(str)
         data_checks(combined_water_data)
 
@@ -270,12 +271,12 @@ def output(local_paths, meta_data_requirements, recalc= False):  #
         if 'other' not in combined_metadata.columns:
             combined_metadata['other'] = ''
 
-        combined_metadata = append_to_other(df=combined_metadata, needed_columns=meta_data_requirements["needed_columns"])
+        combined_metadata = append_to_other(df=combined_metadata,
+                                            needed_columns=meta_data_requirements["needed_columns"])
 
         combined_metadata.drop(columns=[col for col in combined_metadata.columns if
                                         col not in meta_data_requirements["needed_columns"] and col != 'other'],
                                inplace=True)
-
 
         metadata_checks(combined_metadata)
 
@@ -332,11 +333,14 @@ def _get_folder_and_local_paths(source_dir, local_dir, redownload=False):
 
     return local_paths
 
-def get_auk_data(recalc=False, redownload = False):
+
+def get_auk_data(recalc=False, redownload=False):
     local_paths = _get_folder_and_local_paths(source_dir=groundwater_data.joinpath('gwl_akl'),
-                                              local_dir=unbacked_dir.joinpath('auckland_working/'), redownload=redownload)
+                                              local_dir=unbacked_dir.joinpath('auckland_working/'),
+                                              redownload=redownload)
     meta_data_requirements = needed_cols_and_types('akl')
-    return output(local_paths, meta_data_requirements, recalc = recalc)
+    return output(local_paths, meta_data_requirements, recalc=recalc)
+
 
 if __name__ == '__main__':
     data = get_auk_data(recalc=True)

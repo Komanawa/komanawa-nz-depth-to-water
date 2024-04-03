@@ -9,13 +9,18 @@ import os
 import numpy as np
 import pandas as pd
 
-from project_base import groundwater_data, unbacked_dir
-from data_processing_functions import (find_overlapping_files, copy_with_prompt, \
-                                        _get_summary_stats, needed_cols_and_types, metadata_checks, \
-                                        data_checks, append_to_other, assign_flags_based_on_null_values,
-                                        renew_hdf5_store,
-                                        aggregate_water_data)
-from merge_rows import merge_rows_if_possible
+from komanawa.komanawa_nz_depth_to_water.project_base import groundwater_data, unbacked_dir
+from komanawa.komanawa_nz_depth_to_water.head_data_processing.data_processing_functions import (find_overlapping_files,
+                                                                                                copy_with_prompt, \
+                                                                                                _get_summary_stats,
+                                                                                                needed_cols_and_types,
+                                                                                                metadata_checks, \
+                                                                                                data_checks,
+                                                                                                append_to_other,
+                                                                                                assign_flags_based_on_null_values,
+                                                                                                renew_hdf5_store,
+                                                                                                aggregate_water_data)
+from komanawa.komanawa_nz_depth_to_water.head_data_processing.merge_rows import merge_rows_if_possible
 
 
 def _get_metadata(local_paths, file_name, skiprows=0):
@@ -198,7 +203,7 @@ def output(local_paths, meta_data_requirements, recalc=False):  #
 
     # Check if data needs to be recalculated or if the HDF files don't exist
     if not recalc and water_data_store_path.exists():
-        combined_water_data = pd.read_hdf(water_data_store_path, store_key_water_data,)
+        combined_water_data = pd.read_hdf(water_data_store_path, store_key_water_data, )
         combined_metadata = pd.read_hdf(water_data_store_path, store_key_metadata)
 
     else:
@@ -432,5 +437,4 @@ wl_store_key = 'bop_gwl_data'
 gisborne_metadata_store_key = 'bop_metadata'
 
 if __name__ == '__main__':
-    data = get_bop_data(recalc=False, redownload= False)
-
+    data = get_bop_data(recalc=False, redownload=False)

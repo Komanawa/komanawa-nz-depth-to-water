@@ -8,13 +8,13 @@ on: 3/07/2023
 import numpy as np
 import pandas as pd
 
-from data_processing_functions import \
+from komanawa.komanawa_nz_depth_to_water.head_data_processing.data_processing_functions import \
     (find_overlapping_files, copy_with_prompt, \
      _get_summary_stats, append_to_other, needed_cols_and_types, data_checks, \
      metadata_checks, renew_hdf5_store, get_hdf5_store_keys, pull_tethys_data_store, assign_flags_based_on_null_values,
      aggregate_water_data)
-from merge_rows import merge_rows_if_possible
-from project_base import groundwater_data, unbacked_dir
+from komanawa.komanawa_nz_depth_to_water.head_data_processing.merge_rows import merge_rows_if_possible
+from komanawa.komanawa_nz_depth_to_water.project_base import groundwater_data, unbacked_dir
 
 
 def _get_southland_tethys_data(local_paths, meta_data_requirements):
@@ -47,7 +47,6 @@ def _get_southland_tethys_data(local_paths, meta_data_requirements):
     tethys_metadata_water_level_24h = tethys_metadata_water_level_24h.rename(
         columns={"bore_depth": "well_depth", 'bore_top_of_screen': 'top_topscreen',
                  'bore_bottom_of_screen': 'bottom_bottomscreen', 'tetheys_elevation': 'rl_elevation'})
-
 
     site_names = pd.read_excel(local_paths['local_path'] / 'ES_GroundwaterLevel.xlsx', sheet_name='Site Names')
     site_names = site_names.rename(columns={"alt_well_name": "well_name", "well_name": "alt_name"})
@@ -264,8 +263,8 @@ def output(local_paths, meta_data_requirements, recalc=False):
             combined_water_data[column] = combined_water_data[column].astype(dtype)
 
         tethys_metadata['alt_name'] = np.where(pd.isnull(tethys_metadata["alt_name"]),
-                                                tethys_metadata["well_name"], tethys_metadata["alt_name"])
-        tethys_metadata =tethys_metadata.rename(columns={"alt_name": "well_name", "well_name": "alt_name"})
+                                               tethys_metadata["well_name"], tethys_metadata["alt_name"])
+        tethys_metadata = tethys_metadata.rename(columns={"alt_name": "well_name", "well_name": "alt_name"})
 
         src_metadata = _get_southland_metadata()
         src_metadata = src_metadata.rename(columns={"elevation": "rl_elevation"})
@@ -274,7 +273,6 @@ def output(local_paths, meta_data_requirements, recalc=False):
         tethys_metadata['start_date'] = pd.to_datetime(tethys_metadata['start_date'])
         tethys_metadata['end_date'] = pd.to_datetime(tethys_metadata['end_date'])
         tethys_metadata['well_depth'] = tethys_metadata['well_depth'].astype(float)
-
 
         combined_metadata = pd.concat([tethys_metadata, src_metadata], ignore_index=True)
 
@@ -388,13 +386,15 @@ def _get_folder_and_local_paths(source_dir, local_dir, redownload=False):
 
     return local_paths
 
+
 def get_src_data(recalc=False, redownload=False):
     local_paths = _get_folder_and_local_paths(source_dir=groundwater_data.joinpath('gwl_southland'),
-                                              local_dir=unbacked_dir.joinpath('southland_working/'), redownload=redownload)
+                                              local_dir=unbacked_dir.joinpath('southland_working/'),
+                                              redownload=redownload)
     meta_data_requirements = needed_cols_and_types('SRC')
     return output(local_paths, meta_data_requirements, recalc=recalc)
 
 
 if __name__ == '__main__':
-    data= get_src_data(recalc=False)
+    data = get_src_data(recalc=False)
     pass

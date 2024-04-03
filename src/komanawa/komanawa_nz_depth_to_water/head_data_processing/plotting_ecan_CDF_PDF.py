@@ -6,13 +6,13 @@ on: 23/05/2023
 
 import pandas as pd
 import matplotlib.pyplot as plt
-from project_base import project_dir, groundwater_data, gis_data
+from komanawa.komanawa_nz_depth_to_water.project_base import project_dir, groundwater_data, gis_data
 import numpy as np
 from scipy.stats import gaussian_kde
 from scipy import stats
 from matplotlib.ticker import MultipleLocator
-from ashley_case_study_gwl_data import subset_ashley_gwl_data, clean_ashley_metadata
-from get_clean_amandine_data import get_all_chch_gwl_data
+from komanawa.komanawa_nz_depth_to_water.head_data_processing.ashley_case_study_gwl_data import subset_ashley_gwl_data, clean_ashley_metadata
+from komanawa.komanawa_nz_depth_to_water.head_data_processing.get_clean_amandine_data import get_all_chch_gwl_data
 
 
 def get_swl_data():

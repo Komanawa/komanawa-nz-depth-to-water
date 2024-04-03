@@ -7,7 +7,7 @@ on: 26/05/2023
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
-from project_base import gis_data
+from komanawa.komanawa_nz_depth_to_water.project_base import gis_data
 
 def get_and_plot_1km_land_use_data():
     """

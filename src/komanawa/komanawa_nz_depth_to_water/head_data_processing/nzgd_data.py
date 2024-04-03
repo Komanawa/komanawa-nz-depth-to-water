@@ -8,14 +8,15 @@ import numpy as np
 import pandas as pd
 import pyproj
 
-from data_processing_functions import find_overlapping_files, copy_with_prompt, \
+from komanawa.komanawa_nz_depth_to_water.head_data_processing.data_processing_functions import find_overlapping_files, \
+    copy_with_prompt, \
     _get_summary_stats, needed_cols_and_types, metadata_checks, \
     data_checks, append_to_other, renew_hdf5_store, assign_flags_based_on_null_values
-from project_base import groundwater_data, unbacked_dir, project_dir
-from merge_rows import merge_rows_if_possible
-from data_processing_functions import aggregate_water_data
+from komanawa.komanawa_nz_depth_to_water.project_base import groundwater_data, unbacked_dir, project_dir
+from komanawa.komanawa_nz_depth_to_water.head_data_processing.merge_rows import merge_rows_if_possible
 
-def get_transient_data(local_paths, meta_data_requirements, recalc= False):
+
+def get_transient_data(local_paths, meta_data_requirements, recalc=False):
     water_data_store_path = local_paths['local_path'] / 'transient_wl.hdf'
     store_key_manual_water_data = 'manual_water_data'
     store_key_ts_water_data = 'ts_water_data'
@@ -25,7 +26,7 @@ def get_transient_data(local_paths, meta_data_requirements, recalc= False):
     if not recalc and water_data_store_path.exists():
         combined_manual_df = pd.read_hdf(water_data_store_path, store_key_manual_water_data)
         combined_ts_df = pd.read_hdf(water_data_store_path, store_key_ts_water_data)
-        combined_meta_df= pd.read_hdf(water_data_store_path, store_key_metadata)
+        combined_meta_df = pd.read_hdf(water_data_store_path, store_key_metadata)
 
     else:
         path = local_paths['local_path'] / 'NZGDExportInstrumentLogs'
@@ -64,18 +65,20 @@ def get_transient_data(local_paths, meta_data_requirements, recalc= False):
         combined_manual_df['Comments'] = combined_manual_df['Comments'].astype(str)
 
         combined_meta_df = pd.concat(list_meta, ignore_index=True)
-        combined_meta_df = combined_meta_df[['key', 'Reference', 'NZTM X', 'NZTM Y', 'Vertical Datum', 'Ground level (m)',
-                                             '(Standpipe,Borehole, Pieometer) depth (m)',
-                                             'Collar height (m)', 'Depth to screen top (m)', 'Depth to screen bottom (m)']]
-        combined_meta_df = combined_meta_df.rename(columns={'key': 'site_name', 'Reference': 'bore_no', 'NZTM X': 'nztm_x',
-                                                            'NZTM Y': 'nztm_y', 'Vertical Datum': 'rl_datum',
-                                                            'Ground level (m)': 'rl_elevation',
-                                                            '(Standpipe,Borehole, Pieometer) depth (m)': 'well_depth',
-                                                            'Collar height (m)': 'collar_height',
-                                                            'Depth to screen top (m)': 'top_topscreen',
-                                                            'Depth to screen bottom (m)': 'bottom_bottomscreen'})
+        combined_meta_df = combined_meta_df[
+            ['key', 'Reference', 'NZTM X', 'NZTM Y', 'Vertical Datum', 'Ground level (m)',
+             '(Standpipe,Borehole, Pieometer) depth (m)',
+             'Collar height (m)', 'Depth to screen top (m)', 'Depth to screen bottom (m)']]
+        combined_meta_df = combined_meta_df.rename(
+            columns={'key': 'site_name', 'Reference': 'bore_no', 'NZTM X': 'nztm_x',
+                     'NZTM Y': 'nztm_y', 'Vertical Datum': 'rl_datum',
+                     'Ground level (m)': 'rl_elevation',
+                     '(Standpipe,Borehole, Pieometer) depth (m)': 'well_depth',
+                     'Collar height (m)': 'collar_height',
+                     'Depth to screen top (m)': 'top_topscreen',
+                     'Depth to screen bottom (m)': 'bottom_bottomscreen'})
 
-        combined_meta_df= combined_meta_df.round({'nztm_x': 0, 'nztm_y': 0})
+        combined_meta_df = combined_meta_df.round({'nztm_x': 0, 'nztm_y': 0})
         for col in meta_data_requirements['needed_columns']:
             if col not in combined_meta_df.columns:
                 combined_meta_df[col] = meta_data_requirements['default_values'].get(col)
@@ -84,9 +87,8 @@ def get_transient_data(local_paths, meta_data_requirements, recalc= False):
             combined_meta_df[col] = combined_meta_df[col].astype(dtype)
 
         combined_meta_df = append_to_other(df=combined_meta_df,
-                                            needed_columns=meta_data_requirements["needed_columns"])
+                                           needed_columns=meta_data_requirements["needed_columns"])
         combined_meta_df['source'] = 'NZGD'
-
 
         combined_ts_df = pd.concat(list_ts, ignore_index=True)
         combined_ts_df = combined_ts_df.dropna(subset=['Max Water Level (m)'])
@@ -100,7 +102,7 @@ def get_transient_data(local_paths, meta_data_requirements, recalc= False):
         combined_ts_df = combined_ts_df.groupby(['site_name', 'date', 'File Name']).mean('depth_to_water').reset_index()
         assign_flags_based_on_null_values(combined_ts_df, 'depth_to_water', 'dtw_flag', 1, 0)
         assign_flags_based_on_null_values(combined_ts_df, 'gw_elevation', 'water_elev_flag', 1, 0)
-        combined_ts_df['date']= pd.to_datetime(combined_ts_df['date'])
+        combined_ts_df['date'] = pd.to_datetime(combined_ts_df['date'])
 
         for column in combined_meta_df:
             # Check if the column is of pandas nullable Int64 type
@@ -122,18 +124,15 @@ def get_transient_data(local_paths, meta_data_requirements, recalc= False):
         convert_boolean_columns(combined_ts_df)
         convert_boolean_columns(combined_meta_df)
 
-
-
-
-
         # Continue with HDF5 storage operations
         renew_hdf5_store(new_data=combined_manual_df, old_path=water_data_store_path,
                          store_key=store_key_manual_water_data)
         renew_hdf5_store(new_data=combined_ts_df, old_path=water_data_store_path, store_key=store_key_ts_water_data)
         renew_hdf5_store(new_data=combined_meta_df, old_path=water_data_store_path, store_key=store_key_metadata)
 
+    return {'combined_manual_df': combined_manual_df, 'combined_meta_df': combined_meta_df,
+            'combined_ts_df': combined_ts_df}
 
-    return {'combined_manual_df': combined_manual_df, 'combined_meta_df': combined_meta_df, 'combined_ts_df': combined_ts_df}
 
 def get_static_data(local_paths, meta_data_requirements, recalc=False):
     water_data_store_path = local_paths['local_path'] / 'static_wl.hdf'
@@ -147,8 +146,9 @@ def get_static_data(local_paths, meta_data_requirements, recalc=False):
 
     else:
         needed_gw_columns = ['well_name', 'date', 'depth_to_water', 'gw_elevation', 'dtw_flag', 'water_elev_flag',
-                         'data_source', 'elevation_datum', 'other']
-        needed_gw_columns_type = {'well_name': "str", 'depth_to_water': "float", 'gw_elevation': "float", 'dtw_flag': "int",
+                             'data_source', 'elevation_datum', 'other']
+        needed_gw_columns_type = {'well_name': "str", 'depth_to_water': "float", 'gw_elevation': "float",
+                                  'dtw_flag': "int",
                                   'water_elev_flag': 'int',
                                   'data_source': 'str', 'elevation_datum': "str", 'other': "str"}
 
@@ -232,7 +232,8 @@ def get_static_data(local_paths, meta_data_requirements, recalc=False):
             transformer = pyproj.Transformer.from_crs(source_crs, default_crs, always_xy=True)
             # Perform the transformation for the entire group
             try:
-                group['nztm_x'], group['nztm_y'] = transformer.transform(group['easting'].values, group['northing'].values)
+                group['nztm_x'], group['nztm_y'] = transformer.transform(group['easting'].values,
+                                                                         group['northing'].values)
             except Exception as e:
                 # Handle or log the exception as needed
                 print(f"Error transforming coordinates for group {group.name}: {e}")
@@ -278,7 +279,7 @@ def get_static_data(local_paths, meta_data_requirements, recalc=False):
     return {'nzgd_water_data': nzgd_water_data, 'nzgd_metadata': nzgd_metadata}
 
 
-def output(meta_data_requirements, local_paths, recalc= False):
+def output(meta_data_requirements, local_paths, recalc=False):
     water_data_store_path = local_paths['save_path']
     store_key_water_data = local_paths['wl_store_key']
     store_key_metadata = local_paths['nzgd_metadata_store_key']
@@ -299,15 +300,13 @@ def output(meta_data_requirements, local_paths, recalc= False):
 
         transient_metadata = transient_data['combined_meta_df'].copy()
         transient_metadata['dist_mp_to_ground_level'] = transient_metadata['collar_height']
-        transient_metadata =transient_metadata.drop(columns=['collar_height'])
+        transient_metadata = transient_metadata.drop(columns=['collar_height'])
         transient_metadata['well_name'] = transient_metadata['bore_no'].astype(str)
-        transient_metadata= transient_metadata.drop(columns=['bore_no'])
+        transient_metadata = transient_metadata.drop(columns=['bore_no'])
 
         transient_ts_data = transient_data['combined_ts_df'].copy()
 
-
         combined_metadata = pd.concat([nzgd_metadata, transient_metadata], ignore_index=True)
-
 
         # keynote - there appear to be some duplicate well names in the metadata but they may not be the smae sites, hare to tell
         # default_precision = 0.1  # for example, default precision is 2 decimal places
@@ -330,14 +329,17 @@ def output(meta_data_requirements, local_paths, recalc= False):
         combined_metadata['well_name'] = np.where(combined_metadata['well_name'] == 'bh1', 'BH1',
                                                   combined_metadata['well_name'])
 
-        combined_metadata_names= combined_metadata[['well_name', 'site_name']].dropna()
+        combined_metadata_names = combined_metadata[['well_name', 'site_name']].dropna()
 
-        combined_water_data = pd.concat([nzgd_water_data, tranisent_manual_water_data, transient_ts_data], ignore_index=True)
+        combined_water_data = pd.concat([nzgd_water_data, tranisent_manual_water_data, transient_ts_data],
+                                        ignore_index=True)
         combined_water_data = pd.merge(combined_water_data, combined_metadata_names, on='site_name', how='left')
-        combined_water_data['well_name'] = np.where(pd.isnull(combined_water_data['well_name_x']), combined_water_data['well_name_y'], combined_water_data['well_name_x'])
+        combined_water_data['well_name'] = np.where(pd.isnull(combined_water_data['well_name_x']),
+                                                    combined_water_data['well_name_y'],
+                                                    combined_water_data['well_name_x'])
         combined_water_data = combined_water_data.drop(columns=['well_name_x', 'well_name_y'])
 
-        #combined_water_data = aggregate_water_data(combined_water_data)
+        # combined_water_data = aggregate_water_data(combined_water_data)
 
         stats = _get_summary_stats(combined_water_data)
         stats = stats.set_index('well_name')
@@ -345,10 +347,8 @@ def output(meta_data_requirements, local_paths, recalc= False):
         combined_metadata = combined_metadata.combine_first(stats)
         combined_metadata = combined_metadata.reset_index()
 
-
-
         combined_metadata = append_to_other(df=combined_metadata,
-                                        needed_columns=meta_data_requirements["needed_columns"])
+                                            needed_columns=meta_data_requirements["needed_columns"])
         combined_metadata = combined_metadata[meta_data_requirements['needed_columns']]
         combined_metadata['start_date'] = pd.to_datetime(combined_metadata['start_date'])
         combined_metadata['end_date'] = pd.to_datetime(combined_metadata['end_date'])
@@ -365,8 +365,8 @@ def output(meta_data_requirements, local_paths, recalc= False):
 
         combined_metadata = append_to_other(df=combined_metadata, needed_columns=cols_to_keep)
         combined_metadata.drop(columns=[col for col in combined_metadata.columns if
-                                    col not in cols_to_keep and col != 'other'],
-                           inplace=True)
+                                        col not in cols_to_keep and col != 'other'],
+                               inplace=True)
         combined_metadata['well_name'] = combined_metadata['well_name'].astype(str)
         combined_metadata['other'] = combined_metadata['other'].astype(str)
 
@@ -413,12 +413,13 @@ def _get_folder_and_local_paths(source_dir, local_dir, redownload=False):
 
     return local_paths
 
+
 def get_nzgd_data(recalc=False, redownload=False):
     local_paths = _get_folder_and_local_paths(source_dir=project_dir.joinpath('Data/NZGDExportInstrumentLogs/'),
                                               local_dir=unbacked_dir.joinpath('nzgd_working/'), redownload=redownload)
     meta_data_requirements = needed_cols_and_types('NZGD')
-    return output(meta_data_requirements, local_paths, recalc= recalc)
+    return output(meta_data_requirements, local_paths, recalc=recalc)
 
 
 if __name__ == '__main__':
-    data= get_nzgd_data(recalc=True)
+    data = get_nzgd_data(recalc=True)

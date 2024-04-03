@@ -10,12 +10,20 @@ This script cleans and processes the Marlborough GWL data
 import numpy as np
 import pandas as pd
 
-from data_processing_functions import (find_overlapping_files, copy_with_prompt, \
-                                       _get_summary_stats, append_to_other, needed_cols_and_types, data_checks, \
-                                       metadata_checks, parse_and_identify, get_hdf5_store_keys, pull_tethys_data_store,
-                                       assign_flags_based_on_null_values, renew_hdf5_store)
-from merge_rows import merge_rows_if_possible
-from project_base import groundwater_data, unbacked_dir
+from komanawa.komanawa_nz_depth_to_water.head_data_processing.data_processing_functions import (find_overlapping_files,
+                                                                                                copy_with_prompt, \
+                                                                                                _get_summary_stats,
+                                                                                                append_to_other,
+                                                                                                needed_cols_and_types,
+                                                                                                data_checks, \
+                                                                                                metadata_checks,
+                                                                                                parse_and_identify,
+                                                                                                get_hdf5_store_keys,
+                                                                                                pull_tethys_data_store,
+                                                                                                assign_flags_based_on_null_values,
+                                                                                                renew_hdf5_store)
+from komanawa.komanawa_nz_depth_to_water.head_data_processing.merge_rows import merge_rows_if_possible
+from komanawa.komanawa_nz_depth_to_water.project_base import groundwater_data, unbacked_dir
 
 
 ########################################################################################################################
@@ -160,7 +168,7 @@ def _get_marlborough_bespoke_metadata(local_paths, meta_data_requirements):
     return {'mdc_metadata': mdc_metadata, 'mdc_gw_data': mdc_gw_data}
 
 
-def output(local_paths, meta_data_requirements, recalc= False):
+def output(local_paths, meta_data_requirements, recalc=False):
     """This function combines the two sets of metadata and cleans it
     :return: dataframe"""
     needed_gw_columns_type = {'well_name': "str", 'depth_to_water': "float", 'gw_elevation': "float", 'dtw_flag': "int",
@@ -223,7 +231,8 @@ def output(local_paths, meta_data_requirements, recalc= False):
         # Create a list of columns to skip, which are of string type
         skip_cols = [col for col in combined_metadata.columns
                      if
-                     combined_metadata[col].dtype == object or pd.api.types.is_datetime64_any_dtype(combined_metadata[col])]
+                     combined_metadata[col].dtype == object or pd.api.types.is_datetime64_any_dtype(
+                         combined_metadata[col])]
 
         aggregation_functions = {col: np.nanmean for col in precisions}
 
@@ -234,7 +243,8 @@ def output(local_paths, meta_data_requirements, recalc= False):
         if 'other' not in combined_metadata.columns:
             combined_metadata['other'] = ''
 
-        combined_metadata = append_to_other(df=combined_metadata, needed_columns=meta_data_requirements["needed_columns"])
+        combined_metadata = append_to_other(df=combined_metadata,
+                                            needed_columns=meta_data_requirements["needed_columns"])
 
         combined_metadata.drop(columns=[col for col in combined_metadata.columns if
                                         col not in meta_data_requirements["needed_columns"] and col != 'other'],
@@ -255,7 +265,7 @@ def output(local_paths, meta_data_requirements, recalc= False):
                                inplace=True)
 
         renew_hdf5_store(old_path=local_paths['save_path'], store_key=local_paths['wl_store_key'],
-                         new_data = combined_water_data)
+                         new_data=combined_water_data)
 
         renew_hdf5_store(old_path=local_paths['save_path'], store_key=local_paths['marlborough_metadata_store_key'],
                          new_data=combined_metadata)
@@ -305,12 +315,14 @@ def _get_folder_and_local_paths(source_dir, local_dir, redownload=False):
 
     return local_paths
 
-def get_mdc_data(recalc= False, redownload=False):
+
+def get_mdc_data(recalc=False, redownload=False):
     local_paths = _get_folder_and_local_paths(source_dir=groundwater_data.joinpath('gwl_marlborough'),
-                                              local_dir=unbacked_dir.joinpath('marborough_working/'), redownload=redownload)
+                                              local_dir=unbacked_dir.joinpath('marborough_working/'),
+                                              redownload=redownload)
     meta_data_requirements = needed_cols_and_types('MDC')
-    return output(local_paths, meta_data_requirements, recalc= recalc)
+    return output(local_paths, meta_data_requirements, recalc=recalc)
 
 
 if __name__ == '__main__':
-    data= get_mdc_data(recalc= False)
+    data = get_mdc_data(recalc=False)

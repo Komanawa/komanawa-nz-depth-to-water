@@ -14,9 +14,10 @@ import pandas as pd
 from pandas.api.types import is_string_dtype, is_float_dtype, \
     is_datetime64_any_dtype  # review I personally prefer to call these as pd.api.types.is...
 
-from data_processing_functions import find_overlapping_files, copy_with_prompt, _get_summary_stats, \
+from komanawa.komanawa_nz_depth_to_water.head_data_processing.data_processing_functions import find_overlapping_files, \
+    copy_with_prompt, _get_summary_stats, \
     needed_cols_and_types, renew_hdf5_store, assign_flags_based_on_null_values
-from project_base import groundwater_data, unbacked_dir
+from komanawa.komanawa_nz_depth_to_water.project_base import groundwater_data, unbacked_dir
 
 
 def get_final_ecan_data(local_paths, recalc=False):
@@ -113,7 +114,6 @@ def _clean_ecan_gwl_data(local_paths):
     # removing the strange data from the start level of a steptest
     ecan_gwl_data = ecan_gwl_data[ecan_gwl_data['depth_to_water_mp'] != -2090 * positive]
 
-
     # changing the depth to water from dtw from mp to dtw from ground
     # reading in ecan metadata (without the summary stats, just the original plain metadata)
     ecan_metadata = _clean_ecan_metadata(local_paths)
@@ -125,13 +125,13 @@ def _clean_ecan_gwl_data(local_paths):
     # remember this is a copy, not a deep copy/editing the original
     # depth_to_water_mp is positive and dist_mp_to_ground_level negative
     # so adding dist_mp_to_ground from depth_to_water_mp gives dtw_from_ground
-    ecan_gwl_data['dist_mp_to_ground_level'] =ecan_metadata.loc[
+    ecan_gwl_data['dist_mp_to_ground_level'] = ecan_metadata.loc[
         ecan_gwl_data.well_name, "dist_mp_to_ground_level"].values
     # assigning those with NaN (as above) or with gwl > 0 as artesian
     # assigning all the dtw with +999 as NaN, ecan's code for artesian but not measured
     idx = ecan_gwl_data['depth_to_water_mp'] <= 997 * positive
 
-    ecan_gwl_data['artesian'] = (ecan_gwl_data['depth_to_water_mp']+ ecan_gwl_data['dist_mp_to_ground_level']) < 0
+    ecan_gwl_data['artesian'] = (ecan_gwl_data['depth_to_water_mp'] + ecan_gwl_data['dist_mp_to_ground_level']) < 0
     ecan_gwl_data.loc[idx, 'depth_to_water_mp'] = np.nan
 
     # assigning all the dtw with -999 as NaN and dry (ecan's code
@@ -165,7 +165,6 @@ def _clean_ecan_gwl_data(local_paths):
     ecan_gwl_data.loc[ecan_gwl_data['tideda_flag'] == 'A', 'dtw_flag'] = 5
 
     ecan_gwl_data['water_elev_flag'] = 0
-
 
     # handling data types
     ecan_gwl_data = ecan_gwl_data.astype(
@@ -279,7 +278,7 @@ def _get_extra_ecan_metadata(local_paths):
     t = time.time()
 
     # defining the path
-    extra_ecan_metadata_path = local_paths['local_path'] /'From_ecan' / 'missing_metadata.xlsx'
+    extra_ecan_metadata_path = local_paths['local_path'] / 'From_ecan' / 'missing_metadata.xlsx'
 
     extra_ecan_metadata = pd.read_excel(extra_ecan_metadata_path)
 
@@ -309,7 +308,7 @@ def _clean_ecan_metadata(local_paths):
 
     # handling exit data types
     ecan_metadata = ecan_metadata.astype({'well_name': 'str', 'well_depth': 'float', 'mp_elevation_L1937': 'float',
-                                         'dist_mp_to_ground_level': 'float',
+                                          'dist_mp_to_ground_level': 'float',
                                           'nztm_x': 'float', 'nztm_y': 'float',
                                           'top_topscreen': 'float', 'bottom_bottomscreen': 'float',
                                           'screen_count': 'float'})
@@ -491,8 +490,6 @@ def metadata_data_checks(data):
         too_high_idx.to_csv(save_path)
         raise ValueError('Wells with too high GWLs are saved to the unbacked project folder')
 
-
-
     too_low_idx = data[data['mean_dtw'] > 310]
     if not too_low_idx.empty:
         save_path = unbacked_dir.joinpath('mean_gwl_too_low_idx.csv')
@@ -536,7 +533,8 @@ def _get_folder_and_local_paths(source_dir, local_dir, redownload=False):
     # Store keys are hardcoded as they are specific to this setup
     local_paths['wl_store_key'] = 'ecan_gwl_data'
     local_paths['ecan_metadata_store_key'] = 'ecan_metadata'
-    local_paths['save_path'] = groundwater_data.joinpath('gwl_ecan', 'From_ecan', 'cleaned_data', 'combined_ecan_data.hdf')
+    local_paths['save_path'] = groundwater_data.joinpath('gwl_ecan', 'From_ecan', 'cleaned_data',
+                                                         'combined_ecan_data.hdf')
 
     return local_paths
 
@@ -547,7 +545,7 @@ def get_ecan_data(recalc=False, redownload=False):
     meta_data_requirements = needed_cols_and_types('ECAN')
 
     return get_final_ecan_data(local_paths,
-                            recalc=recalc)
+                               recalc=recalc)
 
 
 if __name__ == '__main__':

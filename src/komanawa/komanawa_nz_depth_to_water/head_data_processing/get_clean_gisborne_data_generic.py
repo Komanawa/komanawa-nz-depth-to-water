@@ -8,13 +8,20 @@ import numpy as np
 import pandas as pd
 import pyproj
 
-from data_processing_functions import (find_overlapping_files, copy_with_prompt, \
-                                       _get_summary_stats, needed_cols_and_types, metadata_checks, \
-                                       data_checks, get_hdf5_store_keys, pull_tethys_data_store, append_to_other,
-                                       renew_hdf5_store,
-                                       assign_flags_based_on_null_values, aggregate_water_data)
-from merge_rows import merge_rows_if_possible
-from project_base import groundwater_data, unbacked_dir
+from komanawa.komanawa_nz_depth_to_water.head_data_processing.data_processing_functions import (find_overlapping_files,
+                                                                                                copy_with_prompt, \
+                                                                                                _get_summary_stats,
+                                                                                                needed_cols_and_types,
+                                                                                                metadata_checks, \
+                                                                                                data_checks,
+                                                                                                get_hdf5_store_keys,
+                                                                                                pull_tethys_data_store,
+                                                                                                append_to_other,
+                                                                                                renew_hdf5_store,
+                                                                                                assign_flags_based_on_null_values,
+                                                                                                aggregate_water_data)
+from komanawa.komanawa_nz_depth_to_water.head_data_processing.merge_rows import merge_rows_if_possible
+from komanawa.komanawa_nz_depth_to_water.project_base import groundwater_data, unbacked_dir
 
 
 ########################################################################################################################
@@ -145,7 +152,7 @@ def _get_gisborne_tethys_data(local_paths, meta_data_requirements):
     tethys_groundwater_data['depth_to_water'] = np.where(pd.isnull(tethys_groundwater_data['depth_to_water']),
                                                          tethys_groundwater_data['diff_y'] - tethys_groundwater_data[
                                                              'gw_elevation'], tethys_groundwater_data['depth_to_water'])
-    tethys_groundwater_data= tethys_groundwater_data.drop(columns=['diff_y', 'diff_x'])
+    tethys_groundwater_data = tethys_groundwater_data.drop(columns=['diff_y', 'diff_x'])
 
     tethys_gw_metadata = pd.concat([tethys_gw_metadata['/Gisborne District Council_groundwater_depth_None_metadata'],
                                     tethys_gw_metadata['/Gisborne District Council_water_level_None_metadata'],
