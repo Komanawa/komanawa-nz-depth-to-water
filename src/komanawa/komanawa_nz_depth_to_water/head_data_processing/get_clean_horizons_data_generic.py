@@ -308,7 +308,6 @@ def _get_extra_horizons_metadata(local_paths, meta_data_requirements):
 
     for col, dtype in meta_data_requirements['col_types'].items():
         extra_metadata[col] = extra_metadata[col].astype(dtype)
-    # review figure out what to do with those that don't have coordinates etc
     if 'other' not in extra_metadata.columns:
         extra_metadata['other'] = ''
 

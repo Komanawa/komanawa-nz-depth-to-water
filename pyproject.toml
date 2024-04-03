@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["src/"]
+
+[tool.setuptools.package-data]
+"*" = ["*.txt"]
+
+[project]
+name = "komanawa-nz-depth-to-water"
+version = "v1.0.0"
+authors = [
+    { name = "Matt Dumont", email = "Matt@komanawa.com" },
+]
+description = "Access to data for the NZ depth to water"
+readme = "README.rst"
+license = { file = "LICENSE" }
+requires-python = ">=3.11"
+dependencies = [
+]
+
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+Homepage = ""
+Issues = ""
+Documentation = "access to the Future coasts New Zealand national depth to water dataset"

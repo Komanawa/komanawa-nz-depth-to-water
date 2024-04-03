@@ -138,7 +138,6 @@ def _get_discrete_orc_data(local_paths, meta_data_requirements):
     """
 
     # keynote this is depth to water data
-    # review change this to elevation data
 
     # reading in the data - doing the static water level data first
     all_data = pd.read_excel((local_paths['local_path'] / 'Copy of orc_metadata_site_list.xlsx'),

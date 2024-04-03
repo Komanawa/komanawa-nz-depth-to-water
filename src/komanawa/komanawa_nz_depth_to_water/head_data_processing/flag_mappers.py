@@ -50,5 +50,3 @@ def add_flags_to_hdf(path):
 
 if __name__ == '__main__':
      val = gwl_flag(True)['no_data']
-     # todo compressing data example:
-     #lake_hds.to_hdf(historical_data_savepath, key='lake', complib='zlib', complevel=9)

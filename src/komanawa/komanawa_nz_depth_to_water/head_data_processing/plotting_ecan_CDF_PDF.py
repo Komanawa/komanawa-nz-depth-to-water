@@ -129,10 +129,6 @@ def plot_cdfs():
     #ax[2].set_ylabel('Frequency')
 
     plt.show()
-
-    # todo add in the jacobs data
-    # todo remove the ashley data for now
-    # todo add the all on the same plots
     plt.savefig(groundwater_data.joinpath('gwl_ecan', 'From_ecan', 'cleaned_data', 'comparison_CDF_plots.png'))
 
 

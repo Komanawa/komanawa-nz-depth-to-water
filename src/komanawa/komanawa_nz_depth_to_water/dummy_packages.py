@@ -7,7 +7,7 @@ import warnings
 from pathlib import Path
 import numpy as np
 
-warnings.warn("using dummy packages for paths or lidar access. this may affect results")
+warnings.warn('using dummy packages for paths or lidar access. this may affect results.  The council data that we ingest here is available on request. Contact admin@komanawa.com and ask for the "Z21009FUT_FutureCoasts_raw_groundwater_level_data" data set.')
 
 
 class KslEnvrionment(object):

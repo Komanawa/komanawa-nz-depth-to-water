@@ -62,7 +62,7 @@ def _get_tethys_2024_folder_and_local_paths_v2(source_dir, local_dir, redownload
         print(f"Redownload not requested or source directory {src_dir} does not exist/is not a directory.")
 
 
-def _rename_local_folders(parent_directory):  # review not sure why... add a quick doc string or comment
+def _rename_local_folders(parent_directory):
     # Iterate over each entry in the parent directory
     for entry in os.listdir(parent_directory):
         full_entry_path = os.path.join(parent_directory, entry)
@@ -89,13 +89,12 @@ def create_tethys_gw_database(parent_directory, save_path):
         save_path.parent.mkdir(parents=True, exist_ok=True)
 
     # Iterate over each entry in the parent directory
-    # review glob might provide a cleaner way to do this, but this isn't bad
 
     parent_directory = Path(parent_directory)
     data_files = list(parent_directory.glob('**/data/*.csv'))
     metadata_files = list(parent_directory.glob('**/0_all_stations.csv'))
 
-    for entry in os.listdir(parent_directory):  # review Path.iterdir() is a better option
+    for entry in os.listdir(parent_directory):
         folder_path = os.path.join(parent_directory, entry)
         data_folder_path = os.path.join(folder_path, 'data')
         metadata_file_path = os.path.join(folder_path, '0_all_stations.csv')
@@ -116,7 +115,7 @@ def process_data_files(data_folder_path, save_path, store_key):
     list_dfs = []
     files_processed = 0  # Counter for files processed
 
-    for i, file in enumerate(os.listdir(data_folder_path)):  # review quick way to get a counter
+    for i, file in enumerate(os.listdir(data_folder_path)):
         file_path = os.path.join(data_folder_path, file)
         if os.path.isfile(file_path):
             try:
@@ -133,7 +132,6 @@ def process_data_files(data_folder_path, save_path, store_key):
                 files_processed += 1
                 print(f"Processed file: {file_path}")  # Debugging print
             except Exception as e:
-                # review I would add a debuging module as so:
 
                 with open(debug_path, 'a') as f:
                     f.write(f"Error processing file {file_path=}: {e}\n")
@@ -439,8 +437,4 @@ def get_tethys_store_paths(recalc=False, redownload=False, recalc_download=False
 
 
 if __name__ == '__main__':
-    # review I would sort the projection of data here.
-    # review a bit hard to follow what is going on here...
-    # review, typically bad form to comment out stuff with out explaining why  I'm assuming you don't need to re-run
-    # reivew I would wrap up the full process in a function and call it here
     get_tethys_store_paths(recalc=False)

@@ -39,18 +39,6 @@ def get_final_ecan_data(local_paths, recalc=False):
         renew_hdf5_store(local_paths['save_path'], local_paths['wl_store_key'], combined_water_data)
         renew_hdf5_store(local_paths['save_path'], local_paths['ecan_metadata_store_key'], combined_metadata)
 
-        # review saving it as a shapefile - not -working on remotes
-        # specifying the projection
-    #         crs = 'EPSG:2193'
-    #         # creating the Geodataframe
-    #         geometry = [Point(xy) for xy in zip(combined_metadata['nztm_x'], combined_metadata['nztm_y'])]
-    #         gdf = gpd.GeoDataFrame(combined_metadata, geometry=geometry)
-    #         # converting datetimes to strings so I can save it
-    # #        gdf['start_date'] = gdf['start_date'].astype(str)
-    # #        gdf['end_date'] = gdf['end_date'].astype(str)
-    #         output_path = gis_data.joinpath('vector', 'cleaned_ecan_metadata.shp')
-    #         gdf.to_file(output_path, driver='ESRI Shapefile', crs=crs)
-
     return {'combined_metadata': combined_metadata, 'combined_water_data': combined_water_data}
 
 

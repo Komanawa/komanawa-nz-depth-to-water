@@ -67,7 +67,6 @@ def _get_tasman_tethys_data(meta_data_requirements):
 
     for col, dtype in meta_data_requirements['col_types'].items():
         tethys_metadata_dtw_24h[col] = tethys_metadata_dtw_24h[col].astype(dtype)
-    # review figure out what to do with those that don't have coordinates etc
     if 'other' not in tethys_metadata_dtw_24h.columns:
         tethys_metadata_dtw_24h['other'] = ''
 

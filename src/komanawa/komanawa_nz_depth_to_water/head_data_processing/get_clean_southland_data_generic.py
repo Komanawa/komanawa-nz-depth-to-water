@@ -95,7 +95,7 @@ def _get_southland_tethys_data(local_paths, meta_data_requirements):
             'tethys_metadata_combined': tethys_metadata_water_level_24h}
 
 
-def _get_southland_checks_data():
+def _get_southland_checks_data(local_paths):
     """Read and process groundwater checks data from Southland.
         Returns:
             pd.DataFrame: The processed groundwater checks data.
@@ -134,11 +134,10 @@ def _get_southland_checks_data():
     return df
 
 
-def _get_southland_dip_data():
+def _get_southland_dip_data(local_paths):
     """ this function reads in the dip data as provided by Southland (sent to us)
     :return dataframe, raw data"""
 
-    # review change to gw elevation data - currently dtw usually from top of bore
 
     southland_dip_data = pd.read_excel(
         local_paths['local_path'] / 'GroundwaterLevel_updated.xlsx',
@@ -163,7 +162,7 @@ def _get_southland_dip_data():
     return southland_dip_data
 
 
-def _get_southland_metadata():
+def _get_southland_metadata(local_paths):
     """
     This function reads in and cleans the Southland metadata that was provided by ES
     :return: dataframe, the ES metadata
@@ -225,13 +224,13 @@ def output(local_paths, meta_data_requirements, recalc=False):
         tethys_alt_name = tethys_metadata[['well_name', 'alt_name']]
         tethy_gw_data = pd.merge(tethy_gw_data, tethys_alt_name, on='well_name', how='left')
 
-        southland_gwl_check_data = _get_southland_checks_data()
+        southland_gwl_check_data = _get_southland_checks_data(local_paths)
         southland_gwl_check_data = southland_gwl_check_data.rename(
             columns={"alt_well_name": "well_name", "well_name": "alt_name", "water_level": "gw_elevation"})
         assign_flags_based_on_null_values(southland_gwl_check_data, 'depth_to_water', 'dtw_flag', 3, 0)
         assign_flags_based_on_null_values(southland_gwl_check_data, 'gw_elevation', 'water_elev_flag', 3, 0)
 
-        southland_dip_data = _get_southland_dip_data()
+        southland_dip_data = _get_southland_dip_data(local_paths)
         southland_dip_data['depth_to_water'] = southland_dip_data['depth_to_water'] * -1
 
         assign_flags_based_on_null_values(southland_dip_data, 'depth_to_water', 'dtw_flag', 3, 0)
@@ -266,7 +265,7 @@ def output(local_paths, meta_data_requirements, recalc=False):
                                                tethys_metadata["well_name"], tethys_metadata["alt_name"])
         tethys_metadata = tethys_metadata.rename(columns={"alt_name": "well_name", "well_name": "alt_name"})
 
-        src_metadata = _get_southland_metadata()
+        src_metadata = _get_southland_metadata(local_paths)
         src_metadata = src_metadata.rename(columns={"elevation": "rl_elevation"})
 
         # combining the two metadata sets

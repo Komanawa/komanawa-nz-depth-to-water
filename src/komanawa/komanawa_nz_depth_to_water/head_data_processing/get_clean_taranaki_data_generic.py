@@ -19,7 +19,6 @@ from pathlib import Path
 from komanawa.komanawa_nz_depth_to_water.head_data_processing.merge_rows import merge_rows_if_possible
 
 
-# todo fix random bore numbers from tethys (datrequest sent), fix sign of said bores when data known
 def _get_taranaki_tethys_data(local_paths, meta_data_requirements):
     """" This function reads in the gisborne data from Tethys
             dtw_flag = 1= logger, 2= manual, 3= static_oneoff, 4= calculated frm gw_elevation, 5= aquifer test, 6= other
@@ -257,10 +256,6 @@ def _get_taranaki_metadata(local_paths, meta_data_requirements):
                     'well_strata_type_id', 'well_subtype', 'well_type', 'description', 'location', 'depth']
     metadata.drop(columns=drop_columns, inplace=True)
 
-    # renaming columns
-    # review: not sure how altitude differs from elevation here? maybe need to do a merge where if there is no elevation data, use the altitude data?
-    # todo EC can go back and check with Taranaki
-
     new_names = {'site_code': 'well_name', 'easting': 'nztm_x', 'northing': 'nztm_y', 'well_depth (m)': 'well_depth',
                  'diameter (mm)': 'diameter', 'top_of_screen': 'top_topscreen',
                  'bottom_of_screen': 'bottom_bottomscreen', 'well_aquifer_type': 'aquifer',
@@ -365,14 +360,6 @@ def output(local_paths, meta_data_requirements, recalc=False):
 
         tethys_gw_data.loc[tethys_gw_data['well_name'] == '10923 at Pukeone Rd bore', 'well_name'] = 'GNDxxx'
         tethys_gw_data.loc[tethys_gw_data['well_name'] == '10627 at Peat Rd bore', 'well_name'] = 'GNDxxx'
-
-        # todo this once we know the bore numbers
-        # tethys_metadata['well_name'] = tethys_metadata['old_name'].str.extract(pattern)
-        # # Optional: For rows where the pattern was not found, keep the original 'well_name'
-        # tethys_metadata['well_name'] = tethys_metadata['well_name'].fillna(tethys_metadata['old_name'])
-        # tethys_metadata = tethys_metadata.drop(columns=['old_name'])
-        # tethys_metadata.loc[tethys_metadata['well_name'] == '10923 at Pukeone Rd bore', 'well_name'] = 'GNDxxx'
-        # tethys_metadata.loc[tethys_metadata['well_name'] == '10627 at Peat Rd bore', 'well_name'] = 'GNDxxx'
 
         # pull the council data
         trc_data = _get_taranaki_metadata(local_paths=local_paths,

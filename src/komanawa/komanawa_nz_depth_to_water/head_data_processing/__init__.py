@@ -21,16 +21,3 @@ from komanawa.komanawa_nz_depth_to_water.head_data_processing.get_clean_waikato_
 from komanawa.komanawa_nz_depth_to_water.head_data_processing.get_clean_wellington_data_generic import get_gwrc_data
 from komanawa.komanawa_nz_depth_to_water.head_data_processing.get_clean_west_coast_data_generic import get_wcrc_data
 from komanawa.komanawa_nz_depth_to_water.head_data_processing.nzgd_data import get_nzgd_data
-
-
-
-#  todo FOR finalisation:
-# confirm Horizons data is in correct units eg rl or dtw
-
-# this has all the todos per councils, + some notes from our meetings the past few months
-# V:\Shared drives\Z21009FUT_FutureCoasts\Data\gwl_data\GWL data notes
-# this has notes from our code review, where we discuss putting everything into a certain format
-# V:\Shared drives\Z21009FUT_FutureCoasts\Data\gwl_data\GWL data code review
-# this is the example format we put together during the code review
-# V:\Shared drives\Z21009FUT_FutureCoasts\Data\gwl_data\example format
-

@@ -93,7 +93,7 @@ def _get_hbrc_tethys_data(local_paths, meta_data_requirements):
         else:
             tethys_groundwater_data_metadata[col] = meta_data_requirements['default_values'].get(col)
 
-    # review figure out what to do with those that don't have coordinates etc
+
     if 'other' not in tethys_groundwater_data_metadata.columns:
         tethys_groundwater_data_metadata['other'] = ''
 
