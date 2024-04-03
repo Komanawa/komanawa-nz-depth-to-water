@@ -1,0 +1,48 @@
+# todo fill this out as you create the environment
+# environment was primarily used on [Linux|Windows]
+
+# initial env creation
+conda create -c conda-forge --name [name] python [packages]
+conda activate [name]
+
+# todo kslcore see the instructions at: https://github.com/Komanawa-Solutions-Ltd/kslcore
+# keynote DO NOT COPY THE pip install command as this can give collaborators access to other repos
+
+# todo save the env and update whenever new packages are added:
+conda list --explicit > [path].txt
+conda env export > [path].yml
+
+# make sure you added these files to the git!
+
+
+########### Typical Packages ###########
+conda packages:
+numpy # numerical python
+pandas # dataframes
+pytables # hdf5 interface
+openpyxl # excel interface
+matplotlib # plotting
+scipy # general scientific computing
+netcdf4 # netcdf interface
+psutil # system utilities
+geopandas # shapefile interface
+flopy # MODFLOW interface
+pysheds # watershed delineation
+scikit-learn # machine learning/statistical models
+py7zr # 7zip
+schemdraw # schematic drawing used for flow diagrams
+cartopy # map plotting easy access to open street map
+
+# easy copy to environment call
+numpy pandas pytables openpyxl matplotlib scipy netcdf4 psutil geopandas flopy pysheds scikit-learn py7zr
+
+pip packages:
+pip install descartes  # geometry to matplotlib
+pip install pyemu # PEST
+pip install ppscore # predictive power score see https://pypi.org/project/ppscore/
+pip install Pillow # image processing useful in conjunction with fpdf
+pip install fpdf # pdf creation
+pip install pyhomogeneity # homogeneity testing
+pip install restview # restructured text viewer/editor
+
+
