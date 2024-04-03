@@ -31,6 +31,6 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = ""
-Issues = ""
+Homepage = "https://github.com/Komanawa-Solutions-Ltd/komanawa-nz-depth-to-water"
+Issues = "https://github.com/Komanawa-Solutions-Ltd/komanawa-nz-depth-to-water/issues"
 Documentation = "access to the Future coasts New Zealand national depth to water dataset"

@@ -8,11 +8,11 @@ Internal installation
 
 .. code-block:: bash
 
-        pip install git+https://$kslgittoken@github.com/Komanawa-Solutions-Ltd/komanawa-nz-depth-to-water.git
+        pip install git+https://github.com/Komanawa-Solutions-Ltd/komanawa-nz-depth-to-water.git
 
 .. code-block:: bash
 
-        pip install git+https://%kslgittoken%@github.com/Komanawa-Solutions-Ltd/komanawa-nz-depth-to-water.git
+        pip install git+https://github.com/Komanawa-Solutions-Ltd/komanawa-nz-depth-to-water.git
 
 External installation
 ------------------------
