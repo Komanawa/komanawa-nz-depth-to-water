@@ -12,7 +12,7 @@ import time
 import numpy as np
 import pandas as pd
 from pandas.api.types import is_string_dtype, is_float_dtype, \
-    is_datetime64_any_dtype  # review I personally prefer to call these as pd.api.types.is...
+    is_datetime64_any_dtype
 
 from komanawa.komanawa_nz_depth_to_water.head_data_processing.data_processing_functions import find_overlapping_files, \
     copy_with_prompt, _get_summary_stats, \

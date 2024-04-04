@@ -6,11 +6,8 @@ on: 22/06/2023
 """ This Python script cleans and subsets the Ashley case study data"""
 
 import pandas as pd
-from komanawa.komanawa_nz_depth_to_water.project_base import project_dir, groundwater_data, amandine_data, unbacked_dir, gis_data
-from pandas.api.types import is_string_dtype, is_float_dtype, is_datetime64_any_dtype
+from komanawa.komanawa_nz_depth_to_water.project_base import groundwater_data
 from get_clean_ecan_gwl_data import get_final_ecan_data
-import numpy as np
-from get_clean_ecan_gwl_data import data_checks
 
 
 def subset_ashley_gwl_data():
