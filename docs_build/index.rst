@@ -40,21 +40,22 @@ Introduction and Background
 Future Coasts Aotearoa is a NIWA led MBIE Endeabour research programme that combines expertise in Indigenous culture, economics, social, and physical sciences to tackle the issue of sea-level rise in coastal lowland communities by enhancing the evidence base for sea-level rise risks. It aims to build fit-for-purpose & holistic wellbeing evaluation tools, applying these tools in adaptive planning and decision-making frameworks for a range of case studies.
 Our role at KSL, alongside GNS and the University of Canterbury, is to develop impact and adaptation thresholds for shallow groundwater and seawater intrusion, develop a national coastal groundwater hazard exposure assessment, and national and local models of seawater intrusion and water table shoaling with and without adaptation solutions such as pumped drainage.
 
-As part of this, we have collected and processed a national depth to water dataset for New Zealand. This technical report outlines the data collected, the methods used to produce this dataset, and the potential use cases both within the project and externally.
+A national set of depth to water measurements across New Zealand is a fundamental component of Future Coast Aotearoa. This technical report outlines the data collected, the methods used to produce this dataset, and the potential use cases both within the project and externally. We are publishing this dataset to 1) make it more widely available to the research community, 2) to provide a reference for this base dataset across the Future Coasts Aotearoa project, and 3) to initiate a conversation around the quality and availability of groundwater data in New Zealand.
 
 Methodology
 =============
 
 Data was collected from regional councils directly and using Tethys (developed by Mike Kitteridge). The data was processed using Python; the resulting scripts are publicly available on GitHub. The details of the data collection and processing are outlined in greater detail below.
 
-Data Summary
----------------
+Data Source Summary
+---------------------
 
 A data request was sent out to all thirteen regional councils in March 2023. The data request asked for all groundwater level data; this included sites additional to any NGMP monitoring sites, as well as any discontinuous or sporadic readings. The aim was to collect as much national data as possible, and therefore even sites with only one reading provided some use to us. We were open to receiving both groundwater depth and/or groundwater elevation data, but just asked that it was specified to reduce error during the data processing. Along with the groundwater level data we also requested standard metadata for each site.
+
 Our minimum metadata requirements were:
 - Unique site identifier (e.g. site number)
 - Grid reference in NZTM
-- Well depth
+- Well depth .. todo not sure if this was included... Paddy?
 
 If present for the site, screen top & bottom depth, and the elevation of the measuring point were requested.
 
@@ -99,7 +100,7 @@ A brief summary of the data collected from each council is provided below. The d
 +----------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------+
 | Other data sources: Amandine Bosserelle      | Extra data from the Waimakariri area was provided by Amandine Bosserelle. This included extra data from shallow monitoring wells specifically.                                                                             | High         |
 +----------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------+
-| Other data sources: NZ Geotechnical database |.. todo Paddy to fill in                                                                                                                                                                                                           |              |
+| Other data sources: NZ Geotechnical database |.. todo Paddy to fill in                                                                                                                                                                                                    |              |
 +----------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------+
 
 Data Processing
@@ -122,6 +123,11 @@ The data processing steps are outlined below:
 
 .. todo paddy to add any extra notes or steps here
 
+Data Assumptions and sources of ambiguity
+--------------------------------------------
+
+.. todo paddy
+
 
 Results
 =========
@@ -131,4 +137,43 @@ The dataset is available as an output of the open source GitHub code. If you are
 
 The dataset will be used within the Future Coasts project for .. todo Matt/paddy to fill in
 
-We envisage that this dataset will be useful for a range of other projects as it provides a clean and queryable national dataset of groundwater level data. As new data becomes available, we hope to update the dataset and release new versions, depending on our resource availability. If you have extra data that has not been included in this national dataset, or are aware of more current data, please get in touch.
+We envisage that this dataset will be useful for a range of other projects as it provides a clean and queryable national dataset of groundwater level data. As new data becomes available, we hope to update the dataset and release new versions, depending on our resource availability. If you have extra data that has not been included in this national dataset, or are aware of more current data, please get in touch at admin@komanawa.com.
+
+
+Data Access
+--------------
+
+The dataset is freely available on Figshare, and can be accessed here: `access the data on Figshare <todo>`_. In addition all of the code used to process the data is available on GitHub, and can be accessed here: `access the code on GitHub <todo>`_.  The Github repository also provides the entry point for any issues or bugs you may find in the data or code and provides a way to contribute to the dataset. Ongoing updating of this dataset is not guaranteed and subject to resource availability.
+
+
+Data Model, Description and Scheme
+-------------------------------------
+
+The Data Model for the dataset is as follows:
+
+#. Site metadata:
+    - columns here .. todo paddy
+
+#. Time dependent depth to water data
+    - columns here .. todo paddy
+
+
+.. todo paddy quality codes etc.
+
+
+Dataset Overview
+-------------------
+
+.. todo maps of locations, density, variance, number of spot readings, number of higher frequency readings etc.
+
+
+Conclusions and Recommendations
+=====================================
+
+.. todo  This was hard... better interoperability across data source to allow rapid response to things... Plug Tethys here....  Need to fund this shit.
+.. todo  better and more conistant metadata needed... list for NZGD,
+
+
+
+
+
