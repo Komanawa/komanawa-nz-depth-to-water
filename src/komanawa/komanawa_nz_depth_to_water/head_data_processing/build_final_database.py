@@ -15,10 +15,10 @@ except ImportError:
 from komanawa.komanawa_nz_depth_to_water.head_data_processing import get_bop_data, get_auk_data, get_ecan_data, get_gdc_data, get_hbrc_data, \
     get_hrc_data, get_mdc_data, get_nrc_data, get_orc_data, get_src_data, get_trc_data, get_tdc_data, get_wrc_data, \
     get_gwrc_data, get_wcrc_data, get_nzgd_data, data_processing_functions
-from komanawa.komanawa_nz_depth_to_water.project_base import project_dir
+from komanawa.komanawa_nz_depth_to_water.project_base import project_dir, groundwater_data
 
 def build_final_meta_data(recalc=False):
-    meta_data_store_path = project_dir.joinpath('Data/gwl_data/final_meta_data.hdf')
+    meta_data_store_path = groundwater_data.joinpath('final_meta_data.hdf')
     store_key_metadata = 'meta_and_elv'
 
     # Check if data needs to be recalculated or if the HDF files don't exist
@@ -110,8 +110,8 @@ def build_final_meta_data(recalc=False):
 
 
 def build_final_water_data(recalc=False, recalc_sub=False, redownload=False):
-    water_data_store_path = project_dir.joinpath('Data/gwl_data/final_water_data.hdf')
-    meta_data_store_path = project_dir.joinpath('Data/gwl_data/final_metadata.hdf')
+    water_data_store_path = groundwater_data.joinpath('final_water_data.hdf')
+    meta_data_store_path = groundwater_data.joinpath('final_metadata.hdf')
 
     if not recalc and water_data_store_path.exists():
         final_gw_data = pd.read_hdf(water_data_store_path, 'wl_store_key')
@@ -223,10 +223,10 @@ def build_final_water_data(recalc=False, recalc_sub=False, redownload=False):
 
 
 def check_repaired_function():
-    wd_orig = pd.read_hdf(project_dir.joinpath('Data/gwl_data/final_water_data.hdf'), 'wl_store_key')
-    wd_test = pd.read_hdf(project_dir.joinpath('Data/gwl_data/final_water_data_test.hdf'), 'wl_store_key')
-    md_orig = pd.read_hdf(project_dir.joinpath('Data/gwl_data/final_metadata.hdf'), 'metadata')
-    md_test = pd.read_hdf(project_dir.joinpath('Data/gwl_data/final_metadata_test.hdf'), 'metadata')
+    wd_orig = pd.read_hdf(groundwater_data.joinpath('final_water_data.hdf'), 'wl_store_key')
+    wd_test = pd.read_hdf(groundwater_data.joinpath('final_water_data_test.hdf'), 'wl_store_key')
+    md_orig = pd.read_hdf(groundwater_data.joinpath('final_metadata.hdf'), 'metadata')
+    md_test = pd.read_hdf(groundwater_data.joinpath('final_metadata_test.hdf'), 'metadata')
 
 
 if __name__ == '__main__':
