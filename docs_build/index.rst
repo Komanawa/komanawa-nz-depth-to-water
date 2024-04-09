@@ -108,6 +108,7 @@ Data Processing
 
 The data was processed using Python. The scripts used to process the data are available on GitHub; these are open source, and we encourage others to use and adapt them for their own purposes, as well as flag any issues or areas of improvement. Please note that code for resampling elevation data for each site is not available, as this relies on internal scripts and tools specific to KSL.
 
+.. todo the list formatting isnt working here
 The data processing steps are outlined below:
 - A script was created for each council
 - The data was ingested and cleaned
