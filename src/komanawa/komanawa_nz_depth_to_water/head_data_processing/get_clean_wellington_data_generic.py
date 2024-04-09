@@ -82,7 +82,7 @@ def _get_bespoke_wellington_data(path_lists, meta_data_requirements):
                               'water_elev_flag': 'int',
                               'data_source': 'str', 'elevation_datum': "str", 'other': "str"}
 
-    wrc_data_path = local_paths['water_sporadic_data'] / 'Wells_and_Bores.csv'
+    wrc_data_path = path_lists['water_sporadic_data'] / 'Wells_and_Bores.csv'
     # reading in the data
     wrc_data = pd.read_csv(wrc_data_path)
 
@@ -151,13 +151,17 @@ def _get_bespoke_wellington_data(path_lists, meta_data_requirements):
 
     gw_data = gw_data.dropna(subset=['depth_to_water'])
     # Make 'depth_to_water' negative where 'aquifer' contains 'Flowing Artesian', and positive (absolute) otherwise
+    # Regular expression that matches 'Flowing Artesian' but not 'Non-Flowing Artesian'
+    regex_pattern = r'(?<!Non-)\bFlowing Artesian\b'
+
+    # Update 'depth_to_water' with negated values for 'Flowing Artesian' (excluding 'Non-Flowing Artesian') entries
     gw_data['depth_to_water'] = np.where(
-        gw_data['aquifer'].str.contains('Flowing Artesian', case=False, na=False),
+        gw_data['aquifer'].str.contains(regex_pattern, case=False, na=False, regex=True),
         -gw_data['depth_to_water'].abs(),  # Negate the absolute value for 'Flowing Artesian'
         gw_data['depth_to_water'].abs()  # Ensure all other values are positive (absolute)
     )
-
     gw_data = gw_data.dropna(subset=['depth_to_water'])
+    gw_data = gw_data[gw_data['depth_to_water']<200]
     assign_flags_based_on_null_values(gw_data, 'depth_to_water', 'dtw_flag', 3, 0)
     assign_flags_based_on_null_values(gw_data, 'gw_elevation', 'water_elev_flag', 3, 0)
     for column, dtype in needed_gw_columns_type.items():
@@ -332,12 +336,12 @@ def _get_folder_and_local_paths(source_dir, local_dir, redownload=False):
 
 
 def get_gwrc_data(recalc=False, redownload=False):
-    local_paths = _get_folder_and_local_paths(source_dir=groundwater_data.joinpath('gwl_west_coast'),
-                                              local_dir=unbacked_dir.joinpath('west_coast_working/'),
+    local_paths = _get_folder_and_local_paths(source_dir=groundwater_data.joinpath('gwl_wellington'),
+                                              local_dir=unbacked_dir.joinpath('wellington_working/'),
                                               redownload=redownload)
     meta_data_requirements = needed_cols_and_types('WCRC')
     return output(local_paths, meta_data_requirements, recalc=recalc)
 
 
 if __name__ == '__main__':
-    data = get_gwrc_data(recalc=False)
+    data = get_gwrc_data(recalc=True)

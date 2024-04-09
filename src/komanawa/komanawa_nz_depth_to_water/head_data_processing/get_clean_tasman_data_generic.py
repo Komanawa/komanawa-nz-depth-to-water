@@ -49,8 +49,10 @@ def _get_tasman_tethys_data(meta_data_requirements):
     tethys_metadata_dtw_24h = tethys_metadata['/Tasman District Council_groundwater_depth_24H_metadata']
 
     tethys_data_dtw_24h = tethys_data['/Tasman District Council_groundwater_depth_24H']
-    # keynote cant be depth to water as the water level is deeper than borehole
-    tethys_data_dtw_24h['gw_elevation'] = tethys_data_dtw_24h['groundwater_depth']
+    # keynote cant be depth to water as the water level is deeper than borehole ??????? can't tell
+    # keynote I think it is depth and the bore depth value is wrong
+    # tethys_data_dtw_24h['gw_elevation'] = tethys_data_dtw_24h['groundwater_depth']
+    tethys_data_dtw_24h['depth_to_water'] = tethys_data_dtw_24h['groundwater_depth']
 
     tethys_data_dtw = tethys_data_dtw_24h[needed_gw_columns]
     tethys_data_dtw['data_source'] = "tethys"
