@@ -193,22 +193,25 @@ def build_final_water_data(recalc=False, recalc_sub=False, redownload=False):
                                                  gw_data['depth_to_water'] - gw_data['dist_mp_to_ground_level'],
                                                  gw_data['depth_to_water'])
 
-        # fix auk weirdness
-        idx = (gw_data['source'] == 'auk') & ((abs(gw_data['depth_to_water_cor'])
-                                            - abs(gw_data['depth_to_water'])) > 10)
-        gw_data.loc[idx, 'depth_to_water'] = gw_data.loc[idx, 'depth_to_water']
-
-        # fix orc wierdness
-        # Condition for selecting the rows
+          # fix wierdness in the data
         condition = (gw_data['source'] == 'orc') & (gw_data['depth_to_water'] <= -10)
         # Using np.where to add 100 to 'depth_to_water' where the condition is True
-        gw_data['depth_to_water'] = np.where(condition, gw_data['depth_to_water'] + 100, gw_data['depth_to_water'])
+        gw_data['depth_to_water_cor'] = np.where(condition, gw_data['depth_to_water'] + 100, gw_data['depth_to_water'])
+        condition2 = (gw_data['source'] == 'auk') & ((abs(gw_data['depth_to_water_cor'])
+                                            - abs(gw_data['depth_to_water'])) > 10)
+        gw_data['depth_to_water_cor'] = np.where(condition2, gw_data['depth_to_water'], gw_data['depth_to_water_cor'])
         # General condition for multiple datasets to drop rows where 'dem_source' == -1
         gw_data = gw_data.drop(gw_data[gw_data['dem_source'] == -1].index)
         # keynote dropping gw data if dtw flag is 6 or water_elev is 5
         gw_data = gw_data.drop(gw_data[(gw_data['dtw_flag'] == 6) | (gw_data['water_elev_flag'] == 5)].index)
+
         # drop gw_levels where depth to water is greater than 300 or less than -50
-        #gw_data =
+        gw_data= gw_data.drop(gw_data[(gw_data['depth_to_water'] > 300) | (gw_data['depth_to_water'] < -50)].index)
+        gw_data['depth_to_water_old'] = gw_data['depth_to_water']
+        gw_data['depth_to_water'] = gw_data['depth_to_water_cor']
+        gw_data['gw_elevation'] = np.where(pd.isnull(gw_data['gw_elevation']),
+                                           gw_data['rl_elevation'] - gw_data['depth_to_water'], gw_data['gw_elevation'])
+
         stats = data_processing_functions._get_summary_stats(gw_data, group_column='site_name')
         metadata_db['site_name'] = metadata_db['well_name'] + '_' + metadata_db['source']
         metadata_db = pd.merge(metadata_db, stats, on='site_name', how='left').drop_duplicates(subset=['site_name'])

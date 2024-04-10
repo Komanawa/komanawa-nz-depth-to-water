@@ -29,7 +29,7 @@ Contributing and issues/bugs
 We have made every attempt to ensure the quality of the data and code in this repository. However, inevitably, there will be issues with the data or code. If you find an issue, please raise an issue on the GitHub repository. If you would like to contribute to the code or data, please fork the repository and submit a pull request.
 
 
-Technical Report
+Technical Note
 ######################
 
 .. todo evelyn here is the place to frame the technical report.
@@ -44,13 +44,13 @@ As part of this, we have collected and processed a national depth to water datas
 
 Methodology
 =============
-
-Data was collected from regional councils directly and using Tethys (developed by Mike Kitteridge). The data was processed using Python; the resulting scripts are publicly available on GitHub. The details of the data collection and processing are outlined in greater detail below.
+.. todo need a reference for tethys
+Data was collected from regional councils directly and using Tethys (developed by Mike Kitteridge ). The data was processed using Python; the resulting scripts are publicly available on GitHub. The details of the data collection and processing are outlined in greater detail below.
 
 Data Summary
 ---------------
 
-A data request was sent out to all thirteen regional councils in March 2023. The data request asked for all groundwater level data; this included sites additional to any NGMP monitoring sites, as well as any discontinuous or sporadic readings. The aim was to collect as much national data as possible, and therefore even sites with only one reading provided some use to us. We were open to receiving both groundwater depth and/or groundwater elevation data, but just asked that it was specified to reduce error during the data processing. Along with the groundwater level data we also requested standard metadata for each site.
+A data request was sent out to all thirteen New Zealand Regional Councils in March 2023. The data request asked for all groundwater level data; this included sites additional to any NGMP monitoring sites, as well as any discontinuous or sporadic readings. The aim was to collect as much national data as possible, and therefore even sites with only one reading provided some use to us. We were open to receiving both groundwater depth and/or groundwater elevation data, but just asked that it was specified to reduce error during the data processing. Along with the groundwater level data we also requested standard metadata for each site.
 Our minimum metadata requirements were:
 - Unique site identifier (e.g. site number)
 - Grid reference in NZTM
@@ -63,7 +63,7 @@ The data was received in Excel and csv formats, with various degrees of complete
 Alongside the direct requests to regional councils, data was also pulled from Tethys. Tethys is a Python-based tool developed by Mike Kitteridge which allows any data stored by councils in Hilltop to be accessed and downloaded. For councils that had relevant and up-to-date data in Hilltop, it meant we did not have to rely on a response to the direct request, and saved time in the data collection process. Data from Tethys was downloaded as a csv file.
 
 A brief summary of the data collected from each council is provided below. The data quality rating is based on the formatting of the data as well as the relative quality of the data provided.
-
+.. todo Evelyn can you qualify the data quality ratings, e.g. what makes a high quality dataset vs a low quality dataset?
 +----------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------+
 | Council                                      | Data Provided                                                                                                                                                                                                              | Data Quality |
 +==============================================+============================================================================================================================================================================================================================+==============+
@@ -97,9 +97,7 @@ A brief summary of the data collected from each council is provided below. The d
 +----------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------+
 | West Coast Regional Council                  | Continuous and static groundwater level data sent through by the council, as well as metadata.                                                                                                                             | Medium       |
 +----------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------+
-| Other data sources: Amandine Bosserelle      | Extra data from the Waimakariri area was provided by Amandine Bosserelle. This included extra data from shallow monitoring wells specifically.                                                                             | High         |
-+----------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------+
-| Other data sources: NZ Geotechnical database |.. todo Paddy to fill in                                                                                                                                                                                                           |              |
+| Other: NZ Geotechnical database              | Continuous and static groundwater levels data sent through by XXXX, as well as associated metadata                                                                                                                                                                                        |              |
 +----------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------+
 
 Data Processing
@@ -108,19 +106,53 @@ Data Processing
 The data was processed using Python. The scripts used to process the data are available on GitHub; these are open source, and we encourage others to use and adapt them for their own purposes, as well as flag any issues or areas of improvement. Please note that code for resampling elevation data for each site is not available, as this relies on internal scripts and tools specific to KSL.
 
 The data processing steps are outlined below:
+
 - A script was created for each council
-- The data was ingested and cleaned
+    - The data was ingested and cleaned
     - This included both the Tethys data and the data received directly from councils, where both was present
     - Cleaning the data involved formatting any datatypes, renaming columns, and removing any unnecessary columns
     - Depending on the format the data was received in, it was either processed into depth to water or elevation so that each dataset had both measurements present
-    - Where elevation data was not provided, LiDAR data was sampled to calculate the elevation at each site
     - The data was checked for potentially erroneous readings, such as negative values or values that were outside the expected range
     - Any unwanted NaN values were removed
-    - It was then combined into one dataset
+    - Finally, water levels from all sources were then then combined into one dataset
+    - Where elevation data was not provided, LiDAR data was sampled to calculate the elevation at each site
 - The metadata was ingested and cleaned
     - This involved the same steps as above, but also ensured the metadata site names matched the groundwater level data site names
 
-.. todo paddy to add any extra notes or steps here
+More fully the systematic approach was as follows:
+
+- Ingestion and Preliminary Cleaning
+    - Individual scripts were developed for each regional council to cater to the unique formats of the datasets provided.
+    - GWL data, alongside metadata, were ingested from two primary sources: direct council submissions and the Tethys platform, accessed via a Python API call.
+    - Preliminary cleaning involved standardising data formats, renaming columns for consistency, and excising superfluous columns.
+- Data Standardization and Transformation
+    - The data was processed to ensure the presence of both depth-to-water and elevation measurements. In instances where elevation data was absent, LiDAR data was utilised to ascertain site elevation.
+    - Anomalies such as negative values or readings beyond expected ranges were meticulously examined and rectified. Erroneous NaN values were also purged from the dataset.
+    - All spatial data were transformed into the NZGD 2000 Transverse Mercator projection and NZVD2016 vertical datum.
+    - The data was resampled to a consistent temporal resolution, ergo standardised to daily intervals.
+    - The data was amalgamated into a singular dataset, with each record containing both depth-to-water and groundwater elevation measurements.
+    - The datasets were given a quality rating based on their type and source
+    - The data was checked for any duplicates and removed
+- Metadata Synthesis and Alignment
+    - Metadata processing paralleled the data cleaning steps, with additional emphasis on ensuring alignment between site names in the metadata and the GWL data.
+    - The metadata schema encapsulated a comprehensive array of fields, ranging from well names and depths to spatial coordinates and screening details.
+    - Groundwater elevations were meticulously derived from ground elevation plus collar height (where available) minus depth to water, except for instances where councils provided elevations in NZVD2016.
+- Data Aggregation and Quality Assurance
+    - The processed data from various sources were coalesced into a singular dataset. This aggregation involved strategic merging and deduplication, governed by predefined rules to ensure data integrity.
+    - Quality control measures, including data and metadata checks, were instituted to uphold the data's accuracy and reliability.
+- Storing and Accessing Processed Data
+    - The culminated GWL data and metadata were systematically stored in an HDF5 store, facilitating ease of access and analysis.
+    - Provisions were made to recalculate and update the stored data as necessary, ensuring the database remained current and reflective of the most recent submissions.
+- Assumptions and Considerations
+    - A fundamental assumption is that depth-to-groundwater measurements below the ground surface are positive, with negative readings indicative of artesian conditions. This necessitated sign adjustments and validation against council records.
+    - In cases where well depth information was unavailable, wells were presumed shallow rather than being excluded from the dataset.
+    - Specific regional peculiarities, such as the assumed + 100 m offset for coastal groundwater elevations provided by the Otago Regional Council, were duly considered and adjusted.
+    - For wells where the maximum depth to water exceeded the reported well depth, an assumption was made that the well depth equaled the maximum depth to water plus an additional 3 metres.
+
+Statistical Analysis of datasets
+-----------------------------------
+.. todo Paddy to create this section which will be a summary of the statistics of the datasets, e.g. number of sites, number of readings per source, etc.
+
 
 
 Results
@@ -129,6 +161,13 @@ Results
 The resulting dataset is a national depth to water dataset for New Zealand; the groundwater level data and metadata are available as a complete dataset which can be used for national groundwater modelling, and to better understand the potential of shallow groundwater in New Zealand.
 The dataset is available as an output of the open source GitHub code. If you are interested in the input datasets so you can run the code for yourself, please get in contact with us and we can provide them.
 
-The dataset will be used within the Future Coasts project for .. todo Matt/paddy to fill in
+The dataset will be used within the Future Coasts project for the development of national scale depth to water estimates and probability maps using statistical models to inform risk assessments.. todo Matt/paddy to fill in
 
-We envisage that this dataset will be useful for a range of other projects as it provides a clean and queryable national dataset of groundwater level data. As new data becomes available, we hope to update the dataset and release new versions, depending on our resource availability. If you have extra data that has not been included in this national dataset, or are aware of more current data, please get in touch.
+We envisage that this dataset will be useful for a range of other projects as it provides a cleaned and queryable national dataset of groundwater level data. As new data becomes available, we hope to update the dataset and release new versions, depending on our resource availability. If you have extra data that has not been included in this national dataset, or are aware of more current data, please get in touch.
+
+Limitations and Future Work
+=============================
+.. todo Evelyn, can you please fill this in with the limitations and future work for the dataset?
+Acknowledgements
+==================
+.. todo Evelyn, can you please fill this in with the acknowledgements for the councils and other data providers?

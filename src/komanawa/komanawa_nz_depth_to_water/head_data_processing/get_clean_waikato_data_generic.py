@@ -336,43 +336,6 @@ def _process_wl_data(metadata_paths, folder_path, save_path, store_key, metadata
     return df
 
 
-# def _get_summary_stats(wl_output):
-#     # Group the data by 'well_name'
-#     grouped_data = wl_output.groupby('well_name')
-#
-#     # Perform aggregations
-#     summary_stats = grouped_data.agg({
-#         'well_name': ['count'],
-#         'depth_to_water': ['mean', 'median', 'std', 'max', 'min'],
-#         'date': ['min', 'max']
-#     })
-#
-#     # Flatten the column names
-#     summary_stats.columns = ['_'.join(col).strip() for col in summary_stats.columns.values]
-#
-#     # Rename columns for clarity
-#     summary_stats.rename(columns={
-#         'well_name_count': 'reading_count',
-#         'depth_to_water_mean': 'mean_gwl',
-#         'depth_to_water_median': 'median_gwl',
-#         'depth_to_water_std': 'std_gwl',
-#         'depth_to_water_max': 'max_gwl',
-#         'depth_to_water_min': 'min_gwl',
-#         'date_min': 'start_date',
-#         'date_max': 'end_date'
-#     }, inplace=True)
-#
-#     # Reset index to turn 'well_name' back into a column
-#     summary_stats.reset_index(inplace=True)
-#     summary_stats['reading_count'] = summary_stats['reading_count'].astype(int)
-#
-#     # Convert datatypes
-#     summary_stats['start_date'] = pd.to_datetime(summary_stats['start_date'], format='%Y-%m-%d')
-#     summary_stats['end_date'] = pd.to_datetime(summary_stats['end_date'], format='%Y-%m-%d')
-#
-#     return summary_stats
-
-
 def output(*, metadata_paths, wl_data_path, save_path, wl_store_key, meta_data_requirements, metadata_store_key, datum,
            data_source,
            drop_columns_list=None, rename_columns_list=None, skip_rows_list=None,
