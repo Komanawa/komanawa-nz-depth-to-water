@@ -63,67 +63,49 @@ The data was received in Excel and csv formats, with various degrees of complete
 Alongside the direct requests to regional councils and unitary authorities, data was also pulled from Tethys. Tethys is a Python-based tool developed by Mike Kitteridge which allows any data stored by councils in Hilltop to be accessed and downloaded. For councils that had relevant and up-to-date data in Hilltop, it meant we did not have to rely on a response to the direct request, and saved time in the data collection process. Data from Tethys was downloaded as a csv file.
 
 A brief summary of the data collected from each council is provided below. The data quality rating is based on the formatting of the data as well as the relative quality of the data provided.
-.. todo Evelyn can you qualify the data quality ratings, e.g. what makes a high quality dataset vs a low quality dataset?
 
-+----------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------+
-| Council                                      | Data Provided                                                                                                                                                                                                              | Data Quality |
-+==============================================+============================================================================================================================================================================================================================+==============+
-| Auckland Council                             | Continuous monitoring data downloaded from online data portal. Extra data sent through in spreadsheets, including historical/closed sites. Metadata sent through in a separate spreadsheet.                                | High         |
-+----------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------+
-| Bay of Plenty Regional Council               | Continuous monitoring data and static groundwater levels sent through in separate spreadsheets. Metadata sent through in two different spreadsheets                                                                        | Medium       |
-+----------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------+
-| Environment Canterbury                       | Continuous and spot readings sent through in spreadsheets based on monitoring data. Metadata sent through in a separate spreadsheet, with supporting supplementary information.                                            | Very high    |
-+----------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------+
-| Gisborne District Council                    | Available groundwater level data downloaded from Tethys. Separate data sent through from council, including discrete data and other data classified by the council as poor quality, with disclaimers surrounding the data. | Medium       |
-+----------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------+
-| Hawkes Bay Regional Council                  | Available groundwater level data downloaded from Tethys. Manual dip data, any sites missing from Tethys and extra metadata sent through from the council.                                                                  | Medium       |
-+----------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------+
-| Horizons Regional Council                    | Available groundwater level data downloaded from Tethys. Manual dip data and spot readings sent through by council, as well as metadata for the sites sent through. Any wells missing from Tethys were also provided.      | Low          |
-+----------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------+
-| Marlborough District Council                 | Available groundwater level data downloaded from Tethys. Only data sent through from the council was in the form of a shapefile which contained static water level from drilling and some well metadata.                   | Medium       |
-+----------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------+
-| Northland Regional Council                   | Available groundwater level data downloaded from Tethys. Any spot readings were sent through by the council with  metadata included.                                                                                       | Medium       |
-+----------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------+
-| Otago Regional Council                       | Continuous and spot readings sent through in spreadsheets, along with metadata in separate spreadsheets.                                                                                                                   | Medium       |
-+----------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------+
-| Environment Southland                        | Available groundwater level data downloaded from Tethys. Dip readings sent through by the council, as well as any extra metadata and comments on the sites.                                                                | High         |
-+----------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------+
-| Taranaki Regional Council                    | Available groundwater level data downloaded from Tethys. Any missing sites sent through by the council, including both continuous and discrete data. Metadata also sent through.                                           | Medium       |
-+----------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------+
-| Tasman District Council                      | Available groundwater level data downloaded from Tethys. Any spot readings were sent through by the council with  metadata included.                                                                                       | Medium       |
-+----------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------+
-| Waikato Regional Council                     | All continuous groundwater level data sent through by the council, with a separate csv file for each well. Static readings for each well sent through, as well as metadata.                                                | High         |
-+----------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------+
-| Wellington Regional Council                  | Available groundwater level data downloaded from Tethys. Static readings with metadata sent through by the council as a spreadsheet and shapefile                                                                          | Medium       |
-+----------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------+
-| West Coast Regional Council                  | Continuous and static groundwater level data sent through by the council, as well as metadata.                                                                                                                             | Medium       |
-+----------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------+
-| Other: NZ Geotechnical database              | Continuous and static groundwater levels data sent through by XXXX, as well as associated metadata.                                                                                                                                                                                        |              |
-+----------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------+
-.. todo should armandine's data be included in this table or not do you think?
++----------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Council                          | Data Provided                                                                                                                                                                                                              |
++==================================+============================================================================================================================================================================================================================+
+| Auckland Council                 | Continuous monitoring data downloaded from online data portal. Extra data sent through in spreadsheets, including historical/closed sites. Metadata sent through in a separate spreadsheet.                                |
++----------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Bay of Plenty Regional Council   | Continuous monitoring data and static groundwater levels sent through in separate spreadsheets. Metadata sent through in two different spreadsheets                                                                        |
++----------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Environment Canterbury           | Continuous and spot readings sent through in spreadsheets based on monitoring data. Metadata sent through in a separate spreadsheet, with supporting supplementary information.                                            |
++----------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Gisborne Regional Council        | Available groundwater level data downloaded from Tethys. Separate data sent through from council, including discrete data and other data classified by the council as poor quality, with disclaimers surrounding the data. |
++----------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Hawkes Bay Regional Council      | Available groundwater level data downloaded from Tethys. Manual dip data, any sites missing from Tethys and extra metadata sent through from the council.                                                                  |
++----------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Horizons Regional Council        | Available groundwater level data downloaded from Tethys. Manual dip data and spot readings sent through by council, as well as metadata for the sites sent through. Any wells missing from Tethys were also provided.      |
++----------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Marlborough Regional Council     | Available groundwater level data downloaded from Tethys. Only data sent through from the council was in the form of a shapefile which contained static water level from drilling and some well metadata.                   |
++----------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Northland Regional Council       | Available groundwater level data downloaded from Tethys. Any spot readings were sent through by the council with  metadata included.                                                                                       |
++----------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Otago Regional Council           | Continuous and spot readings sent through in spreadsheets, along with metadata in separate spreadsheets.                                                                                                                   |
++----------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Environment Southland            | Available groundwater level data downloaded from Tethys. Dip readings sent through by the council, as well as any extra metadata and comments on the sites.                                                                |
++----------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Taranaki Regional Council        | Available groundwater level data downloaded from Tethys. Any missing sites sent through by the council, including both continuous and discrete data. Metadata also sent through.                                           |
++----------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Tasman Regional Council          | Available groundwater level data downloaded from Tethys. Any spot readings were sent through by the council with  metadata included.                                                                                       |
++----------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Waikato Regional Council         | All continuous groundwater level data sent through by the council, with a separate csv file for each well. Static readings for each well sent through, as well as metadata.                                                |
++----------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Wellington Regional Council      | Available groundwater level data downloaded from Tethys. Static readings with metadata sent through by the council as a spreadsheet and shapefile                                                                          |
++----------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| West Coast Regional Council      | Continuous and static groundwater level data sent through by the council, as well as metadata.                                                                                                                             |
++----------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Other: NZ Geotechnical database  | Continuous and static groundwater levels data sent through by XXXX, as well as associated metadata.                                                                                                                        |
++----------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
 Data Processing
 ------------------
 
 The data was processed using Python. The scripts used to process the data are available on GitHub; these are open source, and we encourage others to use and adapt them for their own purposes, as well as flag any issues or areas of improvement. Please note that code for resampling elevation data for each site is not available, as this relies on internal scripts and tools specific to KSL.
 
-.. todo this could probably be deleted and replaced with the systematic approach below? seems unnecessary to have both?
-
-The data processing steps are outlined below:
-
-- A script was created for each council
-    - The data was ingested and cleaned
-    - This included both the Tethys data and the data received directly from councils, where both was present
-    - Cleaning the data involved formatting any datatypes, renaming columns, and removing any unnecessary columns
-    - Depending on the format the data was received in, it was either processed into depth to water or elevation so that each dataset had both measurements present
-    - The data was checked for potentially erroneous readings, such as negative values or values that were outside the expected range
-    - Any unwanted NaN values were removed
-    - Finally, water levels from all sources were then then combined into one dataset
-    - Where elevation data was not provided, LiDAR data was sampled to calculate the elevation at each site
-- The metadata was ingested and cleaned
-    - This involved the same steps as above, but also ensured the metadata site names matched the groundwater level data site names
-
-More fully the systematic approach was as follows:
+The systematic approach to the data processing was as follows:
 
 - Ingestion and Preliminary Cleaning
     - Individual scripts were developed for each council to cater to the unique formats of the datasets provided.
@@ -157,8 +139,6 @@ Statistical Analysis of datasets
 -----------------------------------
 .. todo Paddy to create this section which will be a summary of the statistics of the datasets, e.g. number of sites, number of readings per source, etc.
 
-
-
 Results
 =========
 
@@ -171,30 +151,46 @@ We envisage that this dataset will be useful for a range of other projects as it
 
 Limitations and Future Work
 =============================
-.. todo Evelyn, can you please fill this in with the limitations and future work for the dataset?
+Whilst we have made every attempt to ensure the quality of the data and code in this repository, there are still limitations to the data. This includes but is potentially not limited to:
+- We have made a series of assumptions during the data processing; these are discussed above.
+- The data is only as good as the data provided by the councils; we did not have the resources nor all the information to quality assure the data.
+- For many sites, the elevation of the measuring point is unknown. We have used LiDAR data to estimate the elevation of the ground, but this will likely reduce the accuracy of the groundwater elevation.
+- We have assumed that the depth to water from ground level is correct, and therefore any errors in the depth to water data will be reflected in the groundwater elevation values.
+- As discussed, we have assumed any regional peculiarities when the information has been provided to us, but there may be other regional-specific aspects of the data that have been missed.
+- The dataset is not exhaustive, and there may be more data available that has not been included in this dataset.
+
+Future work could be undertaken to address some of these limitations. This is dependent on resource availability, but could include:
+- Ensuring all sites have an accurate elevation of the measuring point, and therefore a more accurate groundwater elevation.
+- Further quality assurance of the data, including cross-referencing the finalised data with councils.
+- Further analysis of the data to identify any potential errors or outliers.
+- Updating the dataset with new data as it becomes available.
+
+.. todo does anything else needed to be added here?
 
 Acknowledgements
 ==================
-We would like to acknowledge the regional councils and unitary authorities, specifically their environmental data teams, for providing us with the required data, and for responding to our data requests and subsequent questions. We appreciate your work in collecting and maintaining this data.
-Thank you to:
-- Auckland Council
-- Bay of Plenty Regional Council
-- Environment Canterbury
-- Gisborne District Council
-- Hawkes Bay Regional Council
-- Horizons Regional Council
-- Marlborough District Council
-- Northland Regional Council
-- Otago Regional Council
-- Environment Southland
-- Taranaki Regional Council
-- Tasman District Council
-- Waikato Regional Council
-- Wellington Regional Council
-- West Coast Regional Council
+We would like to acknowledge the regional councils and unitary authorities, especially their environmental data teams, for providing us with the required data, and for responding to our data requests and subsequent questions. We appreciate your work in collecting and maintaining this data.
+Thank you specifically to:
+- Freya Green from Auckland Council
+- Paul Scholes & Rochelle Gardner from Bay of Plenty Regional Council
+- Jennifer Tregurtha from Environment Canterbury
+- Julia Kendall from Gisborne District Council
+- Ale Cocimano from Hawkes Bay Regional Council
+- Michaela Rose from Horizons Regional Council
+- Charlotte Tomlinson from Marlborough District Council
+- Susie Osbaldiston & Sandrine Le Gars from Northland Regional Council
+- Marc Ettema from Otago Regional Council
+- Fiona Smith from Environment Southland
+- Sarah Avery from Taranaki Regional Council
+- Matt McLarin from Tasman District Council
+- Debbie Eastwood & Sung Soo Koh from Waikato Regional Council
+- Rob Van Der Raaij from Wellington Regional Council
+- Jonny Horrox from West Coast Regional Council
 
 We would like to acknowledge Mike Kitteridge for his development of Tethys, and for providing assistance in using the platform and accessing data.
 We would like to acknowledge the New Zealand Geotechnical Database for providing us with groundwater level data.
 We would like to thank Armandine Bosserelle for providing us with groundwater level data for the Waimakariri area.
 
-.. todo is there anyone I'm missing?
+This work was made possible by the Future Coasts Aotearoa programme, funded by the Ministry of Business, Innovation and Employment (MBIE) Endeavour Fund. We would like to acknowledge the support of the programme, NIWA, and the other researchers involved in the project.
+
+.. todo does anything else needed to be added here?
