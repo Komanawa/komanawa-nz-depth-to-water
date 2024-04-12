@@ -11,13 +11,13 @@ import numpy as np
 import pandas as pd
 import pyproj
 
-import komanawa.komanawa_nz_depth_to_water.head_data_processing.merge_rows
+import komanawa.komanawa_nz_depth_to_water.head_data_processing.merge_rows as merge_rows
 from komanawa.komanawa_nz_depth_to_water.head_data_processing.data_processing_functions import \
     (find_overlapping_files, copy_with_prompt, \
      _get_summary_stats, append_to_other, needed_cols_and_types, data_checks, \
      metadata_checks, renew_hdf5_store, get_hdf5_store_keys, pull_tethys_data_store, assign_flags_based_on_null_values,
-     aggregate_water_data)
-from komanawa.komanawa_nz_depth_to_water.project_base import groundwater_data, unbacked_dir
+     aggregate_water_data )
+from komanawa.komanawa_nz_depth_to_water.project_base import groundwater_data, unbacked_dir, project_dir
 
 
 # keynote not gw_elevation, all depth_to_water -confirmed with horizons
@@ -368,6 +368,15 @@ def _get_horizons_static_gwl(local_paths):
     # handling datatypes
     static_gwl = static_gwl.astype({'well_name': 'str', 'nztm_x': 'float', 'nztm_y': 'float', 'well_depth': 'float',
                                     'elevation': 'float', 'depth_to_water': 'float', 'aquifer': 'str'})
+    # need to transform from nz map grid to nztm
+    nzmg = pyproj.Proj('epsg:27200')
+    # Define the NZTM projection (EPSG:2193)
+    nztm = pyproj.Proj('epsg:2193')
+    static_gwl['nztm_y'], static_gwl['nztm_x'] = (
+        pyproj.transform(nzmg, nztm, static_gwl['nztm_x'], static_gwl['nztm_y']))
+    static_gwl = static_gwl.round({'nztm_x': 0, 'nztm_y': 0})
+
+
     # depth to water by the very name should be positive
     static_gwl['depth_to_water'] = static_gwl['depth_to_water'] * -1
 
@@ -543,6 +552,8 @@ def output(local_paths, meta_data_requirements, recalc=False):
                 # Change the data type of the column to the specified dtype
                 combined_metadata[col] = combined_metadata[col].astype(dtype)
 
+        combined_metadata.to_csv(project_dir.joinpath('Data/gwl_data/horizons_metadata_db.csv'))
+
         for column in needed_gw_columns:
             # Check if the column is of pandas nullable Int64 type
             if pd.api.types.is_integer_dtype(combined_water_data[column]) and combined_water_data[
@@ -618,5 +629,5 @@ def get_hrc_data(recalc=False, redownload=False):
 
 
 if __name__ == '__main__':
-    data = get_hrc_data(recalc=False)
+    data = get_hrc_data(recalc=True)
     pass

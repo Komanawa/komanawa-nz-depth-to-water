@@ -224,7 +224,7 @@ def build_final_water_data(recalc=False, recalc_sub=False, redownload=False):
         metadata_db = metadata_db[
             [col for col in metadata_db.columns if col in needed_columns or col in ['other', 'source', 'site_name']]]
         metadata_db = metadata_db.dropna(subset=['well_name', 'nztm_x', 'nztm_y'])
-
+        metadata_db.to_csv(project_dir.joinpath('Data/gwl_data/metadata_db.csv'))
         final_gw_data = gw_data[
             ['well_name', 'date', 'site_name', 'depth_to_water_cor', 'depth_to_water', 'gw_elevation', 'dtw_flag',
              'source',
@@ -233,6 +233,7 @@ def build_final_water_data(recalc=False, recalc_sub=False, redownload=False):
                                                    new_data=metadata_db)
         data_processing_functions.renew_hdf5_store(old_path=water_data_store_path, store_key='wl_store_key',
                                                    new_data=final_gw_data)
+
     return {'final_gw_data': final_gw_data, 'metadata_db': metadata_db}
 
 
