@@ -7,15 +7,18 @@ on: 26/02/24
 
 import numpy as np
 import pandas as pd
+
 try:
     from komanawa.ksl_tools.spatial.lidar_support import get_best_elv
 except ImportError:
     from komanawa.komanawa_nz_depth_to_water.dummy_packages import get_best_elv
 
-from komanawa.komanawa_nz_depth_to_water.head_data_processing import get_bop_data, get_auk_data, get_ecan_data, get_gdc_data, get_hbrc_data, \
+from komanawa.komanawa_nz_depth_to_water.head_data_processing import get_bop_data, get_auk_data, get_ecan_data, \
+    get_gdc_data, get_hbrc_data, \
     get_hrc_data, get_mdc_data, get_nrc_data, get_orc_data, get_src_data, get_trc_data, get_tdc_data, get_wrc_data, \
     get_gwrc_data, get_wcrc_data, get_nzgd_data, data_processing_functions
 from komanawa.komanawa_nz_depth_to_water.project_base import project_dir
+
 
 def build_final_meta_data(recalc=False):
     meta_data_store_path = project_dir.joinpath('Data/gwl_data/final_meta_data.hdf')
@@ -85,7 +88,6 @@ def build_final_meta_data(recalc=False):
                              axis=0,
                              ignore_index=True)
 
-
         elevation, elevation_source, source_mapper = get_best_elv(metadata['nztm_x'], metadata['nztm_y'],
                                                                   fill_with_8m_dem=True)
 
@@ -145,7 +147,7 @@ def build_final_water_data(recalc=False, recalc_sub=False, redownload=False):
                 data['dem_elv'] - data['dist_mp_to_ground_level'] - data['depth_to_water'],
                 data['dem_elv'] - data['depth_to_water'])
 
-            data['water_elev_flag'] = np.where(data['water_elev_flag']==0, data['dtw_flag'], data['water_elev_flag'])
+            data['water_elev_flag'] = np.where(data['water_elev_flag'] == 0, data['dtw_flag'], data['water_elev_flag'])
 
             if source_name == 'orc':
                 data['gw_elevation'] = np.where(
@@ -158,9 +160,7 @@ def build_final_water_data(recalc=False, recalc_sub=False, redownload=False):
             if source_name == 'hbrc':
                 data = data.drop(data[data['depth_to_water'] > 200].index)
 
-
             return data.dropna(subset=['depth_to_water'])
-
 
         sources = [
             (get_bop_data, 'bop'),
@@ -193,12 +193,12 @@ def build_final_water_data(recalc=False, recalc_sub=False, redownload=False):
                                                  gw_data['depth_to_water'] - gw_data['dist_mp_to_ground_level'],
                                                  gw_data['depth_to_water'])
 
-          # fix wierdness in the data
+        # fix wierdness in the data
         condition = (gw_data['source'] == 'orc') & (gw_data['depth_to_water'] <= -10)
         # Using np.where to add 100 to 'depth_to_water' where the condition is True
         gw_data['depth_to_water_cor'] = np.where(condition, gw_data['depth_to_water'] + 100, gw_data['depth_to_water'])
         condition2 = (gw_data['source'] == 'auk') & ((abs(gw_data['depth_to_water_cor'])
-                                            - abs(gw_data['depth_to_water'])) > 10)
+                                                      - abs(gw_data['depth_to_water'])) > 10)
         gw_data['depth_to_water_cor'] = np.where(condition2, gw_data['depth_to_water'], gw_data['depth_to_water_cor'])
         # General condition for multiple datasets to drop rows where 'dem_source' == -1
         gw_data = gw_data.drop(gw_data[gw_data['dem_source'] == -1].index)
@@ -206,11 +206,29 @@ def build_final_water_data(recalc=False, recalc_sub=False, redownload=False):
         gw_data = gw_data.drop(gw_data[(gw_data['dtw_flag'] == 6) | (gw_data['water_elev_flag'] == 5)].index)
 
         # drop gw_levels where depth to water is greater than 300 or less than -50
-        gw_data= gw_data.drop(gw_data[(gw_data['depth_to_water'] > 300) | (gw_data['depth_to_water'] < -50)].index)
+        gw_data = gw_data.drop(gw_data[(gw_data['depth_to_water'] > 300) | (gw_data['depth_to_water'] < -50)].index)
         gw_data['depth_to_water_old'] = gw_data['depth_to_water']
         gw_data['depth_to_water'] = gw_data['depth_to_water_cor']
         gw_data['gw_elevation'] = np.where(pd.isnull(gw_data['gw_elevation']),
                                            gw_data['rl_elevation'] - gw_data['depth_to_water'], gw_data['gw_elevation'])
+        # dropping ecan well M36/9138 as noted as on ECAN website THis well has no real water level measurement - the entries are for testing the on-line upload MySerives of Ecan's website only!!
+        weird_wells = gw_data[gw_data['gw_elevation'] < -26]
+        gw_data = gw_data.drop(weird_wells.index)
+        weird_wells_unique_id = weird_wells.drop_duplicates(subset='site_name')
+        names_to_remove = ['M36/4050', 'M36/9138', 'BZ19/0314', 'M35/11963']
+        weird_wells = weird_wells[~weird_wells['well_name'].isin(names_to_remove)]
+        weird_wells = weird_wells[weird_wells['source'] != 'nrc']
+        weird_wells = weird_wells[weird_wells['source'] != 'bop']
+        weird_wells = weird_wells[weird_wells['source'] != 'nzgd']
+        gw_data= pd.concat([gw_data, weird_wells], ignore_index=True)
+        gw_data = gw_data[gw_data['well_name'] != '72_10977']
+        gw_data = gw_data[gw_data['well_name'] != 'BOR208347']
+
+        # find unique well names in the 'weird_wells' dataframe but keep all columns
+        metadata_db = metadata_db[metadata_db['well_name'] != '72_10977']
+        metadata_db = metadata_db[metadata_db['well_name'] != 'BOR208347']
+        metadata_db = metadata_db[metadata_db['well_name'] != 'BOR209016']
+        metadata_db = metadata_db[metadata_db['well_name'] != 'BOR209017']
 
         stats = data_processing_functions._get_summary_stats(gw_data, group_column='site_name')
         metadata_db['site_name'] = metadata_db['well_name'] + '_' + metadata_db['source']
@@ -245,5 +263,5 @@ def check_repaired_function():
 
 
 if __name__ == '__main__':
-    #build_final_meta_data(recalc=True)
+    # build_final_meta_data(recalc=True)
     build_final_water_data(recalc_sub=False, recalc=True)
