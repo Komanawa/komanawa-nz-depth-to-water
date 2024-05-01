@@ -97,7 +97,7 @@ A brief summary of the data collected from each council is provided below. The d
 +----------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | West Coast Regional Council      | Continuous and static groundwater level data sent through by the council, as well as metadata.                                                                                                                             |
 +----------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| Other: NZ Geotechnical database  | Continuous and static groundwater levels data sent through by XXXX, as well as associated metadata.                                                                                                                        |
+| Other: NZ Geotechnical database  | Continuous and static groundwater levels data sent through by NZGD, as well as associated metadata.                                                                                                                        |
 +----------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
 Data Processing
@@ -138,6 +138,47 @@ The systematic approach to the data processing was as follows:
 Statistical Analysis of datasets
 -----------------------------------
 .. todo Paddy to create this section which will be a summary of the statistics of the datasets, e.g. number of sites, number of readings per source, etc.
+.. _Summary of Metadata:
+
+.. rubric:: Summary statistics of data
+
+==========================  ==================
+Metric                          Results
+==========================  ==================
+no. sites                    113418
+no. obs                      5455917
+record start_date            1899-12-29
+record end date              2024-01-24
+average n obs per site       49
+no. sites with only one obs  94110
+no. sites less than 10 obs   102282
+=========================  ==================
+
+.. _Summary of Metadata:
+
+.. rubric:: Summary statistics of data by source
+
+========  ==========  ===================  =================  =========  =========================  ====================================
+source     no. bores   record start date    record end date     no. obs   average no. obs per site   no. sites more than one observation
+========  ==========  ===================  =================  =========  =========================  ====================================
+auk              265  1970-03-16           2023-05-01          438142                   1724.97                                   254
+bop             4485  1983-02-03           2023-10-09          132636                   30.0014                                    27
+ecan           13885  1900-01-10           2023-04-20          2334351                  169.009                                  8113
+gdc              173  1973-03-07           2023-10-15          152600                   882.081                                   172
+gwrc            3583  1955-02-06           2022-09-05          754359                   210.304                                   402
+hbrc             377  1972-11-22           2023-09-06          35804                    119.746                                   298
+hrc             4410  1900-01-01           2023-08-17          98213                    24.3705                                  2570
+mdc             2963  1908-04-01           2022-11-25          308064                   104.041                                   102
+nrc             3886  1903-03-04           2023-08-17          135910                   35.0826                                   145
+nzgd           65110  1899-12-29           2024-01-24          122060                   1.87684                                   950
+orc              110  1950-01-01           2023-12-04          99304                    1034.42                                    60
+src             1076  1980-09-09           2023-11-04          155334                   144.362                                   641
+tdc             2456  1900-01-01           2023-03-20          510705                   207.688                                  1252
+trc             2365  1958-11-17           2023-12-04          45427                    75.4601                                   286
+wcrc             216  1995-01-03           2024-01-09          2716                     12.5161                                    29
+wrc             8058  1979-05-25           2023-02-17          130292                   16.3622                                  1448
+========  ==========  ===================  =================  ========  =========================  ====================================
+
 
 Results
 =========
@@ -186,6 +227,8 @@ Thank you specifically to:
 - Debbie Eastwood & Sung Soo Koh from Waikato Regional Council
 - Rob Van Der Raaij from Wellington Regional Council
 - Jonny Horrox from West Coast Regional Council
+- Simon Matthews from the New Zealand Geotechnical Database
+- Chris Strang from Nelson City Council
 
 We would like to acknowledge Mike Kitteridge for his development of Tethys, and for providing assistance in using the platform and accessing data.
 We would like to acknowledge the New Zealand Geotechnical Database for providing us with groundwater level data.
