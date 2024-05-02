@@ -10,17 +10,11 @@ import pandas as pd
 
 from komanawa.komanawa_nz_depth_to_water.head_data_processing.data_processing_functions import (find_overlapping_files,
                                                                                                 copy_with_prompt,
+                                                                                                needed_cols_and_types,
+                                                                                                renew_hdf5_store,
                                                                                                 _get_summary_stats,
                                                                                                 append_to_other,
-                                                                                                needed_cols_and_types,
-                                                                                                data_checks,
-                                                                                                metadata_checks,
-                                                                                                renew_hdf5_store,
-                                                                                                get_hdf5_store_keys,
-                                                                                                pull_tethys_data_store,
-                                                                                                assign_flags_based_on_null_values,
-                                                                                                aggregate_water_data)
-from komanawa.komanawa_nz_depth_to_water.head_data_processing.merge_rows import merge_rows_if_possible
+                                                                                                assign_flags_based_on_null_values)
 from komanawa.komanawa_nz_depth_to_water.project_base import groundwater_data, unbacked_dir
 
 
@@ -44,7 +38,8 @@ def get_final_nelson_data(local_paths, recalc=False):
 
     return {'combined_metadata': metadata, 'combined_water_data': water_data}
 
-def get_nelson_data(local_paths,meta_data_requirements):
+
+def get_all_nelson_data(local_paths, meta_data_requirements):
     """
     A function that reads in the metadata from the ECan datasets
     :param local_paths: dictionary, containing the paths to the local data
@@ -60,7 +55,8 @@ def get_nelson_data(local_paths,meta_data_requirements):
                               'data_source': 'str', 'elevation_datum': "str", 'other': "str"}
 
     # Read in the metadata
-    metadata = pd.read_csv(local_paths['local_path'].joinpath('Groundwater bore dips and locations for Data request.csv'))
+    metadata = pd.read_csv(
+        local_paths['local_path'].joinpath('Groundwater bore dips and locations for Data request.csv'))
     # return unique sites in records
     metadata = metadata.drop_duplicates(subset=['Site Name'])
     metadata = metadata.dropna(subset=['Site Name'])
@@ -74,23 +70,26 @@ def get_nelson_data(local_paths,meta_data_requirements):
 
     # Split the cleaned string into two columns
     metadata[['Bore depth if known', 'other']] = metadata['Bore depth if known'].str.split(',', n=1, expand=True)
-    metadata[['Bore depth if known']] = metadata[['Bore depth if known']].replace(['depth','is',' ','m'], '', regex=True)
+    metadata[['Bore depth if known']] = metadata[['Bore depth if known']].replace(['depth', 'is', ' ', 'm'], '',
+                                                                                  regex=True)
     metadata[['other']] = metadata[['other']].replace([','], 'diameter', regex=True)
     metadata[['well_name']] = metadata[['well_name']].replace([' '], '_', regex=True)
     metadata['source'] = 'ncc'
     # create site name by combining well_name and source
     metadata['site_name'] = metadata['well_name'] + '_' + metadata['source']
+    metadata = metadata.rename(columns={'Bore depth if known': 'well_depth'})
 
-    wl_data = pd.read_csv(local_paths['local_path'].joinpath('Groundwater bore dips and locations for Data request.csv'))
-    wl_data_columns= wl_data.columns.str.strip().str.lower().str.replace(' ', '_')
+    wl_data = pd.read_csv(
+        local_paths['local_path'].joinpath('Groundwater bore dips and locations for Data request.csv'))
+    wl_data_columns = wl_data.columns.str.strip().str.lower().str.replace(' ', '_')
     wl_data.columns = wl_data_columns
     wl_data = wl_data.rename(columns={'site_name': 'well_name', 'time': 'date', 'groundwater_level': 'depth_to_water'})
     wl_data['data_source'] = 'ncc'
-    wl_data['well_name']= wl_data['well_name'].str.replace(' ', '_')
+    wl_data['well_name'] = wl_data['well_name'].str.replace(' ', '_')
     wl_data['site_name'] = wl_data['well_name'] + '_' + wl_data['data_source']
     wl_data['date'] = pd.to_datetime(wl_data['date'], dayfirst=True, errors='coerce')
     wl_data = wl_data.dropna(subset=['site_name'])
-    wl_data = wl_data[['site_name', 'well_name', 'date', 'depth_to_water']]
+    wl_data = wl_data[['site_name', 'well_name', 'date', 'depth_to_water', 'data_source']]
     wl_data['date'] = pd.to_datetime(wl_data['date'].dt.date)
     wl_data['gw_elevation'] = np.nan
     # Convert the 'depth_to_water' column to a numeric type
@@ -99,23 +98,61 @@ def get_nelson_data(local_paths,meta_data_requirements):
     # Divide 'depth_to_water' values by 1000
     wl_data['depth_to_water'] = wl_data['depth_to_water'] / 1000
 
-    assign_flags_based_on_null_values(wl_data, 'depth_to_water', 'dtw_flag', 1, 0)
+    assign_flags_based_on_null_values(wl_data, 'depth_to_water', 'dtw_flag', 3, 0)
     # Assign 'water_elev_flag' based on 'gw_elevation'
-    assign_flags_based_on_null_values(wl_data, 'gw_elevation', 'water_elev_flag', 1, 0)
+    assign_flags_based_on_null_values(wl_data, 'gw_elevation', 'water_elev_flag', 3, 0)
+    for column, dtype in needed_gw_columns_type.items():
+        if column not in wl_data.columns:
+            wl_data[column] = np.nan
+        wl_data[column] = wl_data[column].astype(dtype)
+
+
+    stats = _get_summary_stats(wl_data)
+    stats = stats.set_index('well_name')
+    metadata = metadata.set_index('well_name')
+    metadata = metadata.combine_first(stats)
+    metadata = metadata.reset_index()
+
 
     for col in meta_data_requirements['needed_columns']:
-        if col not in tethys_metadata_all.columns:
-            tethys_metadata_all[col] = meta_data_requirements['default_values'].get(col)
+        if col not in metadata.columns:
+            metadata[col] = meta_data_requirements['default_values'].get(col)
 
     for col, dtype in meta_data_requirements['col_types'].items():
-        tethys_metadata_all[col] = tethys_metadata_all[col].astype(dtype)
-    if 'other' not in tethys_metadata_all.columns:
-        tethys_metadata_all['other'] = ''
+        metadata[col] = metadata[col].astype(dtype)
+    if 'other' not in metadata.columns:
+        metadata['other'] = ''
+    metadata = metadata[meta_data_requirements['needed_columns']]
 
+    for column in metadata:
+        # Check if the column is of pandas nullable Int64 type
+        if pd.api.types.is_integer_dtype(metadata[column]) and metadata[
+            column].isnull().any():
+            # Convert to float64 if there are NaN values, as NaN cannot be represented in pandas' non-nullable integer types
+            metadata[column] = metadata[column].astype('float64')
+        elif pd.api.types.is_integer_dtype(metadata[column]):
+            # Convert to NumPy's int64 if there are no NaN values and it is a pandas Int64 type
+            metadata[column] = metadata[column].astype('int64')
 
+    cols_to_keep = [
+        'well_name', 'rl_elevation', 'rl_datum', 'rl_source',
+        'ground_level_datum', 'ground_level_source', 'well_depth', 'top_topscreen',
+        'bottom_bottomscreen', 'nztm_x', 'nztm_y', 'other', 'dist_mp_to_ground_level'
+    ]
+
+    metadata = append_to_other(df=metadata, needed_columns=cols_to_keep)
+    metadata.drop(columns=[col for col in metadata.columns if
+                                    col not in cols_to_keep and col != 'other'],
+                           inplace=True)
+
+    metadata['well_depth'] = metadata['well_depth'].astype('float64')
+
+    renew_hdf5_store(new_data=wl_data, old_path=local_paths['save_path'],
+                     store_key=local_paths['wl_store_key'])
+    renew_hdf5_store(new_data=metadata, old_path=local_paths['save_path'],
+                     store_key=local_paths['nelson_metadata_store_key'])
 
     return metadata
-
 
 def _get_folder_and_local_paths(source_dir, local_dir, redownload=False):
     """This function reads in the file paths and creates local directories"""
@@ -126,8 +163,7 @@ def _get_folder_and_local_paths(source_dir, local_dir, redownload=False):
     # Initialize the local directory map
     local_dir_map = {}
 
-    # Determine the destination directory
-
+    # Check for overlapping files and prompt only when redownload is True
     if redownload:
         if src_dir.is_file():
             overlapping_items = [dst_dir] if dst_dir.exists() else []
@@ -146,24 +182,23 @@ def _get_folder_and_local_paths(source_dir, local_dir, redownload=False):
 
     # Store keys are hardcoded as they are specific to this setup
     local_paths['wl_store_key'] = 'nelson_gwl_data'
-    local_paths['ecan_metadata_store_key'] = 'nelson_metadata'
-    local_paths['save_path'] = groundwater_data.joinpath('gwl_nelson', 'From_nelson', 'cleaned_data',
-                                                         'combined_nelson_data.hdf')
+    local_paths['nelson_metadata_store_key'] = 'nelson_metadata'
+    local_paths['save_path'] = groundwater_data.joinpath('gwl_nelson', 'cleaned_data', 'combined_nelson_data.hdf')
 
     return local_paths
+
 
 
 def get_nelson_data(recalc=False, redownload=False):
     local_paths = _get_folder_and_local_paths(source_dir=groundwater_data.joinpath('gwl_nelson'),
                                               local_dir=unbacked_dir.joinpath('nelson_working/'), redownload=redownload)
     meta_data_requirements = needed_cols_and_types('ncc')
-    get_nelson_data(local_paths, meta_data_requirements)
+    get_all_nelson_data(local_paths, meta_data_requirements)
 
     return get_final_nelson_data(local_paths,
-                               recalc=recalc)
+                                 recalc=recalc)
 
 
 if __name__ == '__main__':
-
     out = get_nelson_data(recalc=True, redownload=False)
     pass
