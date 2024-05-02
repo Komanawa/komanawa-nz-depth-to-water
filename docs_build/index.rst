@@ -137,7 +137,7 @@ The systematic approach to the data processing was as follows:
 
 Statistical Analysis of datasets
 -----------------------------------
-.. todo Paddy to create this section which will be a summary of the statistics of the datasets, e.g. number of sites, number of readings per source, etc.
+The dataset comprises a comprehensive collection of groundwater monitoring sites, totaling 113,418 distinct sites. Spanning a significant temporal range from December 29, 1899, to January 24, 2024, the dataset encompasses a robust 5,455,917 observations. On average, each site contains 49 observations, highlighting a considerable breadth of data per location. Notably, a significant proportion of the sites—94,110 to be exact—have only a single observation recorded, while 102,282 sites have fewer than ten observations. These figures underscore the varying degrees of data density across the monitoring network.
 .. _Summary of Metadata:
 
 .. rubric:: Summary statistics of data
@@ -154,6 +154,7 @@ no. sites with only one obs  94110
 no. sites less than 10 obs   102282
 =========================  ==================
 
+Investigating the dataset by source reveals distinct patterns in data collection and density. The Environment Canterbury (ecan)  stands out with the highest number of observations, totalling 2,334,351, spread across 13,885 bores with a record span from 1900 to 2023. This contrasts the New Zealand Geotechnical Database (nzgd) comprises 65,110 bores but only 122,060 observations, averaging less than two observations per site. Otago Regional Council (orc) provided data for fewer monitoring sites, but what is monitored has significant data density. These variations highlight the diversity of monitoring efforts and data densities across different sources. Collectively, these statistics underscore the heterogeneity of groundwater monitoring across regions, influenced by the varying goals (e.g. geotechnical investigations), methodologies, and resources of different data sources.
 .. _Summary of Metadata:
 
 .. rubric:: Summary statistics of data by source
