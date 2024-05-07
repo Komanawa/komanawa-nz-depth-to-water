@@ -16,8 +16,5 @@ unbacked_dir.mkdir(exist_ok=True)
 
 # also consider adding key directories e.g. my groundwater directories
 groundwater_data = project_dir.joinpath('Data', 'gwl_data')
-amandine_data = project_dir.joinpath('Data', 'ChCh', 'Amandine data', 'ForZeb_May2023')
 gis_data = project_dir.joinpath('GIS')
-des_resample_dir = project_dir.joinpath('Data', 'des_resample')
-# data_dir = project_dir.joinpath("data")
-# results_dir = project_dir.joinpath("results")
+

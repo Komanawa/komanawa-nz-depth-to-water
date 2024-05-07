@@ -28,7 +28,7 @@ from komanawa.komanawa_nz_depth_to_water.project_base import groundwater_data, u
 
 ########################################################################################################################
 def _get_marlborough_tethys_data(meta_data_requirements):
-    """" This function reads in the gisborne data from Tethys
+    """" This function reads in the marlborough data from Tethys
             dtw_flag = 1= logger, 2= manual, 3= static_oneoff, 4= calculated frm gw_elevation, 5= aquifer test, 6= other
     water_ele_flag = 1= logger, 2= manual, 3= static_oneoff, 4= aquifer test, 5= other
     """

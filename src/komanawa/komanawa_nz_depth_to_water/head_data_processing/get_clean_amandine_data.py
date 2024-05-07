@@ -6,7 +6,7 @@ on: 22/06/2023
 """ This Python script gets and cleans the data passed on from Amandine"""
 
 import pandas as pd
-from komanawa.komanawa_nz_depth_to_water.project_base import project_dir, groundwater_data, amandine_data, unbacked_dir, \
+from komanawa.komanawa_nz_depth_to_water.project_base import project_dir, groundwater_data, unbacked_dir, \
     gis_data
 from pandas.api.types import is_string_dtype, is_float_dtype, is_datetime64_any_dtype
 
@@ -18,14 +18,14 @@ def get_clean_chch_gwl_data(recalc=False):
     :return: dataframe
     """
     # uses a recalc method
-    save_path = amandine_data.joinpath('clean_chch_well_data.hdf')
+    save_path = groundwater_data.joinpath('Amandine data', 'clean_chch_well_data.hdf')
     store_key = 'clean_chch_well_data'
     if save_path.exists() and not recalc:
         clean_chch_well_df = pd.read_hdf(save_path, store_key)
     else:
 
         # reading in the raw data
-        chch_gwl_data_path = amandine_data.joinpath('Hourly_210WLS_16-20.csv')
+        chch_gwl_data_path = groundwater_data.joinpath('Amandine data', 'ForZeb_May2023', 'Hourly_210WLS_16-20.csv')
         clean_chch_well_df = pd.read_csv(chch_gwl_data_path)
 
         clean_chch_well_df.to_hdf(save_path, store_key)
@@ -45,13 +45,13 @@ def get_all_chch_gwl_data(recalc=False):
     :return:
     """
     # uses a recalc method
-    save_path = amandine_data.joinpath('all_chch_well_data.hdf')
+    save_path = groundwater_data.joinpath('Amandine data','all_chch_well_data.hdf')
     store_key = 'all_chch_well_data'
     if save_path.exists() and not recalc:
         all_chch_well_df = pd.read_hdf(save_path, store_key)
     else:
         # reading in the raw data
-        all_chch_gwl_data_path = amandine_data.joinpath('Hourly_AllWLS_16-20.csv')
+        all_chch_gwl_data_path = groundwater_data.joinpath('Amandine data', 'ForZeb_May2023','Hourly_AllWLS_16-20.csv')
         all_chch_well_df = pd.read_csv(all_chch_gwl_data_path)
 
         all_chch_well_df.to_hdf(save_path, store_key)
@@ -70,7 +70,7 @@ def get_all_wells_metadata():
     :return: dataframe, the metadata for the ChCh wells
     """
     # defining the path
-    all_wells_path = project_dir.joinpath('GIS', 'all_wells_data.csv')
+    all_wells_path = groundwater_data.joinpath('Amandine data', 'all_wells_data.csv')
 
     # reading in the data
     all_wells_metadata = pd.read_csv(all_wells_path)
@@ -105,7 +105,7 @@ def clean_chch_wells_metadata():
     clean_chch_wells_metadata = all_wells_metadata[all_wells_metadata['well_no'].isin(list_chch_wells)]
 
     # reading out to a csv
-    save_path = amandine_data.joinpath('cleaned_chch_wells_metadata.csv')
+    save_path = groundwater_data.joinpath('Amandine data','cleaned_chch_wells_metadata.csv')
     clean_chch_wells_metadata.to_csv(save_path)
 
     return clean_chch_wells_metadata
@@ -131,7 +131,7 @@ def all_chch_wells_metadata():
     all_chch_wells_metadata = all_wells_metadata[all_wells_metadata['well_no'].isin(list_all_chch_wells)]
 
     # reading out to a csv
-    save_path = amandine_data.joinpath('all_chch_wells_metadata.csv')
+    save_path = groundwater_data.joinpath('Amandine data','all_chch_wells_metadata.csv')
     all_chch_wells_metadata.to_csv(save_path)
 
     return all_chch_wells_metadata
