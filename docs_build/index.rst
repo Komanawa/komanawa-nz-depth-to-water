@@ -12,24 +12,43 @@ a small repo that holds:
     :hidden:
 
     Code documentation<autoapi/komanawa/komanawa-nz-depth-to-water/index.rst>
+    Dataset Technical Note<Technical_note.rst>
 
 Data Access and versions
-###########################
+==========================
 
 :Version: 1.0.0
 :Date: 2024-04-04
 :Description: Initial release of the dataset
 :Changelog entry: Initial release of the dataset
-:Data access: `access the data on Figshare <todo>`_
+:Data access: `access the data on Figshare <todo>`_ .. todo figshare or other???
 
+
+Data Access via Python
+-------------------------
+Installation
+^^^^^^^^^^^^^
+
+**Option 1 - pip**
+
+.. code-block:: bash
+
+        pip install git+https://github.com/Komanawa-Solutions-Ltd/komanawa-nz-depth-to-water.git
+
+**Option 2 - clone the repository**
+
+clone the repository and install the package as you see fit.
+
+**Option 3 - Fork the repository**
+
+Fork the repository and modify and use the code as you see fit.  If you have any improvements, please submit a pull request.
+
+Code Example
+^^^^^^^^^^^^^^
+
+.. todo - add code example
 
 Contributing and issues/bugs
-##############################
+=============================
 
 We have made every attempt to ensure the quality of the data and code in this repository. However, inevitably, there will be issues with the data or code. If you find an issue, please raise an issue on the GitHub repository. If you would like to contribute to the code or data, please fork the repository and submit a pull request.
-
-
-Technical Note
-######################
-
-.. include:: technical_note.rst
