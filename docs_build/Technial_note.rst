@@ -19,7 +19,7 @@ Data was collected from regional councils and unitary authorities directly and u
 Data Summary
 ---------------
 
-A data request was sent out to 15 New Zealand councils in March 2023; this included all 11 regional councils and four unitary authorities. The data request asked for all groundwater level data; this included sites additional to any NGMP monitoring sites, as well as any discontinuous or sporadic readings. The aim was to collect as much national data as possible, and therefore even sites with only one reading provided some use to us. We were open to receiving both groundwater depth and/or groundwater elevation data, but just asked that it was specified to reduce error during the data processing. Along with the groundwater level data we also requested standard metadata for each site.
+A data request was sent out to 16 New Zealand councils in March 2023; this included all 11 regional councils and five unitary authorities. The data request asked for all groundwater level data; this included sites additional to any NGMP monitoring sites, as well as any discontinuous or sporadic readings. The aim was to collect as much national data as possible, and therefore even sites with only one reading provided some use to us. We were open to receiving both groundwater depth and/or groundwater elevation data, but just asked that it was specified to reduce error during the data processing. Along with the groundwater level data we also requested standard metadata for each site.
 
 Our minimum metadata requirements were:
 
@@ -35,7 +35,7 @@ Our preferred metadata requirements included:
 
 The data was received in Excel and csv formats, with various degrees of completeness and processing. Data management and storage varied from council to council, which meant processing to standardise the data was required.
 
-Alongside the direct requests to regional councils and unitary authorities, data was also pulled from Tethys: https://github.com/tethys-ts. Tethys is a Python-based tool developed by Mike Kitteridge which allows any data stored by councils in Hilltop to be accessed and downloaded. For councils that had relevant and up-to-date data in Hilltop, it meant we did not have to rely on a response to the direct request, and saved time in the data collection and processing.
+Alongside the direct requests to regional councils and unitary authorities, data was also pulled from Tethys. Tethys is a Python-based tool developed by Mike Kitteridge which allows any data stored by councils in Hilltop to be accessed and downloaded. For councils that had relevant and up-to-date data in Hilltop, it meant we did not have to rely on a response to the direct request, and saved time in the data collection and processing.
 
 A brief summary of the data collected from each council is provided below. The data quality rating is based on the formatting of the data as well as the relative quality of the data provided.
 
@@ -55,6 +55,8 @@ A brief summary of the data collected from each council is provided below. The d
 | Horizons Regional Council        | Available groundwater level data downloaded from Tethys. Manual dip data and spot readings sent through by council, as well as metadata for the sites sent through. Any wells missing from Tethys were also provided.      |
 +----------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Marlborough Regional Council     | Available groundwater level data downloaded from Tethys. Only data sent through from the council was in the form of a shapefile which contained static water level from drilling and some well metadata.                   |
++----------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Nelson City Council              | Any spot readings were sent through by the council with  metadata included.                                                                                       |
 +----------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Northland Regional Council       | Available groundwater level data downloaded from Tethys. Any spot readings were sent through by the council with  metadata included.                                                                                       |
 +----------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -86,7 +88,7 @@ The systematic approach to the data processing was as follows:
     - Individual scripts were developed for each council to cater to the unique formats of the datasets provided.
     - GWL data, alongside metadata, were ingested from two primary sources: direct council submissions and the Tethys platform, accessed via a Python API call.
     - Preliminary cleaning involved standardising data formats, renaming columns for consistency, and excising superfluous columns.
-- Data Standardization and Transformation
+- Data Standardisation and Transformation
     - The data was processed to ensure the presence of both depth-to-water and elevation measurements. In instances where elevation data was absent, LiDAR data was utilised to ascertain site elevation.
     - Anomalies such as negative values or readings beyond expected ranges were meticulously examined and rectified. Erroneous NaN values were also purged from the dataset.
     - All spatial data were transformed into the NZGD 2000 Transverse Mercator projection and NZVD2016 vertical datum.
@@ -145,7 +147,7 @@ Further summary statistics of the data by the source are provided below.
 Conclusions
 =============
 
-Preparing this dataset was a mammoth undertaking which took over 2 years between data collection, processing, and quality assurance and hundreds of staff hours.
+Preparing this dataset was a mammoth undertaking which took over a year between data collection, processing, and quality assurance and hundreds of staff hours.
 This was a significant effort and component of the Future Coasts Aotearoa project.
 The dataset is now available for use by other researchers and organisations, and we hope that it will be useful for a range of projects.
 
@@ -164,16 +166,16 @@ As a pragmatic interim solution we would recommend that some base standards be a
 #. All public data held by an organisation should be made available via a public API.
 #. All public datasets should include metadata.  Ideally this metadata would be in a standard machine readable format, but as an interim solution, a simple publicly visible document discussing the data structure and any peculiarities would be a good start.
 #. All public datasets should have a mechanism for users to report errors or issues with the data and these issues should be publicly visible. Even if organisations do not have the resources to fix all these issues, there is value in collating them. At the moment each researcher must discover these issues themselves, which is challenging and time consuming. Consider the value of forums like Stack Exchange or GitHub issues for this purpose in the software development world.
+#. All public data held by an organisation should be available in a standard format. This could be as simple as CSV, but ideally would be a more structured format like JSON or XML. This would allow for easier integration with other datasets and tools.
+#. All public dataset should have consistent +ve or -ve signs for depth to water above or below gwl. Ideally this would be a national standard, but minimally should be an organisational standard and documented.
+#. All public datasets should have a consistent way of specifying the elevation of the measuring point. This could be as simple as a GPS elevation, but minimally should be documented.
 
-.. todo - dtw above or below gwl-- ideally national standard, minimally organisational standard and documentation
-
-Additionally, we would like to recommend the NZGD for their work in providing a national database of geotechnical data. The dataset was of enormous value to this project, particularly in data sparce regions. We also have some specific additional recommendations for the NZGD:
+Additionally, we would like to commend the NZGD for their work in providing a national database of geotechnical data. The dataset was of enormous value to this project, particularly in data sparce regions. We also have some specific additional recommendations for the NZGD: that they include additional fields to specify whether measurements at a point are relative to the average surrounding land surface or taken in foundation excavations. This is important because records from urban areas often show markedly different water depths compared to nearby observations. These discrepancies likely stem from variations in the drilling locations, such as greenfield sites versus foundation pits. To improve accuracy and consistency, we also urge the NZGD to mandate the provision of GPS elevation data for the bore collar as a minimum requirement.
 
 #. As discussed above:
     #. A public API for the data would be of great value.
     #. As would a publicly visible mechanism for users to report issues, inconsistencies, and concerns with the data.
-#. We would encourage the NZGD to consider adding fields .. todo PD discuss, weird depth to water in pits... etc
-
+    #. We recommend that NZGD add the following fields 1: (minimum of gps) elevation of bore collar, 2. relative elevation of the bore collar to surrounding land surface.
 Finally we have some specific recommendations for the dataset we have produced:
 
 - Further quality assurance of the data, including cross-referencing the finalised data with councils.
@@ -187,7 +189,7 @@ We have made every attempt to ensure the quality of the data and code in this re
 
 Limitations
 =============
-While we have made every attempt to ensure the quality of the data and code in this repository, we do not provide any explicit or implicit guarantee that the datasets produced or methods provided here.
+While we have made every attempt to ensure the quality of the data and code in this repository, we do not provide any explicit or implicit guarantee of the datasets produced or methods provided here.
 We are aware of limitations of this work which are listed below:
 
 - We have made a series of assumptions during the data processing; these are discussed above.
