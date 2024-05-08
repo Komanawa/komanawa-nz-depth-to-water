@@ -106,13 +106,11 @@ def get_all_nelson_data(local_paths, meta_data_requirements):
             wl_data[column] = np.nan
         wl_data[column] = wl_data[column].astype(dtype)
 
-
     stats = _get_summary_stats(wl_data)
     stats = stats.set_index('well_name')
     metadata = metadata.set_index('well_name')
     metadata = metadata.combine_first(stats)
     metadata = metadata.reset_index()
-
 
     for col in meta_data_requirements['needed_columns']:
         if col not in metadata.columns:
@@ -142,8 +140,8 @@ def get_all_nelson_data(local_paths, meta_data_requirements):
 
     metadata = append_to_other(df=metadata, needed_columns=cols_to_keep)
     metadata.drop(columns=[col for col in metadata.columns if
-                                    col not in cols_to_keep and col != 'other'],
-                           inplace=True)
+                           col not in cols_to_keep and col != 'other'],
+                  inplace=True)
 
     metadata['well_depth'] = metadata['well_depth'].astype('float64')
 
@@ -153,6 +151,7 @@ def get_all_nelson_data(local_paths, meta_data_requirements):
                      store_key=local_paths['nelson_metadata_store_key'])
 
     return metadata
+
 
 def _get_folder_and_local_paths(source_dir, local_dir, redownload=False):
     """This function reads in the file paths and creates local directories"""
@@ -188,8 +187,7 @@ def _get_folder_and_local_paths(source_dir, local_dir, redownload=False):
     return local_paths
 
 
-
-def get_nelson_data(recalc=False, redownload=False):
+def get_ncc_data(recalc=False, redownload=False):
     local_paths = _get_folder_and_local_paths(source_dir=groundwater_data.joinpath('gwl_nelson'),
                                               local_dir=unbacked_dir.joinpath('nelson_working/'), redownload=redownload)
     meta_data_requirements = needed_cols_and_types('ncc')
@@ -200,5 +198,5 @@ def get_nelson_data(recalc=False, redownload=False):
 
 
 if __name__ == '__main__':
-    out = get_nelson_data(recalc=True, redownload=False)
+    out = get_ncc_data(recalc=True, redownload=False)
     pass
