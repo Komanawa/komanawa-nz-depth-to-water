@@ -43,6 +43,7 @@ def build_final_meta_data(recalc=False):
         trc = get_trc_data(recalc=False, redownload=False)
         tdc = get_tdc_data(recalc=True, redownload=False)
         wrc = get_wrc_data(recalc=False)
+        ncc = get_nelson_data(recalc=False)
         gwrc = get_gwrc_data(recalc=False, redownload=False)
         wcrc = get_wcrc_data(recalc=False, redownload=False)
         nzgd = get_nzgd_data(recalc=False, redownload=False)
@@ -54,6 +55,7 @@ def build_final_meta_data(recalc=False):
         hbrc = hbrc['combined_metadata']
         hrc = hrc['combined_metadata']
         mdc = mdc['combined_metadata']
+        ncc = ncc['combined_metadata']
         nrc = nrc['combined_metadata']
         orc = orc['combined_metadata']
         src = src['combined_metadata']
@@ -71,6 +73,7 @@ def build_final_meta_data(recalc=False):
         hbrc['source'] = 'hbrc'
         hrc['source'] = 'hrc'
         mdc['source'] = 'mdc'
+        nnc['source'] = 'ncc'
         nrc['source'] = 'nrc'
         orc['source'] = 'orc'
         src['source'] = 'src'
