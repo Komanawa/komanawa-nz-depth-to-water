@@ -1,1 +1,1 @@
-conda create -c conda-forge --name futcoast python numpy pandas pytables openpyxl matplotlib scipy netcdf4 psutil geopandas flopy pysheds scikit-learn py7zr pyemu
+conda create -c conda-forge --name Komanawa_nz_dtw python numpy pandas pytables openpyxl matplotlib scipy netcdf4 psutil geopandas flopy pysheds scikit-learn py7zr pyemu

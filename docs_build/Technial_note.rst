@@ -1,7 +1,9 @@
 Developing a National Depth to Water Dataset for New Zealand
 #################################################################
 
-.. include:: docs_build/last_updated.rst
+.. #include:: docs_build/last_updated.rst
+
+
 
 Introduction and Background
 =============================
@@ -112,7 +114,41 @@ The systematic approach to the data processing was as follows:
     - Specific regional peculiarities, such as the assumed + 100 m offset for coastal groundwater elevations provided by the Otago Regional Council, were duly considered and adjusted.
     - For wells where the maximum depth to water exceeded the reported well depth, an assumption was made that the well depth equaled the maximum depth to water plus an additional 3 metres.
 
-Results
+Statistical Analysis
+----------------------
+This dataset is an output of research to produce maps of steady-state depth to water at a national scale to aid in identifying areas at risk of groundwater inundation.
+As such the results will only be indicative of the long term average conditions.
+To understand the scale of the problems associated with the groundwater inundation, knowledge of the water level range and variance is required.
+To inform the assessment, the following statistical analysis of the data is required:
+    1. The range of water levels expected, principally for sites with the highest water levels.
+    2. The variation in water levels, for example the standard deviation of the water levels at each site.
+    3. The frequency of water levels above a certain threshold, for example the number of days per year where the water level is within 0.5m of the surface.
+    4. The duration of water levels above a certain threshold, for example the number of days per year where the water level is within 0.5m of the surface.
+
+Several mechanisms exist to display and analyse the data at a national scale to inform the assessment, for example:
+    1. A map of the range of water levels expected, e.g. the maximum or minimum depth to water at each site.
+    2. A map of the variation in water levels, e.g. the standard deviation and quantiles of the water levels at each site.
+    3. A map of the frequency of water levels above a certain threshold, e.g. the number of days per year where the water level is within 0.5m of the surface.
+    4. A map of the duration of water levels above a certain threshold, e.g. the number of days per year where the water level is within 0.5m of the surface.
+
+The analysis we have undertaken relies only on actual data and statistical simple statistical metrics of the data. The results will be indicative of the long term average conditions and will not take into account the impact of extreme events, such as heavy rainfall or droughts.
+
+To this end the following analysis was undertaken:
+    1. To first split the data to sites drilled at various depth categories (cat1 <10m, 10 > cat 2 < 30 m, cat3 >30 m)
+    2. to then subset the data to sites more readings than n=30, as this is a rough rule of thumb minimum number of readings required to calculate the standard deviation.
+    3. for this subset of data, calculate the range of water levels expected. Determine the mean, standard deviation, minimum and maximum water levels at each site
+    4. next calculate the frequency of water levels above a certain threshold, for example the number of days per year where the water level is within 0.5m of the surface was determined.
+
+To produce generalizable results around the risk of groundwater inundation it is necessary to identify the likelihood of groundwater reaching the surface for each depth bin.
+This can be achieved by calculating the probability of the depth to water being within 2m, 1m, 0.5m and 0.1m of the surface for each depth bin.
+In order to do this it is most robust to return to the raw data amd calculate the probability, rather than using the summary statistics and assuming a gaussian distribution.
+To accurately estimate the probabilities of data reaching specific depths, the Johnson SU distribution is employed. This four-parameter distribution is a versatile tool for modeling data that does not follow a normal distribution. It works by transforming the data into a normal form and then adapting it into the Johnson SU distribution, effectively generalizing the normal distribution to accommodate data with non-normal characteristics.
+The number of sites that meet the filtration criteria (e.g. well depth less than 10m, reading count n>30) is 2317. The Johnson SU distribution is fitted to the data for each site, and the probability of the depth to water being within 2m, 1m, 0.5m, and 0.1m of the surface is calculated.
+A useful way to visualise the statistical analysis is through the use of cdf plots, box plots and histograms.
+Specifically we can use cdf to display the frequency a certain threshold is exceeded, box plots to show the range of water levels expected and histograms to display the variation in water levels.
+
+
+Results and discussion
 =========
 
 The resulting dataset is a national depth to water dataset for New Zealand; the groundwater level data and metadata are available as a complete dataset which can be used for national groundwater modelling, and to better understand the potential of shallow groundwater in New Zealand.
@@ -125,9 +161,9 @@ We envisage that this dataset will be useful for a range of other projects as it
 
 Statistical Analysis of datasets
 -----------------------------------
-The dataset comprises a comprehensive collection of groundwater monitoring sites, spanning a significant temporal range from as ealy as December 29, 1899. A statistical summary of the dataset is provided below.
+The dataset comprises a comprehensive collection of groundwater monitoring sites, spanning a significant temporal range from as early as December 29, 1899. A statistical summary of the dataset is provided below.
 
-.. include:: docs_build/tables/full_dataset_summary.rst
+.. #include:: docs_build/tables/full_dataset_summary.rst
 
 Investigating the dataset by source reveals distinct patterns in data collection and density.
 Notably, Environment Canterbury (Ecan) stands out with the highest number of observations with many observations at each site.
@@ -137,8 +173,84 @@ These variations highlight the diversity of monitoring efforts and data densitie
 Collectively, these statistics underscore the heterogeneity of groundwater monitoring across regions, influenced by the varying goals (e.g. geotechnical investigations), methodologies, and resources of different data sources.
 Further summary statistics of the data by the source are provided below.
 
-.. include:: docs_build/tables/summary_by_source.rst
+Statistical description of depth to water variance
+----------------------------------------
 
+Summary stats for binned data are:
+.. #include:: /home/patrick/unbacked/Future_Coasts/result_table.rst
+Table xxx Depth cat 1
+_________
+ =========================  ================  ================  =====================  ====================  ===============  ===============  ==========  ==========
+ Mean depth to water bin      Count of Sites    Total Readings    Mean Depth to Water    Standard Deviation    Maximum Depth    Minimum Depth    Skewness    Kurtosis
+ =========================  ================  ================  =====================  ====================  ===============  ===============  ==========  ==========
+ <0.1                                     37             16512              -0.174088              0.113711            3.904        -0.973      1.21774      11.5065
+ 0.1 to 0.5                               99             96484               0.324557              0.224459            4.333        -0.989001   0.632055      2.05187
+ 0.5 to 0.75                             160             95396               0.645728              0.22744             3.77         -0.612001   0.302951      1.80708
+ 0.75 to 1.0                             249            149382               0.880217              0.245421            5.09         -0.82       0.265956      2.96745
+ 1.0 to 1.5                              502            273805               1.24421               0.273498            6.9          -0.467999   0.0762522     2.41549
+ 1.5 to 2.0                              392            256403               1.7527                0.338324            9.582        -0.92      -0.0322242     2.44665
+ 2.0 to 3.0                              551            374356               2.46136               0.418172            8.871        -0.949     -0.185564      2.24327
+ 3.0 to 5.0                              487            400798               3.82496               0.629606            9.99         -0.978     -0.0810056     2.16833
+ >5.0                                    279            206730               6.34053               0.601571           10             0         -0.429029      4.44186
+ =========================  ================  ================  =====================  ====================  ===============  ===============  ==========  ==========
+
+
+The results from Table 1 show that all depth to water bins have the potential for water to reach the surface.
+The above table already shows the data does not follow a gaussian distribution, as the skewness and kurtosis values are not close to 0 and 3 respectively.
+The statistics suggest the data is positively skewed and leptokurtic, meaning the data is not normally distributed and the mean and standard deviation are not necessarily representative of the data.
+
+.. image:: /home/patrick/unbacked/Future_Coasts/mean_depth_to_water.png
+   :alt: Histogram of Mean Depth to Water (all wells <10 m)
+   :caption: Histogram of Mean Depth to Water (all wells <10 m)
+
+.. image:: /home/patrick/unbacked/Future_Coasts/sd_depth_to_water.png
+   :alt: Histogram of SD Depth to Water (all wells <10 m)
+   :caption: Histogram of SD Depth to Water (all wells <10 m)
+
+.. image:: /home/patrick/unbacked/Future_Coasts/cdf_depth_to_water.png
+   :alt: CDF of Depth to Water (all wells <10 m)
+   :caption: CDF of Depth to Water (all wells <10 m)
+
+.. image:: /home/patrick/unbacked/Future_Coasts/mean_depth_to_water<2m.png
+   :alt: Histogram of Mean Depth to Water (mean dtw <2 m)
+   :caption: Histogram of Mean Depth to Water (mean dtw <2 m)
+
+.. image:: /home/patrick/unbacked/Future_Coasts/sd_depth_to_water<2m.png
+   :alt: Histogram of SD Depth to Water (mean dtw <2 m)
+   :caption: Histogram of SD Depth to Water (mean dtw <2 m)
+
+.. image:: /home/patrick/unbacked/Future_Coasts/cdf_depth_to_water<2m.png
+   :alt: CDF of Depth to Water (mean dtw <2 m)
+   :caption: CDF of Depth to Water (mean dtw <2 m)
+
+.. image:: /home/patrick/unbacked/Future_Coasts/mean_depth_to_water<1m.png
+   :alt: Histogram of Mean Depth to Water (mean dtw <1 m)
+   :caption: Histogram of Mean Depth to Water (mean dtw <1 m)
+
+.. image:: /home/patrick/unbacked/Future_Coasts/sd_depth_to_water<1m.png
+   :alt: Histogram of SD Depth to Water (mean dtw <1 m)
+   :caption: Histogram of SD Depth to Water (mean dtw <1 m)
+
+.. image:: /home/patrick/unbacked/Future_Coasts/cdf_depth_to_water<1m.png
+   :alt: CDF of Depth to Water (mean dtw <1 m)
+   :caption: CDF of Depth to Water (mean dtw <1 m)
+
+.. image:: /home/patrick/unbacked/Future_Coasts/mean_depth_to_water<0.5m.png
+   :alt: Histogram of Mean Depth to Water (mean dtw <0.5 m)
+   :caption: Histogram of Mean Depth to Water (mean dtw <0.5 m)
+
+.. image:: /home/patrick/unbacked/Future_Coasts/sd_depth_to_water<0.5m.png
+   :alt: Histogram of SD Depth to Water (mean dtw <0.5 m)
+   :caption: Histogram of SD Depth to Water (mean dtw <0.5 m)
+
+.. image:: /home/patrick/unbacked/Future_Coasts/cdf_depth_to_water<0.5m.png
+   :alt: CDF of Depth to Water (mean dtw <0.5 m)
+   :caption: CDF of Depth to Water (mean dtw <0.5 m)
+.. #include:: docs_build/tables/summary_by_source.rst
+
+The results of the frequency of occurrence of water levels above a certain threshold are presented in the following table where the units a re days per year:
+
+.. todo insert the table
 .. todo figure cumulative nrecords and n sites vs time (overall and by source)
 .. todo spatial coverage of data (by n records)
 .. todo cumulative data by nrecords/site (both nsites, and n data points)

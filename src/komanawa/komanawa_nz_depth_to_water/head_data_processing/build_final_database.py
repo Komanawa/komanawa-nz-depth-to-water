@@ -15,7 +15,8 @@ except ImportError:
 
 from komanawa.komanawa_nz_depth_to_water.head_data_processing import get_bop_data, get_auk_data, get_ecan_data, \
     get_gdc_data, get_hbrc_data, \
-    get_hrc_data, get_mdc_data, get_nrc_data, get_orc_data, get_src_data, get_trc_data, get_tdc_data, get_wrc_data, \
+    get_hrc_data, get_mdc_data, get_ncc_data, get_nrc_data, get_orc_data, get_src_data, get_trc_data, get_tdc_data, \
+    get_wrc_data, \
     get_gwrc_data, get_wcrc_data, get_nzgd_data, data_processing_functions
 from komanawa.komanawa_nz_depth_to_water.project_base import project_dir, groundwater_data
 
@@ -43,7 +44,7 @@ def build_final_meta_data(recalc=False):
         trc = get_trc_data(recalc=False, redownload=False)
         tdc = get_tdc_data(recalc=True, redownload=False)
         wrc = get_wrc_data(recalc=False)
-        ncc = get_nelson_data(recalc=False)
+        ncc = get_ncc_data(recalc=False)
         gwrc = get_gwrc_data(recalc=False, redownload=False)
         wcrc = get_wcrc_data(recalc=False, redownload=False)
         nzgd = get_nzgd_data(recalc=False, redownload=False)
@@ -73,7 +74,7 @@ def build_final_meta_data(recalc=False):
         hbrc['source'] = 'hbrc'
         hrc['source'] = 'hrc'
         mdc['source'] = 'mdc'
-        nnc['source'] = 'ncc'
+        ncc['source'] = 'ncc'
         nrc['source'] = 'nrc'
         orc['source'] = 'orc'
         src['source'] = 'src'
@@ -87,7 +88,7 @@ def build_final_meta_data(recalc=False):
 
         # combine all the data into a single dataframe
 
-        metadata = pd.concat([auk, bop, gdc, hbrc, hrc, mdc, nrc, orc, src, trc, tdc, wrc, gwrc, wcrc, nzgd, ecan],
+        metadata = pd.concat([auk, bop, gdc, hbrc, hrc, mdc, nrc, ncc, orc, src, trc, tdc, wrc, gwrc, wcrc, nzgd, ecan],
                              axis=0,
                              ignore_index=True)
 
@@ -172,6 +173,7 @@ def build_final_water_data(recalc=False, recalc_sub=False, redownload=False):
             (get_hbrc_data, 'hbrc'),
             (get_hrc_data, 'hrc'),
             (get_mdc_data, 'mdc'),
+            (get_ncc_data, 'ncc'),
             (get_nrc_data, 'nrc'),
             (get_orc_data, 'orc'),
             (get_src_data, 'src'),
@@ -184,11 +186,15 @@ def build_final_water_data(recalc=False, recalc_sub=False, redownload=False):
             (get_nzgd_data, 'nzgd')
         ]
 
-        processed_data = [process_source_data(source_func, source_name, recalc_sub,
-                                              redownload if source_func in [get_hbrc_data, get_hrc_data, get_mdc_data,
-                                                                            get_nrc_data, get_orc_data,
-                                                                            get_tdc_data] else False) for
-                          source_func, source_name in sources]
+    # todo I think we don't need this for this for specific council anymore. remove?? the 'redownload' argument from the function calls
+
+    # processed_data = [process_source_data(source_func, source_name, recalc_sub,
+    #                                           redownload if source_func in [get_hbrc_data, get_hrc_data, get_mdc_data,
+    #                                                                         get_nrc_data, get_orc_data,
+    #                                                                         get_tdc_data] else False) for
+    #                       source_func, source_name in sources]
+
+        processed_data = [process_source_data(source_func, source_name, recalc_sub, False) for source_func, source_name in sources]
 
         gw_data = pd.concat(processed_data, ignore_index=True)
         gw_data['site_name'] = gw_data['well_name'] + '_' + gw_data['source']
@@ -223,7 +229,7 @@ def build_final_water_data(recalc=False, recalc_sub=False, redownload=False):
         weird_wells = weird_wells[weird_wells['source'] != 'nrc']
         weird_wells = weird_wells[weird_wells['source'] != 'bop']
         weird_wells = weird_wells[weird_wells['source'] != 'nzgd']
-        gw_data= pd.concat([gw_data, weird_wells], ignore_index=True)
+        gw_data = pd.concat([gw_data, weird_wells], ignore_index=True)
         gw_data = gw_data[gw_data['well_name'] != '72_10977']
         gw_data = gw_data[gw_data['well_name'] != 'BOR208347']
 

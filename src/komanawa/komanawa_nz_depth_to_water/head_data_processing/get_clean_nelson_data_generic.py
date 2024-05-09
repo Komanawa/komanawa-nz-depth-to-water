@@ -31,7 +31,7 @@ def get_final_nelson_data(local_paths, recalc=False):
         water_data = pd.read_hdf(recalc_path, local_paths['wl_store_key'])
     else:
         # reading in the final data
-        metadata, water_data = get_nelson_data(local_paths)
+        metadata, water_data = get_ncc_data(local_paths)
 
         renew_hdf5_store(local_paths['save_path'], local_paths['wl_store_key'], water_data)
         renew_hdf5_store(local_paths['save_path'], local_paths['ecan_metadata_store_key'], metadata)
