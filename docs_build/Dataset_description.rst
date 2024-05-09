@@ -102,7 +102,7 @@ Table 3: Source key
 +------------+--------------------------------------+
 | orc        | Otago Regional Council               |
 +------------+--------------------------------------+
-| src        | Environment Southlad                 |
+| src        | Environment Southland                |
 +------------+--------------------------------------+
 | trc        | Taranaki Regional Council            |
 +------------+--------------------------------------+
