@@ -8,7 +8,7 @@ Developing a National Depth to Water Dataset for New Zealand
 Introduction and Background
 =============================
 
-Future Coasts Aotearoa is a NIWA led MBIE Endeabour research programme that combines expertise in Indigenous culture, economics, social, and physical sciences to tackle the issue of sea-level rise in coastal lowland communities by enhancing the evidence base for sea-level rise risks. It aims to build fit-for-purpose & holistic wellbeing evaluation tools, applying these tools in adaptive planning and decision-making frameworks for a range of case studies.
+Future Coasts Aotearoa is a NIWA led MBIE Endeavour research programme that combines expertise in Indigenous culture, economics, social, and physical sciences to tackle the issue of sea-level rise in coastal lowland communities by enhancing the evidence base for sea-level rise risks. It aims to build fit-for-purpose & holistic wellbeing evaluation tools, applying these tools in adaptive planning and decision-making frameworks for a range of case studies.
 Our role at KSL, alongside GNS and the University of Canterbury, is to develop impact and adaptation thresholds for shallow groundwater and seawater intrusion, develop a national coastal groundwater hazard exposure assessment, and national and local models of seawater intrusion and water table shoaling with and without adaptation solutions such as pumped drainage.
 
 As part of this, we have collected and processed a national depth to water dataset for New Zealand. This technical note outlines the data collected, the methods used to produce this dataset, and the potential use cases both within the project and externally.
@@ -116,37 +116,29 @@ The systematic approach to the data processing was as follows:
 
 Statistical Analysis
 ----------------------
-This dataset is an output of research to produce maps of steady-state depth to water at a national scale to aid in identifying areas at risk of groundwater inundation.
-As such the results will only be indicative of the long term average conditions.
-To understand the scale of the problems associated with the groundwater inundation, knowledge of the water level range and variance is required.
-To inform the assessment, the following statistical analysis of the data is required:
-    1. The range of water levels expected, principally for sites with the highest water levels.
-    2. The variation in water levels, for example the standard deviation of the water levels at each site.
-    3. The frequency of water levels above a certain threshold, for example the number of days per year where the water level is within 0.5m of the surface.
-    4. The duration of water levels above a certain threshold, for example the number of days per year where the water level is within 0.5m of the surface.
+The objective of this dataset is to produce maps of steady-state depth to water (DTW) at a national scale, aiding in the identification of areas at risk of groundwater inundation. Simple statistical analyses were performed to uncover any prominent traits within the data by undertaking the following steps:
 
-Several mechanisms exist to display and analyse the data at a national scale to inform the assessment, for example:
-    1. A map of the range of water levels expected, e.g. the maximum or minimum depth to water at each site.
-    2. A map of the variation in water levels, e.g. the standard deviation and quantiles of the water levels at each site.
-    3. A map of the frequency of water levels above a certain threshold, e.g. the number of days per year where the water level is within 0.5m of the surface.
-    4. A map of the duration of water levels above a certain threshold, e.g. the number of days per year where the water level is within 0.5m of the surface.
+-  Categorization by Depth:
+    - The dataset was divided into three depth categories:
+    - Category 1: Sites with DTW less than 10 meters.
+    - Category 2: Sites with DTW between 10 and 30 meters.
+    - Category 3: Sites with DTW greater than 30 meters.
 
-The analysis we have undertaken relies only on actual data and statistical simple statistical metrics of the data. The results will be indicative of the long term average conditions and will not take into account the impact of extreme events, such as heavy rainfall or droughts.
+- Sub-setting by Number of Readings:
+    - Only sites with more than 30 readings were considered for further analysis. This threshold was chosen as a rule of thumb to ensure a reliable calculation of the standard deviation.
 
-To this end the following analysis was undertaken:
-    1. To first split the data to sites drilled at various depth categories (cat1 <10m, 10 > cat 2 < 30 m, cat3 >30 m)
-    2. to then subset the data to sites more readings than n=30, as this is a rough rule of thumb minimum number of readings required to calculate the standard deviation.
-    3. for this subset of data, calculate the range of water levels expected. Determine the mean, standard deviation, minimum and maximum water levels at each site
-    4. next calculate the frequency of water levels above a certain threshold, for example the number of days per year where the water level is within 0.5m of the surface was determined.
+- Statistical Calculations:
+    - For each site in the subset, the following statistical measures were computed:
+        - Mean: The average depth to water.
+        - Standard Deviation: A measure of the variation in water levels.
+        - Minimum: The lowest recorded water level.
+        - Maximum: The highest recorded water level.
+    These statistics provide insights into the expected range of water levels at each site.
 
-To produce generalizable results around the risk of groundwater inundation it is necessary to identify the likelihood of groundwater reaching the surface for each depth bin.
-This can be achieved by calculating the probability of the depth to water being within 2m, 1m, 0.5m and 0.1m of the surface for each depth bin.
-In order to do this it is most robust to return to the raw data amd calculate the probability, rather than using the summary statistics and assuming a gaussian distribution.
-To accurately estimate the probabilities of data reaching specific depths, the Johnson SU distribution is employed. This four-parameter distribution is a versatile tool for modeling data that does not follow a normal distribution. It works by transforming the data into a normal form and then adapting it into the Johnson SU distribution, effectively generalizing the normal distribution to accommodate data with non-normal characteristics.
-The number of sites that meet the filtration criteria (e.g. well depth less than 10m, reading count n>30) is 2317. The Johnson SU distribution is fitted to the data for each site, and the probability of the depth to water being within 2m, 1m, 0.5m, and 0.1m of the surface is calculated.
-A useful way to visualise the statistical analysis is through the use of cdf plots, box plots and histograms.
-Specifically we can use cdf to display the frequency a certain threshold is exceeded, box plots to show the range of water levels expected and histograms to display the variation in water levels.
+- Grouping by Mean DTW:
+    - The data was further grouped by the mean DTW to analyze combined statistics across different groups. This grouping allows for a comparison of water level characteristics across sites with similar mean DTW values.
 
+This structured approach to data analysis ensures a comprehensive understanding of the depth to water across various sites. By categorising, sub-setting, and computing key statistics, we can identify patterns and traits that are crucial for assessing groundwater inundation risks on a national scale.
 
 Results and discussion
 =========
@@ -176,79 +168,51 @@ Further summary statistics of the data by the source are provided below.
 Statistical description of depth to water variance
 ----------------------------------------
 
-Summary stats for binned data are:
-.. #include:: /home/patrick/unbacked/Future_Coasts/result_table.rst
-Table xxx Depth cat 1
+Table xxx statistics by depth category
 _________
- =========================  ================  ================  =====================  ====================  ===============  ===============  ==========  ==========
- Mean depth to water bin      Count of Sites    Total Readings    Mean Depth to Water    Standard Deviation    Maximum Depth    Minimum Depth    Skewness    Kurtosis
- =========================  ================  ================  =====================  ====================  ===============  ===============  ==========  ==========
- <0.1                                     37             16512              -0.174088              0.113711            3.904        -0.973      1.21774      11.5065
- 0.1 to 0.5                               99             96484               0.324557              0.224459            4.333        -0.989001   0.632055      2.05187
- 0.5 to 0.75                             160             95396               0.645728              0.22744             3.77         -0.612001   0.302951      1.80708
- 0.75 to 1.0                             249            149382               0.880217              0.245421            5.09         -0.82       0.265956      2.96745
- 1.0 to 1.5                              502            273805               1.24421               0.273498            6.9          -0.467999   0.0762522     2.41549
- 1.5 to 2.0                              392            256403               1.7527                0.338324            9.582        -0.92      -0.0322242     2.44665
- 2.0 to 3.0                              551            374356               2.46136               0.418172            8.871        -0.949     -0.185564      2.24327
- 3.0 to 5.0                              487            400798               3.82496               0.629606            9.99         -0.978     -0.0810056     2.16833
- >5.0                                    279            206730               6.34053               0.601571           10             0         -0.429029      4.44186
- =========================  ================  ================  =====================  ====================  ===============  ===============  ==========  ==========
 
-
-The results from Table 1 show that all depth to water bins have the potential for water to reach the surface.
+===========  =======  =================  ================  ============  ==============  =============  ===============  =================  =================  ===========================
+  depth_cat     mean  mean_range         dtw_range           std_median  std_range         skew_median  skew_range         kurtosis_median  kurtosis_range       observation_reading_count
+===========  =======  =================  ================  ============  ==============  =============  ===============  =================  =================  ===========================
+          1   -0.167  -0.801 - 0.081     -0.973 - 3.904           0.077  0.0 - 0.494             0.667  -2.491 - 12.26               2.917  -0.556 - 178.626                         14708
+          1    0.325  0.134 - 0.495      -0.989 - 4.333           0.161  0.02 - 0.662            0.351  -1.206 - 4.735               0.098  -1.378 - 26.625                          79019
+          1    0.789  0.509 - 0.996      -0.82 - 6.654            0.197  0.055 - 0.723           0.006  -1.874 - 5.324               0.495  -1.32 - 30.268                          255800
+          1    1.244  1.007 - 1.487      -0.468 - 6.9             0.231  0.077 - 0.815          -0.02   -2.824 - 4.081               0.48   -1.378 - 25.565                         271885
+          1    1.753  1.504 - 1.996      -0.92 - 9.582            0.26   0.074 - 1.314          -0.114  -3.595 - 3.837               0.784  -1.274 - 24.486                         241975
+          1    2.458  2.006 - 2.985      -0.94 - 8.871            0.33   0.081 - 1.494          -0.157  -3.652 - 3.635               0.45   -1.18 - 28.304                          322851
+          1    3.818  3.014 - 4.984      -0.978 - 9.99            0.475  0.115 - 2.253          -0.14   -4.131 - 3.296               0.223  -1.365 - 30.752                         324202
+          1    6.36   5.021 - 8.784      0.0 - 10.0               0.48   0.141 - 2.02           -0.316  -6.199 - 3.437               0.133  -1.293 - 53.213                         190387
+          2   -0.083  -0.504 - 0.054     -0.98 - 0.52             0.083  0.023 - 0.275          -0.111  -1.031 - 0.84                0.859  -1.421 - 3.726                            2063
+          2    0.312  0.111 - 0.471      -0.811 - 2.03            0.241  0.116 - 0.493           0.306  -1.779 - 1.734              -0.049  -0.949 - 8.266                            1133
+          2    0.754  0.507 - 0.966      -0.789 - 21.685          0.27   0.097 - 1.411           0.134  -0.86 - 13.936               0.26   -1.538 - 400.505                         36374
+          2    1.242  1.018 - 1.493      -0.594 - 5.03            0.35   0.071 - 1.212           0.28   -2.035 - 2.331               0.085  -1.137 - 15.786                          43139
+          2    1.772  1.525 - 1.998      -0.011 - 27.775          0.357  0.137 - 2.807           0.174  -1.641 - 13.161              1.738  -1.19 - 480.687                          46529
+          2    2.542  2.039 - 2.95       -0.752 - 9.42            0.4    0.083 - 2.138           0.073  -2.907 - 4.306               0.684  -1.217 - 24.754                          93825
+          2    3.999  3.03 - 4.978       -0.598 - 23.979          0.763  0.14 - 3.498            0.114  -2.329 - 8.866               0.381  -1.367 - 81.352                         238173
+          2    7.391  5.035 - 9.947      -0.666 - 28.63           1.02   0.166 - 4.523          -0.035  -4.054 - 3.846               0.215  -1.449 - 51.62                          288260
+          2   12.186  10.076 - 14.914    -0.173 - 27.261          0.937  0.183 - 4.597          -0.17   -7.671 - 4.791               0.058  -1.475 - 176.056                        245646
+          2   17.211  15.033 - 19.803    0.0 - 29.71              1.133  0.243 - 5.309          -0.444  -6.071 - 3.005               0.238  -1.372 - 66.755                         176173
+          2   23.229  20.149 - 28.324    0.0 - 29.658             0.813  0.152 - 3.712          -0.207  -10.773 - 1.92               0.88   -1.235 - 229.039                         69924
+          3   -0.166  -0.411 - -0.005    -1.0 - 1.4               0.166  0.075 - 0.473           0.039  -5.75 - 3.359               -0.077  -0.955 - 32.772                            722
+          3    0.293  0.111 - 0.462      -0.9 - 45.996            0.281  0.203 - 0.69            2.327  0.163 - 52.197               4.802  -1.024 - 3718.508                         7229
+          3    0.694  0.537 - 0.895      -0.812 - 7.65            0.337  0.059 - 1.215          -0.078  -1.34 - 3.017               -0.025  -0.998 - 11.847                           5896
+          3    1.26   1.012 - 1.493      -0.73 - 30.144           0.497  0.129 - 2.785           0.679  -1.759 - 15.61               0.002  -1.226 - 285.517                         49080
+          3    1.763  1.513 - 1.993      -0.59 - 11.2             0.622  0.089 - 1.736           0.698  -0.736 - 3.181               0.066  -1.028 - 14.236                          88894
+          3    2.503  2.011 - 2.952      -0.692 - 57.033          0.648  0.094 - 2.39            0.405  -3.038 - 12.712              0.648  -1.452 - 369.748                        160823
+          3    4.007  3.03 - 4.989       -0.54 - 36.255           0.842  0.145 - 3.739           0.59   -2.522 - 8.442               0.299  -1.326 - 76.371                         142458
+          3    7.303  5.072 - 9.865      -0.54 - 296.444          1.151  0.163 - 6.913           0.51   -5.592 - 8.128               0.293  -1.354 - 75.996                         203190
+          3   12.25   10.054 - 14.93     0.0 - 76.0               1.784  0.103 - 13.038          0.528  -1.747 - 6.366               0.235  -1.706 - 42.539                         123155
+          3   17.447  15.183 - 19.941    0.0 - 203.39             1.959  0.095 - 14.352          0.251  -4.358 - 10.724              0.148  -1.509 - 132.344                        117164
+          3   25.294  20.192 - 29.954    -0.098 - 192.544         1.901  0.172 - 16.16           0.088  -5.467 - 4.662               0.164  -1.552 - 130.091                        212539
+          3   39.108  30.265 - 49.706    0.0 - 99.84              1.788  0.144 - 11.792         -0.032  -42.384 - 5.576              0.272  -1.798 - 2546.243                       301687
+          3   60.635  50.016 - 74.383    0.0 - 108.818            3.027  0.136 - 11.163          0.03   -47.791 - 5.213             -0.017  -1.595 - 2617.439                       184962
+          3   86.986  75.71 - 99.712     0.86 - 114.0             4.372  0.142 - 10.427         -0.54   -59.608 - 3.5                1.253  -1.628 - 3980.007                        99578
+          3  139.798  100.271 - 283.949  1.5 - 286.106            1.288  0.12 - 14.681          -0.204  -52.647 - 1.727             -0.056  -1.607 - 2785.338                       115829
+===========  =======  =================  ================  ============  ==============  =============  ===============  =================  =================  ===========================
+The results from the provided statistics show that all depth categories have the potential for water to reach the surface. For depth category 3, and likely for category 2, this indicates semi-confined to confined artesian conditions. In depth category 1, the depth to water exhibits little variation in the shallower bins, suggesting wells that are near a boundary condition or wells with high specific yields. As depth increases, the variability in the depth to water also increases, as evidenced by larger ranges and higher standard deviations. For instance, in depth category 1, the standard deviation median increases from 0.077 in the <0.1m bin to 0.48 in the 6.36m bin. Notably, the skewness suggests a tendency towards shallower water levels in many records, despite the large possible ranges in depth. This is observed in the negative skewness values that become more pronounced with increasing depth, indicating that while the average water levels are deeper, there are frequent instances of shallower depths. The kurtosis values further highlight the presence of notable outliers and extreme values. As depth increases, the kurtosis medians remain high or increase, indicating distributions with frequent extreme values. This pattern is consistent across other depth categories, where deeper bins show increased kurtosis, suggesting that extreme values become more apparent with depth. Overall, the statistics indicate that as depth increases, not only does the variability in water levels increase, but the presence of outliers and extreme values also becomes more pronounced.
 The above table already shows the data does not follow a gaussian distribution, as the skewness and kurtosis values are not close to 0 and 3 respectively.
-The statistics suggest the data is positively skewed and leptokurtic, meaning the data is not normally distributed and the mean and standard deviation are not necessarily representative of the data.
-
-.. image:: /home/patrick/unbacked/Future_Coasts/mean_depth_to_water.png
-   :alt: Histogram of Mean Depth to Water (all wells <10 m)
-   :caption: Histogram of Mean Depth to Water (all wells <10 m)
-
-.. image:: /home/patrick/unbacked/Future_Coasts/sd_depth_to_water.png
-   :alt: Histogram of SD Depth to Water (all wells <10 m)
-   :caption: Histogram of SD Depth to Water (all wells <10 m)
-
-.. image:: /home/patrick/unbacked/Future_Coasts/cdf_depth_to_water.png
-   :alt: CDF of Depth to Water (all wells <10 m)
-   :caption: CDF of Depth to Water (all wells <10 m)
-
-.. image:: /home/patrick/unbacked/Future_Coasts/mean_depth_to_water<2m.png
-   :alt: Histogram of Mean Depth to Water (mean dtw <2 m)
-   :caption: Histogram of Mean Depth to Water (mean dtw <2 m)
-
-.. image:: /home/patrick/unbacked/Future_Coasts/sd_depth_to_water<2m.png
-   :alt: Histogram of SD Depth to Water (mean dtw <2 m)
-   :caption: Histogram of SD Depth to Water (mean dtw <2 m)
-
-.. image:: /home/patrick/unbacked/Future_Coasts/cdf_depth_to_water<2m.png
-   :alt: CDF of Depth to Water (mean dtw <2 m)
-   :caption: CDF of Depth to Water (mean dtw <2 m)
-
-.. image:: /home/patrick/unbacked/Future_Coasts/mean_depth_to_water<1m.png
-   :alt: Histogram of Mean Depth to Water (mean dtw <1 m)
-   :caption: Histogram of Mean Depth to Water (mean dtw <1 m)
-
-.. image:: /home/patrick/unbacked/Future_Coasts/sd_depth_to_water<1m.png
-   :alt: Histogram of SD Depth to Water (mean dtw <1 m)
-   :caption: Histogram of SD Depth to Water (mean dtw <1 m)
-
-.. image:: /home/patrick/unbacked/Future_Coasts/cdf_depth_to_water<1m.png
-   :alt: CDF of Depth to Water (mean dtw <1 m)
-   :caption: CDF of Depth to Water (mean dtw <1 m)
-
-.. image:: /home/patrick/unbacked/Future_Coasts/mean_depth_to_water<0.5m.png
-   :alt: Histogram of Mean Depth to Water (mean dtw <0.5 m)
-   :caption: Histogram of Mean Depth to Water (mean dtw <0.5 m)
-
-.. image:: /home/patrick/unbacked/Future_Coasts/sd_depth_to_water<0.5m.png
-   :alt: Histogram of SD Depth to Water (mean dtw <0.5 m)
-   :caption: Histogram of SD Depth to Water (mean dtw <0.5 m)
-
-.. image:: /home/patrick/unbacked/Future_Coasts/cdf_depth_to_water<0.5m.png
-   :alt: CDF of Depth to Water (mean dtw <0.5 m)
-   :caption: CDF of Depth to Water (mean dtw <0.5 m)
-.. #include:: docs_build/tables/summary_by_source.rst
-
-The results of the frequency of occurrence of water levels above a certain threshold are presented in the following table where the units a re days per year:
+The statistics suggest the data is skewed and leptokurtic, meaning the data is not normally distributed and the mean and standard deviation are not necessarily representative of the data.
+.. todo check goodness of fit of distributions
 
 .. todo insert the table
 .. todo figure cumulative nrecords and n sites vs time (overall and by source)
