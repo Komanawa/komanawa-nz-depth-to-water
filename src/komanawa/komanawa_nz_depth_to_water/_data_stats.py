@@ -133,17 +133,21 @@ def get_running_totals(wd):
         'unique_sites'].cumsum()
 
 
+    # todo Matt please show me how to save correctly
 
     plt.figure(figsize=(10, 6))
     # plot the cumulative number of records
     plt.plot(cumulative_n_records['year'], cumulative_n_records['depth_to_water'], label='cumulative n records')
-
     plt.show()
+    plt.savefig(project_dir.joinpath('docs_build', 'figures', 'cumulative_n_records.png'))
+    plt.close()
 
     plt.figure(figsize=(10, 6))
     # plot the cumulative number of sites
     plt.plot(cumulative_n_sites['year'], cumulative_n_sites['site_name'], label='cumulative n sites')
     plt.show()
+    plt.savefig(project_dir.joinpath('docs_build', 'figures', 'cumulative_n_sites.png'))
+    plt.close()
 
     plt.figure(figsize=(10, 6))
     for source in cumulative_n_records_per_source['source'].unique():
@@ -151,6 +155,10 @@ def get_running_totals(wd):
         plt.plot(source_data['year'], source_data['depth_to_water'], label=f'cumulative n records {source}')
     plt.legend()
     plt.show()
+    # save the figure to docs_build -figure folder
+    plt.savefig(project_dir.joinpath('docs_build', 'figures', 'cumulative_n_records_per_source.png'))
+    plt.close()
+
 
     plt.figure(figsize=(10, 6))
     for source in n_sites_per_source_per_year['source'].unique():
@@ -158,13 +166,9 @@ def get_running_totals(wd):
         plt.plot(source_data['year'], source_data['cumulative_unique_sites'], label=f'cumulative n records {source}')
     plt.legend()
     plt.show()
+    plt.savefig(project_dir.joinpath('docs_build', 'figures', 'cumulative_n_sites_per_source.png'))
+    plt.close()
 
-
-
-    plt.figure(figsize=(10, 6))
-    # plot the cumulative number of sites per source
-    plt.plot(wd.date, wd.cumulative_n_sites_per_source, label='cumulative n sites per source')
-    plt.show()
 
     return None
 
