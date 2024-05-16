@@ -7,6 +7,7 @@ on: 1/05/24
 import pandas as pd
 from komanawa.komanawa_nz_depth_to_water.project_base import project_dir
 from tabulate import tabulate # todo...
+import matplotlib.pyplot as plt
 
 
 def load_data():
@@ -99,9 +100,80 @@ def _check_data():
     nzgd_md = md[md.source == 'nzgd']
 
 
+def get_running_totals(wd):
+    '''
+    figure cumulative n_records and n sites vs time (overall and by source)
+    Returns:
+
+    '''
+
+    wd['year'] = wd.date.dt.year
+    # get the cumulative number of records excluding this date: '1900-01-01 00:00:00'
+    wd = wd[(wd.date != '1900-01-01 00:00:00')]
+
+    sum_by_source = wd.groupby('source').agg({'depth_to_water': 'count'}).reset_index()
+
+    cumulative_n_records = wd.groupby('year').agg({'depth_to_water': 'count'}).cumsum().reset_index()
+
+
+    # get the cumulative number of sites
+    cumulative_n_sites = wd.groupby('year').agg({'site_name': 'nunique'}).cumsum().reset_index()
+    # get the cumulative number of records per source
+    n_records_per_source_per_year = wd.groupby(['year', 'source']).agg({'depth_to_water': 'count'})
+    cumulative_n_records_per_source = n_records_per_source_per_year.groupby('source').cumsum().reset_index()
+
+    # get the cumulative number of sites per source unique sites
+
+    n_sites_per_source_per_year = wd.groupby(['year', 'source']).agg({'site_name': 'nunique'}).reset_index()
+    # Rename the column for clarity
+    n_sites_per_source_per_year = n_sites_per_source_per_year.rename(columns={'site_name': 'unique_sites'})
+
+    # Calculate the cumulative sum of unique sites for each source
+    n_sites_per_source_per_year['cumulative_unique_sites'] = n_sites_per_source_per_year.groupby('source')[
+        'unique_sites'].cumsum()
+
+
+
+    plt.figure(figsize=(10, 6))
+    # plot the cumulative number of records
+    plt.plot(cumulative_n_records['year'], cumulative_n_records['depth_to_water'], label='cumulative n records')
+
+    plt.show()
+
+    plt.figure(figsize=(10, 6))
+    # plot the cumulative number of sites
+    plt.plot(cumulative_n_sites['year'], cumulative_n_sites['site_name'], label='cumulative n sites')
+    plt.show()
+
+    plt.figure(figsize=(10, 6))
+    for source in cumulative_n_records_per_source['source'].unique():
+        source_data = cumulative_n_records_per_source[cumulative_n_records_per_source['source'] == source]
+        plt.plot(source_data['year'], source_data['depth_to_water'], label=f'cumulative n records {source}')
+    plt.legend()
+    plt.show()
+
+    plt.figure(figsize=(10, 6))
+    for source in n_sites_per_source_per_year['source'].unique():
+        source_data = n_sites_per_source_per_year[n_sites_per_source_per_year['source'] == source]
+        plt.plot(source_data['year'], source_data['cumulative_unique_sites'], label=f'cumulative n records {source}')
+    plt.legend()
+    plt.show()
+
+
+
+    plt.figure(figsize=(10, 6))
+    # plot the cumulative number of sites per source
+    plt.plot(wd.date, wd.cumulative_n_sites_per_source, label='cumulative n sites per source')
+    plt.show()
+
+    return None
+
+
+
 
 if __name__ == '__main__':
     wd, md = load_data()
+    get_running_totals(wd)
     table1, table2 = get_data_stats(wd, md)
     # Write table1 and table2 as .rst tables
     write_rst_table_with_tabulate(table1, project_dir.joinpath('Data', 'table1.rst'))
