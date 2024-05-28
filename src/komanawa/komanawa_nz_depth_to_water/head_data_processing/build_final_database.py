@@ -186,13 +186,6 @@ def build_final_water_data(recalc=False, recalc_sub=False, redownload=False):
             (get_nzgd_data, 'nzgd')
         ]
 
-    # todo I think we don't need this for this for specific council anymore. remove?? the 'redownload' argument from the function calls
-
-    # processed_data = [process_source_data(source_func, source_name, recalc_sub,
-    #                                           redownload if source_func in [get_hbrc_data, get_hrc_data, get_mdc_data,
-    #                                                                         get_nrc_data, get_orc_data,
-    #                                                                         get_tdc_data] else False) for
-    #                       source_func, source_name in sources]
 
         processed_data = [process_source_data(source_func, source_name, recalc_sub, False) for source_func, source_name in sources]
 
