@@ -235,7 +235,7 @@ def hist_sd(outdir, wd, md):
 
     # Generate the RST table
     rst_table = tabulate(out, headers, tablefmt="rst")
-    print(rst_table) # todo save this to a file, what exactly is this?
+    print(rst_table) # todo save this to a file, what exactly is this? # todo add the depth to water bin to the table and it'll make sense....
 
     # Save the stats to a csv file
     # todo why are we saving this? should it be included in our outputs???
@@ -251,6 +251,7 @@ def hist_sd(outdir, wd, md):
 
     stats_final = pd.merge(stats_results, sites, on='site_name', how='left')
 
+    # todo review tables and make sure the naming is good/consistent
     # next we group by bins and calculate the mean max and min and sd of each probaility and class, skew and kurtosis, min and max and mean of each bin
     summary_stats = stats_final.groupby('mean_depth_bin').agg(
         {'Annual Frequency (<0.1m)': ['mean', 'std', 'max', 'min'],
@@ -277,7 +278,7 @@ def hist_sd(outdir, wd, md):
 
     for dtw_threshold in [np.inf, 2, 1, 0.5]:
 
-        stats_temp = stats[stats['depth_to_water_cor_mean'] < dtw_threshold]
+        stats_temp = stats[stats['mean'] < dtw_threshold]
         fig = plt.figure(figsize=(10, 6))
         gs = fig.add_gridspec(2, 2, height_ratios=[1, 0.3])
         ax_dtw = fig.add_subplot(gs[0, 0])
@@ -286,17 +287,17 @@ def hist_sd(outdir, wd, md):
         ax_legend = fig.add_subplot(gs[1, :])
         ax_legend.axis('off')
 
-        ax_dtw.hist(stats_temp['depth_to_water_cor_mean'], bins=50, alpha=0.7, color='blue', edgecolor='black',
+        ax_dtw.hist(stats_temp['mean'], bins=50, alpha=0.7, color='blue', edgecolor='black',
                     label='Mean Depth to Water')
-        ax_dtw.xlabel('Mean Depth to Water')
-        ax_dtw.ylabel('Frequency')
+        ax_dtw.set_xlabel('Mean Depth to Water')
+        ax_dtw.set_ylabel('Frequency')
 
         # Save the histogram of SD Depth to Water
-        ax_std.hist(stats_temp['depth_to_water_cor_std'], bins=50, alpha=0.7, color='orange', edgecolor='black',
+        ax_std.hist(stats_temp['std'], bins=50, alpha=0.7, color='orange', edgecolor='black',
                     label='SD Depth to Water')
-        ax_std.title('Histogram of SD Depth to Water')
-        ax_std.xlabel('Standard Deviation Depth to Water')
-        ax_std.ylabel('Frequency')
+        ax_std.set_title('Histogram of SD Depth to Water')
+        ax_std.set_xlabel('Standard Deviation Depth to Water')
+        ax_std.set_ylabel('Frequency')
 
         # Save the CDF of  Depth to Water
         ax_dtw_cum.hist(stats_temp['depth_to_water_cor'], bins=100, alpha=0.7, color='red', edgecolor='black',
@@ -304,8 +305,8 @@ def hist_sd(outdir, wd, md):
                         density=True, label='CDF of Depth to Water')
         ax_dtw_cum.axhline(y=0.75, color='k', linestyle='--', label='75% Cumulative Probability')
         ax_dtw_cum.axhline(y=0.95, color='k', linestyle=':', label='95% Cumulative Probability')
-        ax_dtw_cum.xlim(-0.1, 2)
-        ax_dtw_cum.ylabel('Cumulative Probability')
+        ax_dtw_cum.set_xlim(-0.1, 2)
+        ax_dtw_cum.set_ylabel('Cumulative Probability')
         handles_cum, labels_cum = ax_dtw_cum.get_legend_handles_labels()
         handles_dtw, labels_dtw = ax_dtw.get_legend_handles_labels()
         handles_std, labels_std = ax_std.get_legend_handles_labels()
@@ -383,10 +384,9 @@ def exceedance_prob(outdir, wd, md, depth_cat=1):
     # Plotting the CDF
     fig, ax = plt.subplots(figsize=(8, 6))
     ax.plot(sorted_depth, cdf, marker='.', linestyle='none')
-    ax.title('Cumulative Distribution Function of Depth to Water')
-    ax.xlabel('Depth to Water (m)')
-    ax.ylabel('CDF')
-    ax.grid(True)
+    ax.set_title('Cumulative Distribution Function of Depth to Water')
+    ax.set_xlabel('Depth to Water (m)')
+    ax.set_ylabel('CDF')
     fig.savefig(outdir.joinpath(f'cdf_depth_to_water_depth_cat_{depth_cat}.png'))
     plt.close(fig)
 
