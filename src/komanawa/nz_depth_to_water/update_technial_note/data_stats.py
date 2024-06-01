@@ -172,6 +172,7 @@ def get_running_totals(wd):
     handles2, labels2 = ax2.get_legend_handles_labels()
     ax.legend(handles + handles2, labels + labels2, loc='upper left')
     ax.set_title('Cumulative number of records and sites')
+    ax.set_xlim(1940, 2025)
     fig.tight_layout()
     outfigs['cumulative_n_records'] = fig
 
@@ -187,6 +188,7 @@ def get_running_totals(wd):
         ax.fill_between(prev.index, prev, prev + source_data['depth_to_water'].cumsum() * 1e-6, label=f'{source}')
         prev += source_data['depth_to_water'].cumsum() * 1e-6
     ax.set_xlabel('Year')
+    ax.set_xlim(1940, 2025)
     ax.set_ylabel('Number of records (millions)')
     ax.set_title('Cumulative number of records per source')
     ax.legend()
@@ -205,6 +207,7 @@ def get_running_totals(wd):
     ax.set_ylabel('Number of sites')
     ax.set_title('Cumulative number of sites per source')
     ax.legend()
+    ax.set_xlim(1940, 2025)
     fig.tight_layout()
     outfigs['cumulative_n_sites_per_source'] = fig
     return outfigs
