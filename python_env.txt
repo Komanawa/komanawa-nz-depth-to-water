@@ -1,1 +1,7 @@
-conda create -c conda-forge --name Komanawa_nz_dtw python numpy pandas pytables openpyxl matplotlib scipy netcdf4 psutil geopandas flopy pysheds scikit-learn py7zr pyemu
+Packages to update the technical note
+
+pip install pandas
+pip install matplotlib
+pip install scipy
+pip install tabulate
+pip install tables

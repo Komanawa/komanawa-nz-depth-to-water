@@ -7,6 +7,14 @@ a small repo that holds:
 * Versioning of and access to the dataset
 * Full documentation of the dataset
 
+:Author: |author|
+:copyright: |copyright|
+:Version: |release|
+:Date: |today|
+:Description: Initial release of the dataset
+:Changelog entry: Initial release of the dataset
+:Data access: `access the data on Figshare <todo>`_ .. todo figshare or other???
+
 .. toctree::
     :maxdepth: 2
     :hidden:
@@ -17,11 +25,6 @@ a small repo that holds:
 Data Access and versions
 ==========================
 
-:Version: 1.0.0
-:Date: 2024-04-04
-:Description: Initial release of the dataset
-:Changelog entry: Initial release of the dataset
-:Data access: `access the data on Figshare <todo>`_ .. todo figshare or other???
 
 
 Data Access via Python

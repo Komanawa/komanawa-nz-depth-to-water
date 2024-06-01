@@ -13,7 +13,7 @@ where = ["src/"]
 
 [project]
 name = "komanawa-nz-depth-to-water"
-version = "v1.0.0"
+dynamic = ["version"] # version set in version.py
 authors = [
     { name = "Matt Dumont", email = "Matt@komanawa.com" },
 ]
@@ -22,6 +22,7 @@ readme = "README.rst"
 license = { file = "LICENSE" }
 requires-python = ">=3.11"
 dependencies = [
+    # todo
 ]
 
 classifiers = [
@@ -30,7 +31,10 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 
+[tool.setuptools.dynamic]
+version = {attr = "komanawa.nz_depth_to_water.version.__version__"}
+
 [project.urls]
 Homepage = "https://github.com/Komanawa-Solutions-Ltd/komanawa-nz-depth-to-water"
 Issues = "https://github.com/Komanawa-Solutions-Ltd/komanawa-nz-depth-to-water/issues"
-Documentation = "access to the Future coasts New Zealand national depth to water dataset"
+Documentation = "https://github.com/Komanawa-Solutions-Ltd/komanawa-nz-depth-to-water"
