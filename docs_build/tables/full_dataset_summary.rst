@@ -1,20 +1,15 @@
-.. todo move tables into a unique document, and link to them here so that we can auto generate them from the data in the future
-.. todo update inlcude n sites/nobs with only one obs and less than 10 obs
-.. todo make machine producable tables
+.. table Overview of the dataset generated from src/komanawa/nz_depth_to_water/update_technial_note/data_stats.py :
 
+.. rubric:: Overview of the dataset
 
-.. _Summary of Metadata:
-
-.. rubric:: Summary statistics of data
-
-==========================  ==================
-Metric                          Results
-==========================  ==================
-no. sites                    113418
-no. obs                      5455917
-record start_date            1899-12-29
-record end date              2024-01-24
-average n obs per site       49
-no. sites with only one obs  94110
-no. sites less than 10 obs   102282
-=========================  ==================
+==========================  ==========
+Metric                      Value
+==========================  ==========
+N sites                     113,430
+N obs.                      5,456,573
+Start date                  1899-12-29
+End date                    2024-04-30
+Mean n obs./site            49.22
+N sites with only one obs.  94,110
+N sites < 10 obs.           102,282
+==========================  ==========

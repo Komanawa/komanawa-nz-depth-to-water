@@ -13,19 +13,14 @@ a small repo that holds:
 :Date: |today|
 :Description: Initial release of the dataset
 :Changelog entry: Initial release of the dataset
-:Data access: `access the data on Figshare <todo>`_ .. todo figshare or other???
+:Data access: Access the data via this package.
 
 .. toctree::
     :maxdepth: 2
     :hidden:
 
-    Code documentation<autoapi/komanawa/komanawa-nz-depth-to-water/index.rst>
-    Dataset Technical Note<Technical_note.rst>
-
-Data Access and versions
-==========================
-
-
+    Code documentation<autoapi/komanawa/nz_depth_to_water/index.rst>
+    Dataset Technical Note<supporting_docs/Technial_note.rst>
 
 Data Access via Python
 -------------------------
@@ -49,9 +44,33 @@ Fork the repository and modify and use the code as you see fit.  If you have any
 Code Example
 ^^^^^^^^^^^^^^
 
-.. todo - add code example
+.. code-block:: python
+
+    from komanawa.nz_depth_to_water import get_nz_depth_to_water
+    water_level_data, metadata = get_nz_depth_to_water()
+
+
+Export the data to a csv files
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+To export the data to a csv file, you can use the following code (assuming you have installed the package):
+
+.. code-block:: bash
+
+        python -m komanawa.nz_depth_to_water.export_to_csv
+
+Alternatively, you can specify a folder to export the data:
+
+.. code-block:: bash
+
+        python -m komanawa.nz_depth_to_water.export_to_csv /path/to/folder
+
+.. todo - check this works
 
 Contributing and issues/bugs
 =============================
 
 We have made every attempt to ensure the quality of the data and code in this repository. However, inevitably, there will be issues with the data or code. If you find an issue, please raise an issue on the GitHub repository. If you would like to contribute to the code or data, please fork the repository and submit a pull request.
+
+
+.. include:: tables/Dataset_description.rst
