@@ -37,4 +37,4 @@ version = { attr = "komanawa.nz_depth_to_water.version.__version__" }
 [project.urls]
 Homepage = "https://github.com/Komanawa-Solutions-Ltd/komanawa-nz-depth-to-water"
 Issues = "https://github.com/Komanawa-Solutions-Ltd/komanawa-nz-depth-to-water/issues"
-Documentation = "https://github.com/Komanawa-Solutions-Ltd/komanawa-nz-depth-to-water" # todo update to gitpage
+Documentation = "https://komanawa-solutions-ltd.github.io/komanawa-nz-depth-to-water/"
