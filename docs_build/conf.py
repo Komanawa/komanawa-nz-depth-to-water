@@ -5,12 +5,19 @@
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
+import sys
+from pathlib import Path
 
 project = 'komanawa-nz-depth-to-water'
-copyright = '2024, Komanawa Solutions Ltd.'
-author = 'Matt Dumont'
-release = 'v1.0.0'
+copyright = '2024, Kо̄manawa Solutions Ltd.'
+light_name = 'nz-depth-to-water'
+project_dirname = 'nz_depth_to_water'
+author = 'Patrick Durney, Matt Dumont, Evelyn Charlesworth'
+sys.path.append(str(Path(__file__).parent.parent.joinpath('src', 'komanawa', project_dirname)))
+print(sys.path)
+from version import __version__
 
+release = f'v{__version__}'
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
@@ -26,6 +33,8 @@ autoapi_python_class_content = 'both'  # Include both the class docstring and th
 autoapi_dirs = ['../src/komanawa/']  # The directory to process
 autoapi_options = ['members', 'inherited-members', 'show-inheritance', 'show-module-summary', 'imported-members',
                    'show-inheritance-diagram']
+
+autoapi_member_order = 'groupwise'
 
 autoapi_python_use_implicit_namespaces = True
 templates_path = ['_templates']
@@ -54,7 +63,7 @@ html_theme_options = {
     "navbar_end": ["navbar-icon-links"],
     "logo": {
         "image_light": "_static/ksl_for_latex.png",
-        "text": "Kendall Stats Overview",
+        "text": f"{light_name.title()} {release} Overview",
     },
     "show_toc_level": 2,
     "secondary_sidebar_items": ["page-toc", ],
@@ -74,7 +83,7 @@ html_theme_options = {
             "type": "fontawesome",
         },
         {
-            "name": "Komanawa Solutions Ltd.",
+            "name": "Kо̄manawa Solutions Ltd.",
             "url": "https://www.komanawa.com",
             "icon": "_static/just_symbol.png",
             "type": "local",
@@ -86,3 +95,14 @@ html_show_sourcelink = False
 html_context = {
     "default_mode": 'light'
 }
+
+variables_to_export = [
+    "project",
+    "copyright",
+    'release',
+    "author",
+    'light_name',
+]
+frozen_locals = dict(locals())
+rst_epilog = '\n'.join(map(lambda x: f".. |{x}| replace:: {frozen_locals[x]}", variables_to_export))
+del frozen_locals

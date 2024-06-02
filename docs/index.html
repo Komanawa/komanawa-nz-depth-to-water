@@ -1,0 +1,746 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" data-theme="light">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Kо̄manawa NZ Depth to Water &#8212; komanawa-nz-depth-to-water v0.1.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=fd3f3429" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=3ee479438cf8b5e0d341"></script>
+
+    <script src="_static/documentation_options.js?v=fa47ad08"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'index';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="komanawa.nz_depth_to_water" href="autoapi/komanawa/nz_depth_to_water/index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="light">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class=" navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+
+<a class="navbar-brand logo" href="#">
+  
+  
+  
+  
+  
+    
+    
+    
+    <img src="_static/ksl_for_latex.png" class="logo__image only-light" alt=""/>
+    <script>document.write(`<img src="" class="logo__image only-dark" alt=""/>`);</script>
+  
+  
+    <p class="title logo__title">Nz-Depth-To-Water v0.1.0 Overview</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class=" navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav class="navbar-nav">
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="autoapi/komanawa/nz_depth_to_water/index.html">
+    Code documentation
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="supporting_docs/Technial_note.html">
+    Dataset Technical Note
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
+        </div>
+      
+      
+        <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="#https://github.com/Komanawa-Solutions-Ltd/komanawa-nz-depth-to-water#" title="View on GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i></span>
+            <span class="sr-only">View on GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://www.linkedin.com/company/k%C5%8Dmanawa-solutions-ltd/" title="Follow us on LinkedIn" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-linkedin fa-lg" aria-hidden="true"></i></span>
+            <span class="sr-only">Follow us on LinkedIn</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://www.komanawa.com" title="Kо̄manawa Solutions Ltd." class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="_static/just_symbol.png" class="icon-link-image" alt="Kо̄manawa Solutions Ltd."/></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
+    </div>
+  
+
+  
+    <button class="sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav class="navbar-nav">
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="autoapi/komanawa/nz_depth_to_water/index.html">
+    Code documentation
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="supporting_docs/Technial_note.html">
+    Dataset Technical Note
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="#https://github.com/Komanawa-Solutions-Ltd/komanawa-nz-depth-to-water#" title="View on GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i></span>
+            <span class="sr-only">View on GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://www.linkedin.com/company/k%C5%8Dmanawa-solutions-ltd/" title="Follow us on LinkedIn" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-linkedin fa-lg" aria-hidden="true"></i></span>
+            <span class="sr-only">Follow us on LinkedIn</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://www.komanawa.com" title="Kо̄manawa Solutions Ltd." class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="_static/just_symbol.png" class="icon-link-image" alt="Kо̄manawa Solutions Ltd."/></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none"></div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="kmanawa-nz-depth-to-water">
+<h1>Kо̄manawa NZ Depth to Water<a class="headerlink" href="#kmanawa-nz-depth-to-water" title="Link to this heading">#</a></h1>
+<p>a small repo that holds:</p>
+<ul class="simple">
+<li><p>The code used to produce a New Zealand wide depth to water dataset</p></li>
+<li><p>Versioning of and access to the dataset</p></li>
+<li><p>Full documentation of the dataset</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Author<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Patrick Durney, Matt Dumont, Evelyn Charlesworth</p>
+</dd>
+<dt class="field-even">copyright<span class="colon">:</span></dt>
+<dd class="field-even"><p>2024, Kо̄manawa Solutions Ltd.</p>
+</dd>
+<dt class="field-odd">Version<span class="colon">:</span></dt>
+<dd class="field-odd"><p>v0.1.0</p>
+</dd>
+<dt class="field-even">Date<span class="colon">:</span></dt>
+<dd class="field-even"><p>Jun 02, 2024</p>
+</dd>
+<dt class="field-odd">Changelog entry<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Initial release of the dataset</p>
+</dd>
+<dt class="field-even">Data access<span class="colon">:</span></dt>
+<dd class="field-even"><p>Access the data via this package.</p>
+</dd>
+</dl>
+<div class="toctree-wrapper compound">
+</div>
+<section id="data-access-via-python">
+<h2>Data Access via Python<a class="headerlink" href="#data-access-via-python" title="Link to this heading">#</a></h2>
+<section id="installation">
+<h3>Installation<a class="headerlink" href="#installation" title="Link to this heading">#</a></h3>
+<p><strong>Option 1 - pip</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>git+https://github.com/Komanawa-Solutions-Ltd/komanawa-nz-depth-to-water.git
+</pre></div>
+</div>
+<p><strong>Option 2 - clone the repository</strong></p>
+<p>clone the repository and install the package as you see fit.</p>
+<p><strong>Option 3 - Fork the repository</strong></p>
+<p>Fork the repository and modify and use the code as you see fit.  If you have any improvements, please submit a pull request.</p>
+</section>
+<section id="code-example">
+<h3>Code Example<a class="headerlink" href="#code-example" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">komanawa.nz_depth_to_water</span> <span class="kn">import</span> <span class="n">get_nz_depth_to_water</span>
+<span class="n">water_level_data</span><span class="p">,</span> <span class="n">metadata</span> <span class="o">=</span> <span class="n">get_nz_depth_to_water</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="export-the-data-to-a-csv-files">
+<h3>Export the data to a csv files<a class="headerlink" href="#export-the-data-to-a-csv-files" title="Link to this heading">#</a></h3>
+<p>To export the data to a csv file, you can use the following code (assuming you have installed the package):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>komanawa.nz_depth_to_water.export_to_csv
+</pre></div>
+</div>
+<p>Alternatively, you can specify a folder to export the data:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>komanawa.nz_depth_to_water.export_to_csv<span class="w"> </span>/path/to/folder
+</pre></div>
+</div>
+<section id="contributing-and-issues-bugs">
+<h4>Contributing and issues/bugs<a class="headerlink" href="#contributing-and-issues-bugs" title="Link to this heading">#</a></h4>
+<p>We have made every attempt to ensure the quality of the data and code in this repository. However, inevitably, there will be issues with the data or code. If you find an issue, please raise an issue on the GitHub repository. If you would like to contribute to the code or data, please fork the repository and submit a pull request.</p>
+</section>
+<section id="dataset-metadata">
+<h4>Dataset Metadata<a class="headerlink" href="#dataset-metadata" title="Link to this heading">#</a></h4>
+</section>
+</section>
+</section>
+<section id="table-1-data-description">
+<h2>Table 1: Data description<a class="headerlink" href="#table-1-data-description" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Column title</strong></p></th>
+<th class="head"><p><strong>Datatype</strong></p></th>
+<th class="head"><p><strong>Descriptions</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>well_name</p></td>
+<td><p>string</p></td>
+<td><p>The name of the well, as provided by the data provider.</p></td>
+</tr>
+<tr class="row-odd"><td><p>date</p></td>
+<td><p>datetime</p></td>
+<td><p>The date the reading was taken</p></td>
+</tr>
+<tr class="row-even"><td><p>site_name</p></td>
+<td><p>string</p></td>
+<td><p>A unique identifier for each well, combining the well name and the source provider.</p></td>
+</tr>
+<tr class="row-odd"><td><p>depth_to_water_cor</p></td>
+<td><p>float</p></td>
+<td><p>Depth to water from from ground surface e.g. corrected for collar height if available.</p></td>
+</tr>
+<tr class="row-even"><td><p>depth_to_water</p></td>
+<td><p>float</p></td>
+<td><p>The depth to water reading at the site on the date provided to either ground level or measuring point. Provided by the data provider, otherwise calculated if a groundwater elevation was provided.</p></td>
+</tr>
+<tr class="row-odd"><td><p>gw_elevation</p></td>
+<td><p>float</p></td>
+<td><p>The groundwater elevation at the site on the date provided. Provided by the data provider, otherwise calculated if a groundwater depth reading was provided.</p></td>
+</tr>
+<tr class="row-even"><td><p>dtw_flag</p></td>
+<td><p>int</p></td>
+<td><p>A flag that describes how the depth to water reading was taken/calculated. The meaning of each flag is described in flag_mappers.py</p></td>
+</tr>
+<tr class="row-odd"><td><p>source</p></td>
+<td><p>string</p></td>
+<td><p>The data provider. A key is provided in Table 3.</p></td>
+</tr>
+<tr class="row-even"><td><p>water_elev_flag</p></td>
+<td><p>int</p></td>
+<td><p>A flag that describes how the groundwater elevation reading was taken/calculated. The meaning of each flag is described in flag_mappers.py</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="table-2-metadata-description">
+<h2>Table 2: Metadata description<a class="headerlink" href="#table-2-metadata-description" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Column title</strong></p></th>
+<th class="head"><p><strong>Datatype</strong></p></th>
+<th class="head"><p><strong>Descriptions</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>well_name</p></td>
+<td><p>string</p></td>
+<td><p>The name of the well, as provided by the data provider.</p></td>
+</tr>
+<tr class="row-odd"><td><p>bottom_bottomscreen</p></td>
+<td><p>float</p></td>
+<td><p>The depth of the end of the bottom screen, if known. If there is only one screen in the well, the end of screen depth will be recorded in bottom_topscreen. If there is more than one screen in the well, this value is the depth at which the last screen ends.</p></td>
+</tr>
+<tr class="row-even"><td><p>dist_mp_to_ground_level</p></td>
+<td><p>float</p></td>
+<td><p>The distance from the measuring point to the ground surface, if known. If it is 0, the measuring point is at the ground surface.</p></td>
+</tr>
+<tr class="row-odd"><td><p>ground_level_datum</p></td>
+<td><p>string</p></td>
+<td><p>The elevation datum used for the ground level elevation.</p></td>
+</tr>
+<tr class="row-even"><td><p>nztm_x</p></td>
+<td><p>float</p></td>
+<td><p>The NZTM X coordinate for the site.</p></td>
+</tr>
+<tr class="row-odd"><td><p>nztm_y</p></td>
+<td><p>float</p></td>
+<td><p>The NZTM Y coordinate for the site.</p></td>
+</tr>
+<tr class="row-even"><td><p>other</p></td>
+<td><p>string</p></td>
+<td><p>All other metadata as provided by council that may be useful or the Future Coast Research Programme. Some of it is redundant.</p></td>
+</tr>
+<tr class="row-odd"><td><p>rl_datum</p></td>
+<td><p>string</p></td>
+<td><p>The elevation datum for the collar elevation.</p></td>
+</tr>
+<tr class="row-even"><td><p>rl_elevation</p></td>
+<td><p>float</p></td>
+<td><p>The elevation at the site, either provided by the data provider, or if not known then sampled from LiDAR.</p></td>
+</tr>
+<tr class="row-odd"><td><p>top_topscreen</p></td>
+<td><p>float</p></td>
+<td><p>The depth of the top of the top screen, if known. If there is only one screen in the well, this is the screen depth provided. If there is more than one screen, this is the depth of the top of the upper most screen.</p></td>
+</tr>
+<tr class="row-even"><td><p>well_depth</p></td>
+<td><p>float</p></td>
+<td><p>The depth of the well, if known, as provided by the data provider.</p></td>
+</tr>
+<tr class="row-odd"><td><p>source</p></td>
+<td><p>string</p></td>
+<td><p>The data provider. A key is provided in Table 3.</p></td>
+</tr>
+<tr class="row-even"><td><p>site_name</p></td>
+<td><p>float</p></td>
+<td><p>A unique identifier for each well, combining the well name and the source provider.</p></td>
+</tr>
+<tr class="row-odd"><td><p>reading_count</p></td>
+<td><p>float</p></td>
+<td><p>The number of groundwater level readings associated with each well.</p></td>
+</tr>
+<tr class="row-even"><td><p>mean_dtw</p></td>
+<td><p>float</p></td>
+<td><p>The mean depth to water for the site.</p></td>
+</tr>
+<tr class="row-odd"><td><p>median_dtw</p></td>
+<td><p>float</p></td>
+<td><p>The median depth to water for the site.</p></td>
+</tr>
+<tr class="row-even"><td><p>std_dtw</p></td>
+<td><p>float</p></td>
+<td><p>The standard deviation of the depth to water readings. This is only present for wells where the reading count is greater than one.</p></td>
+</tr>
+<tr class="row-odd"><td><p>max_dtw</p></td>
+<td><p>float</p></td>
+<td><p>The maximum depth to water reading at that site.</p></td>
+</tr>
+<tr class="row-even"><td><p>min_gwl</p></td>
+<td><p>float</p></td>
+<td><p>The minimum depth to water reading at that site.</p></td>
+</tr>
+<tr class="row-odd"><td><p>start_date</p></td>
+<td><p>datetime</p></td>
+<td><p>The date the groundwater level readings start at that site.</p></td>
+</tr>
+<tr class="row-even"><td><p>end_date</p></td>
+<td><p>datetime</p></td>
+<td><p>The date the groundwater level readings finish at that site.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="table-3-source-key">
+<h2>Table 3: Source key<a class="headerlink" href="#table-3-source-key" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Source</strong></p></th>
+<th class="head"><p><strong>Full name</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>auk</p></td>
+<td><p>Auckland Council</p></td>
+</tr>
+<tr class="row-odd"><td><p>bop</p></td>
+<td><p>Bay of Plenty Regional Council</p></td>
+</tr>
+<tr class="row-even"><td><p>gdc</p></td>
+<td><p>Gisborne District Council</p></td>
+</tr>
+<tr class="row-odd"><td><p>hbrc</p></td>
+<td><p>Hawkes Bay Regional Council</p></td>
+</tr>
+<tr class="row-even"><td><p>hrc</p></td>
+<td><p>Horizons Regional Council</p></td>
+</tr>
+<tr class="row-odd"><td><p>mdc</p></td>
+<td><p>Marlborough District Council</p></td>
+</tr>
+<tr class="row-even"><td><p>nrc</p></td>
+<td><p>Northland Regional Council</p></td>
+</tr>
+<tr class="row-odd"><td><p>ncc</p></td>
+<td><p>Nelson City Council</p></td>
+</tr>
+<tr class="row-even"><td><p>orc</p></td>
+<td><p>Otago Regional Council</p></td>
+</tr>
+<tr class="row-odd"><td><p>src</p></td>
+<td><p>Environment Southland</p></td>
+</tr>
+<tr class="row-even"><td><p>trc</p></td>
+<td><p>Taranaki Regional Council</p></td>
+</tr>
+<tr class="row-odd"><td><p>tdc</p></td>
+<td><p>Tasman District Council</p></td>
+</tr>
+<tr class="row-even"><td><p>wc</p></td>
+<td><p>Waikato Regional Council</p></td>
+</tr>
+<tr class="row-odd"><td><p>gwrc</p></td>
+<td><p>Greater Wellington Regional Council</p></td>
+</tr>
+<tr class="row-even"><td><p>wcrc</p></td>
+<td><p>West Coast Regional Council</p></td>
+</tr>
+<tr class="row-odd"><td><p>nzgd</p></td>
+<td><p>New Zealand Geotechnical database</p></td>
+</tr>
+<tr class="row-even"><td><p>ecan</p></td>
+<td><p>Environment Canterbury</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="right-next"
+       href="autoapi/komanawa/nz_depth_to_water/index.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">komanawa.nz_depth_to_water</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-access-via-python">Data Access via Python</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#code-example">Code Example</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#export-the-data-to-a-csv-files">Export the data to a csv files</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#contributing-and-issues-bugs">Contributing and issues/bugs</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dataset-metadata">Dataset Metadata</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#table-1-data-description">Table 1: Data description</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#table-2-metadata-description">Table 2: Metadata description</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#table-3-source-key">Table 3: Source key</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2024, Kо̄manawa Solutions Ltd..
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.15.3.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

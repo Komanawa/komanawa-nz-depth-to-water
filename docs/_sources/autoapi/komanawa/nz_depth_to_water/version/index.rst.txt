@@ -1,0 +1,12 @@
+komanawa.nz_depth_to_water.version
+==================================
+
+.. py:module:: komanawa.nz_depth_to_water.version
+
+.. autoapi-nested-parse::
+
+   created matt_dumont 
+   on: 6/1/24
+
+
+

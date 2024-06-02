@@ -1,0 +1,36 @@
+komanawa.nz_depth_to_water.export_to_csv
+========================================
+
+.. py:module:: komanawa.nz_depth_to_water.export_to_csv
+
+.. autoapi-nested-parse::
+
+   usage:
+
+       python export_to_csv.py [outdir]
+
+   outdir: str, optional, the directory to save the csv files to. If not provided, the user's Downloads directory is used.
+
+   created matt_dumont
+   on: 6/2/24
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   komanawa.nz_depth_to_water.export_to_csv.export_dtw_to_csv
+
+
+Module Contents
+---------------
+
+.. py:function:: export_dtw_to_csv(outdir)
+
+   Export the depth to water data to csv files.
+
+   :return:
+
+

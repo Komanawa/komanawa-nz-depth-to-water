@@ -1,0 +1,38 @@
+komanawa.nz_depth_to_water.get_data
+===================================
+
+.. py:module:: komanawa.nz_depth_to_water.get_data
+
+.. autoapi-nested-parse::
+
+   created matt_dumont 
+   on: 7/05/24
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   komanawa.nz_depth_to_water.get_data.export_dtw_to_csv
+   komanawa.nz_depth_to_water.get_data.get_nz_depth_to_water
+
+
+Module Contents
+---------------
+
+.. py:function:: export_dtw_to_csv(outdir)
+
+   Export the depth to water data to csv files.
+
+   :return:
+
+
+.. py:function:: get_nz_depth_to_water()
+
+   load the depth to water data and metadata and return them as pandas DataFrames.
+
+   :return: water_level_data, metadata
+
+
