@@ -9,7 +9,7 @@ import sys
 from pathlib import Path
 
 project = 'komanawa-nz-depth-to-water'
-copyright = '2024, Komanawa Solutions Ltd.'
+copyright = '2024, Kо̄manawa Solutions Ltd.'
 light_name = 'nz-depth-to-water'
 project_dirname = 'nz_depth_to_water'
 author = 'Patrick Durney, Matt Dumont, Evelyn Charlesworth'
@@ -83,7 +83,7 @@ html_theme_options = {
             "type": "fontawesome",
         },
         {
-            "name": "Komanawa Solutions Ltd.",
+            "name": "Kо̄manawa Solutions Ltd.",
             "url": "https://www.komanawa.com",
             "icon": "_static/just_symbol.png",
             "type": "local",

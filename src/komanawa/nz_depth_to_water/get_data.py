@@ -127,6 +127,7 @@ def export_dtw_to_csv(outdir):
 
     :return:
     """
+    print(f'Preparing to export data to csvs in {outdir}')
     water_level_data, metadata = get_nz_depth_to_water()
     outdir = Path(outdir)
     outdir.mkdir(exist_ok=True)
