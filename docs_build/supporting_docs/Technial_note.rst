@@ -7,22 +7,24 @@ Developing a National Depth to Water Dataset for New Zealand
 Introduction and Background
 =============================
 
-Future Coasts Aotearoa is a NIWA led MBIE Endeavour research programme that combines expertise in Indigenous culture, economics, social, and physical sciences to tackle the issue of sea-level rise in coastal lowland communities by enhancing the evidence base for sea-level rise risks. It aims to build fit-for-purpose & holistic wellbeing evaluation tools, applying these tools in adaptive planning and decision-making frameworks for a range of case studies.
-Our role at Kōmanawa Solutions Ltd, alongside GNS and the University of Canterbury, is to develop impact and adaptation thresholds for shallow groundwater and seawater intrusion, develop a national coastal groundwater hazard exposure assessment, and national and local models of seawater intrusion and water table shoaling with and without adaptation solutions such as pumped drainage.
+Groundwater level data are a key input for a broad range of water resource investigation, management and research activities. Access to national groundwater level data in New Zealand is challenging, however, because the data are held in the various Regional Council and Unitary Authority databases and in the New Zealand Geotechnical Database under a wide array of data architectures. The quality of the data and metadata varies significantly; in some instances, the data are subject to rigorous quality assurance processes and include accurate measurement point elevations and spatial coordinates. In other instances, the data comprise single readings of unknown quality with no information on the measurement point elevation or even the depth of the well
 
-As part of this, we have collected and processed a national depth to water dataset for New Zealand. This technical note outlines the data collected, the methods used to produce this dataset, and the potential use cases both within the project and externally.
+Future Coasts Aotearoa is a NIWA led MBIE Endeavour research programme that combines expertise in Indigenous culture, economics, social, and physical sciences to tackle the issue of sea-level rise in coastal lowland communities by enhancing the evidence base for sea-level rise risks. Key groundwater science outputs include develop impact and adaptation thresholds for shallow groundwater hazards, a national coastal groundwater hazard exposure assessment, and national and local models of seawater intrusion and water table shoaling.
+
+This technical note outlines the data collected, the methods used to produce and analyse a national depth to water dataset for New Zealand for the Future Coasts research programme. The dataset will be valuable for a range of applied science and research activities.
 
 Methodology
 =============
 
-Data was collected from regional councils and unitary authorities directly and using Tethys (https://github.com/tethys-ts, developed by Mike Kitteridge). The data was processed using Python; the resulting scripts are publicly available on GitHub: https://github.com/Komanawa-Solutions-Ltd/komanawa-nz-depth-to-water. The details of the data collection and processing are outlined in greater detail below.
+Data gathering scope
+----------------------
+
+Groundwater level data can be grouped into discrete measurements and regular monitoring. The former include spot values recorded during/immediately after well drilling, measurements taken during geotechnical investigations (e.g. Cone Penetration Tests, geotechnical bores and trial pits) and piezometric surveys undertaken by Regional Councils. The latter includes manual and instrument-based regular data collection programmes undertaken by Regional Councils, Unitary Authorities and some Territorial Authorities. Groundwater level readings are also collected in accordance with consent conditions for certain consented activities, but these data are typically stored in reports and spreadsheets as part of a large set of files in records management systems operated by Regional Council and Unitary Authority consenting and compliance teams and are hence not accessible without significant investment of resources. Our data collection was therefore constrained to discrete readings and regular monitoring data within Regional Council and Unitary Authority groundwater level databases and the New Zealand Geotechnical Database.
 
 Data Request
 ---------------
 
-A data request was sent out to 16 New Zealand councils in March 2023; this included all 11 regional councils and five unitary authorities. The data request asked for all groundwater level data; this included sites additional to any NGMP monitoring sites, as well as any discontinuous or sporadic readings. The aim was to collect as much national data as possible, and therefore even sites with only one reading provided some use to us. We were open to receiving both groundwater depth and/or groundwater elevation data, but just asked that it was specified to reduce error during the data processing. Along with the groundwater level data we also requested standard metadata for each site.
-
-Our minimum metadata requirements were:
+A data request was sent out to 16 New Zealand councils in March 2023; this included all 11 regional councils and five unitary authorities. The data request sought all groundwater level data; this included sites additional to any NGMP monitoring sites, as well as any discontinuous or sporadic readings. The aim was to collect as much national data as possible, including sites with a single. We were open to receiving both groundwater depth and/or groundwater elevation data on the proviso that it was specified to reduce data processing error. We also requested standard metadata for each site, with a minimum metadata requirement of:
 
 - Unique site identifier (e.g. site number)
 - Grid reference in NZTM
@@ -34,11 +36,12 @@ Our preferred metadata requirements included:
 - Surveyed elevation of the ground surface at the measuring point
 - The distance between the measuring point and the general ground surface.
 
-The data was received in Excel and csv formats, with various degrees of completeness and processing. Data management and storage varied from council to council, which meant processing to standardise the data was required.
+The data were received in Excel and csv formats, with various degrees of completeness and processing. Data management and storage varied from council to council hence processing to standardise the data was required.
 
-Alongside the direct requests to regional councils and unitary authorities, data was also pulled from Tethys. Tethys is a Python-based tool developed by Mike Kitteridge which allows any data stored by councils in Hilltop to be accessed and downloaded. For councils that had relevant and up-to-date data in Hilltop, it meant we did not have to rely on a response to the direct request, and saved time in the data collection and processing.
 
-A brief summary of the data collected from each council is provided below. The data quality rating is based on the formatting of the data as well as the relative quality of the data provided.
+Alongside the direct requests to regional councils and unitary authorities, data was also pulled from Tethys (https://github.com/tethys-ts), which allows hilltop based data to be accessed and downloaded. For councils that had relevant and up-to-date data in Hilltop, it meant we did not have to rely on a response to the direct request, and saved time in the data collection and processing.
+
+A brief summary of the data collected from each council is provided below.
 
 .. include:: ../tables/data_provided_summary.rst
 
@@ -46,7 +49,8 @@ A brief summary of the data collected from each council is provided below. The d
 Data Processing
 ------------------
 
-The data was processed using Python. The scripts used to process the data are available on GitHub; these are open source, and we encourage others to use and adapt them for their own purposes, as well as flag any issues or areas of improvement. Please note that code for resampling elevation data for each site is not available, as this relies on internal scripts and tools specific to KSL.
+The data was processed using Python. The scripts used to process the data are available on GitHub; these are open source, and we encourage others to use and adapt them for their own purposes, as well as flag any issues or areas of improvement.
+
 
 The systematic approach to the data processing was as follows:
 
@@ -59,8 +63,10 @@ The systematic approach to the data processing was as follows:
     - Anomalies such as negative values or readings beyond expected ranges were meticulously examined and rectified. Erroneous NaN values were also purged from the dataset.
     - All spatial data were transformed into the NZGD 2000 Transverse Mercator projection and NZVD2016 vertical datum.
     - The data was resampled to a consistent temporal resolution, ergo standardised to daily intervals.
-    - The data was amalgamated into a singular dataset, with each record containing both depth-to-water and groundwater elevation measurements.
     - The datasets were given a quality rating based on their type and source
+
+.. todo is there a quality rating for the datasets?  If so, where is it? and describe...
+
     - The data was checked for any duplicates and removed
 - Metadata Synthesis and Alignment
     - Metadata processing paralleled the data cleaning steps, with additional emphasis on ensuring alignment between site names in the metadata and the GWL data.
@@ -68,15 +74,20 @@ The systematic approach to the data processing was as follows:
     - Groundwater elevations were meticulously derived from ground elevation plus collar height (where available) minus depth to water, except for instances where councils provided elevations in NZVD2016.
 - Data Aggregation and Quality Assurance
     - The processed data from various sources were coalesced into a singular dataset. This aggregation involved strategic merging and deduplication, governed by predefined rules to ensure data integrity.
-    - Quality control measures, including data and metadata checks, were instituted to uphold the data's accuracy and reliability.
+    - Quality control measures, including data and metadata checks, were instituted to uphold accuracy and reliability.
 - Storing and Accessing Processed Data
     - The culminated GWL data and metadata were systematically stored in an HDF5 store, facilitating ease of access and analysis.
-    - Provisions were made to recalculate and update the stored data as necessary, ensuring the database remained current and reflective of the most recent submissions.
-- Assumptions and Considerations
+    - Provisions were made to recalculate and update the stored data as necessary, ensuring the database can remain current and reflective of the most recent submissions.
+- Assumptions and Usage Considerations
     - A fundamental assumption is that depth-to-groundwater measurements below the ground surface are positive, with negative readings indicative of artesian conditions. This necessitated sign adjustments and validation against council records.
     - In cases where well depth information was unavailable, wells were presumed shallow rather than being excluded from the dataset.
+
+.. todo How does this manifest in the output database - is there a particular value assigned?
+
     - Specific regional peculiarities, such as the assumed + 100 m offset for coastal groundwater elevations provided by the Otago Regional Council, were duly considered and adjusted.
     - For wells where the maximum depth to water exceeded the reported well depth, an assumption was made that the well depth equaled the maximum depth to water plus an additional 3 metres.
+
+.. todo got here in integrating ZE edits
 
 Statistical Analysis of Water Table Variation
 -------------------------------------------------
