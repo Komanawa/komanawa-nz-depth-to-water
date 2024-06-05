@@ -77,6 +77,9 @@ def get_data_stats(wd, md):
                                     'mean n obs./site', 'n sites 1+ obs.']
     source_summary_table['start date'] = source_summary_table['start date'].dt.date
     source_summary_table['end date'] = source_summary_table['end date'].dt.date
+    source_summary_table.index = source_summary_table.index.str.upper()
+    source_summary_table.index.name = 'Source'
+    source_summary_table.columns = source_summary_table.columns.str.capitalize()
     # Function to write DataFrame as reST table
 
     return overview_table, source_summary_table

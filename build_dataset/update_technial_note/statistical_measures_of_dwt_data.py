@@ -109,14 +109,15 @@ def quantile_99(x):
 
 def _calculate_stats(data, depth_cat):
     data_filtered = data[data['depth_cat'] == depth_cat]
-    stats = data_filtered.groupby('mean_depth_bin').agg({
+    stats = data_filtered.groupby('mean_depth_bin', observed=False).agg({
         'mean': ['mean', quantile_01, quantile_99],
         'std': ['median', quantile_01, quantile_99],
         'max': ['max'],
         'min': ['min'],
         'skew': ['median', quantile_01, quantile_99],
         'kurtosis': ['median', quantile_01, quantile_99],
-        'reading_count': 'sum'
+        'reading_count': 'sum',
+        'site_name': 'nunique'
     })
     # round to 3 dp
     stats = stats.round(3)
@@ -134,12 +135,13 @@ def _calculate_stats(data, depth_cat):
                                 'kurtosis_quantile_01', 'kurtosis_quantile_99', 'max_max', 'min_min'])
     stats = stats[
         ['depth_cat', 'mean_mean', 'mean_dtw_range', 'dtw_range', 'std_median', 'std_range', 'skew_median',
-         'skew_range', 'kurtosis_median', 'kurtosis_range', 'reading_count_sum']]
+         'skew_range', 'kurtosis_median', 'kurtosis_range', 'reading_count_sum', 'site_name_nunique']]
     stats = stats.rename(columns={'mean_mean': 'mean', 'mean_dtw_range': 'mean_range',
                                   'std_median': 'std_median', 'std_range': 'std_range',
                                   'skew_median': 'skew_median', 'skew_range': 'skew_range',
                                   'kurtosis_median': 'kurtosis_median', 'kurtosis_range': 'kurtosis_range',
-                                  'dtw_range': 'dtw_range', 'reading_count_sum': 'observation_reading_count'})
+                                  'dtw_range': 'dtw_range', 'reading_count_sum': 'observation_reading_count',
+                                   'site_name_nunique': 'n_sites'})
     return stats
 
 
@@ -219,7 +221,7 @@ def hist_sd(outdir, wd, md):
     stats['mean_depth_bin'] = pd.cut(stats['mean'], bins=bins, labels=bin_labels)
     # Check if any entries are in the '>5.0' category
     print(stats[stats['mean_depth_bin'] == '>5.0'])
-    stats_useful = stats.drop(columns=['site_name'])
+    stats_useful = stats.copy()
 
     stats_depth_cat1 = _calculate_stats(stats_useful, 1)
     stats_depth_cat2 = _calculate_stats(stats_useful, 2)
@@ -234,7 +236,7 @@ def hist_sd(outdir, wd, md):
         stats_depth['n_obs.'] = stats_depth['observation_reading_count']
         stats_depth = stats_depth[['std_median',
                                    'std_range', 'skew_median', 'skew_range', 'kurtosis_median',
-                                   'kurtosis_range', 'n_obs.']]
+                                   'kurtosis_range', 'n_obs.', 'n_sites']]
         stats_depth.columns = [e.replace('_', ' ').capitalize() for e in stats_depth.columns]
         write_rst_table_with_tabulate(stats_depth, outdir.joinpath('tables', f'stats_depth_cat_{depth_cat}.rst'),
                                       f'Summary of variance and skewness for {depth_categories_desc[depth_cat]}')
@@ -259,7 +261,7 @@ def hist_sd(outdir, wd, md):
 
     # next we produce some nice tables for the report, one for each depth frequency
     for depth in ['0.1', '0.5', '1']:
-        temp = stats_final.groupby('mean_depth_bin').agg(
+        temp = stats_final.groupby('mean_depth_bin', observed=False).agg(
             {f'Annual Frequency (<{depth}m)': ['mean', 'std', 'min', 'max', ],
              f'Probability (<{depth}m)': ['mean', 'std']})
 
@@ -315,7 +317,6 @@ def hist_sd(outdir, wd, md):
             fig.suptitle(f'Analysis of Depth to Water')
             ax_dtw_cum.set_xlim(-1, 150)
         else:
-            ax_dtw_cum.set_xlim(-1, dtw_threshold)
             fig.suptitle(f'Analysis of Depth to Water\nWhere the mean depth to water is less than {dtw_threshold}m')
         fig.tight_layout()
         fig.savefig(outdir.joinpath('_static', f'hist_sd_depth_to_water_lt_{dtw_threshold}.png'))

@@ -1,4 +1,4 @@
-.. table Annual Frequency and Probability of Depth to Water <0.5m generated from src/komanawa/nz_depth_to_water/update_technial_note/data_stats.py :
+.. table Annual Frequency and Probability of Depth to Water <0.5m generated from PycharmProjects/komanawa-nz-depth-to-water/build_dataset/update_technial_note/data_stats.py :
 
 .. rubric:: Annual Frequency and Probability of Depth to Water <0.5m
 

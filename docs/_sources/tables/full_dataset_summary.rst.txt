@@ -1,4 +1,4 @@
-.. table Overview of the dataset generated from src/komanawa/nz_depth_to_water/update_technial_note/data_stats.py :
+.. table Overview of the dataset generated from PycharmProjects/komanawa-nz-depth-to-water/build_dataset/update_technial_note/data_stats.py :
 
 .. rubric:: Overview of the dataset
 
