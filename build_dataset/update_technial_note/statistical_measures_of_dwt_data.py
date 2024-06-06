@@ -4,11 +4,17 @@ created by: Patrick_Durney
 on: 18/04/24
 """
 
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
+from komanawa.ksl_tools.spatial.lidar_support.build_lidar_support import KslEnv
+from komanawa.modeltools import RectangularModelTools
 from matplotlib import pyplot as plt
 from scipy.stats import johnsonsu, kurtosis
-from pathlib import Path
+from collections import deque
+
+from build_dataset.generate_dataset.project_base import groundwater_data
 from build_dataset.update_technial_note.data_stats import write_rst_table_with_tabulate
 
 depth_categories_desc = {1: 'well depth < 10m or unknown depth and max dtw < 10m',
@@ -141,7 +147,7 @@ def _calculate_stats(data, depth_cat):
                                   'skew_median': 'skew_median', 'skew_range': 'skew_range',
                                   'kurtosis_median': 'kurtosis_median', 'kurtosis_range': 'kurtosis_range',
                                   'dtw_range': 'dtw_range', 'reading_count_sum': 'observation_reading_count',
-                                   'site_name_nunique': 'n_sites'})
+                                  'site_name_nunique': 'n_sites'})
     return stats
 
 
@@ -182,18 +188,9 @@ def hist_sd(outdir, wd, md):
     # Calculate number of readings per site
     stats_detail = data
 
-    # todo patrick is this codes still needed????? if not let's get rid of it
-    # stats_detail['reading_count'] = stats_detail.groupby('site_name')['site_name'].transform('size')
-    # stats_detail = stats_detail[
-    #     stats_detail['reading_count'] >= 30]  # n=30 stats rule of thumb for min n for sd calculation
-
     # Select unique sites
     unique_sites = stats_detail.drop_duplicates(
         subset='site_name')  # 3210 sites accross all depth clats that have mre than 30 points
-
-    # unique_sites = unique_sites[unique_sites['depth_cat'] == depth_cat]  # 1537 sites in depth cat 1 with more than 30 obs
-    # # we are only concerned with well that represent the shallow resource, hence the filter for depth cat 1
-    # stats_detail = stats_detail[stats_detail['depth_cat'] == depth_cat]
 
     # Then, add the reading count as a new column
     stats_detail['reading_count'] = stats_detail.groupby('site_name')['site_name'].transform('size')
@@ -241,13 +238,7 @@ def hist_sd(outdir, wd, md):
         write_rst_table_with_tabulate(stats_depth, outdir.joinpath('tables', f'stats_depth_cat_{depth_cat}.rst'),
                                       f'Summary of variance and skewness for {depth_categories_desc[depth_cat]}')
 
-    all_stats = pd.concat([stats_depth_cat1, stats_depth_cat2, stats_depth_cat3], axis=0)
-    all_stats = all_stats.dropna()
     # Extract data and headers from the DataFrame
-
-    # Save the stats to a csv file
-    # todo why are we saving this? should it be included in our outputs???
-    # all_stats.to_csv(KslEnv.large_working.joinpath('UNbacked', 'Fut', 'stats.csv'))
 
     # bind stats back to the orignial dataframe on site_name
     stats_detail = pd.merge(stats_detail, stats, on='site_name', how='left')
@@ -356,25 +347,6 @@ def exceedance_prob(outdir, wd, md, depth_cat=1):
     # drop wells greated than 10m depth
     data = data[data['depth_cat'] == depth_cat]
 
-    # for sake of argument we will assume that
-    # todo patrick is this codes still needed????? if not let's get rid of it
-    # # get boolean of sites where depth_to_water_cor is less than 0.5
-    # data['site<0.5m'] = data.groupby('site_name')['depth_to_water_cor'].transform(has_depth_less_than_half_meter)
-    # data['site<0.5m'] = data['site<0.5m'].astype(int)
-    # data = data[data['site<0.5m'] == 1]
-    # data['mean_dtw']= data.groupby('site_name')['depth_to_water_cor'].transform('mean')
-    # data['date'] = pd.to_datetime(data['date'])
-    # unique_sites = data.drop_duplicates(subset='site_name')
-
-    # attempted fto find number of day exceeding 0.1 m but the issue is the data is too sparse to be meaningful
-    ##Set the depth threshold
-    # depth_threshold = 0.1
-    #
-    # # Group by year and count days where depth is less than the threshold
-    # exceedance_days = data[data['depth_to_water_cor'] < depth_threshold].groupby(
-    #     [data['site_name'], data['date'].dt.year]
-    # ).size().reset_index(name='days_below_threshold')
-
     # using cdf of depth to water to find exceedance probability
 
     sorted_depth = np.sort(data['depth_to_water_cor'])
@@ -390,3 +362,136 @@ def exceedance_prob(outdir, wd, md, depth_cat=1):
     ax.set_ylabel('CDF')
     fig.savefig(outdir.joinpath('_static', f'cdf_depth_to_water_depth_cat_{depth_cat}.png'))
     plt.close(fig)
+
+
+def density_plot_sites(recalc=False):
+    """
+
+    """
+
+    if recalc:
+        # Load prior results and convert to DataFrame
+        data = load_training_data()
+        wd = data['wd']
+        md = data['md']
+
+        # Copy the data and reset the index
+        new_df = md.copy().reset_index(drop=True)
+        i, j = smt.convert_coords_to_matix(new_df['nztm_x'], new_df['nztm_y'], coords_out_domain='coerce')
+        new_df['i'] = i
+        new_df['j'] = j
+
+        array = smt.get_no_flow()
+        # make array 2d
+        array = array[0]
+
+        # Initialize a 2D array with NaN values
+
+        grid = array.copy()*np.nan
+
+        # Update the 2D array with the count of the number of sites in each cell
+        df = new_df.groupby(['i', 'j']).size().reset_index(name='count')
+        grid[df['i'], df['j']] = df['count']
+        # repalce nans in grid with 0
+        grid = np.nan_to_num(grid)
+
+        # now make copy of array again and find the number of cells to the nearest non nan cell in grid
+        distance_grid_nearest_site = find_min_distance_to_target(grid, 1, array)
+        distance_grid_nearest_10_sites = find_min_distance_to_target(grid, 10, array)
+
+        smt.io.array_to_raster(KslEnv.large_working.joinpath('UNbacked', 'Fut', f'obs_loc_dist1.tiff'), distance_grid_nearest_site, no_flow_layer=0)
+        smt.io.array_to_raster(KslEnv.large_working.joinpath('UNbacked', 'Fut', f'obs_loc_dist_10_sites.tiff'), distance_grid_nearest_10_sites, no_flow_layer=0)
+
+    else:
+        pass
+
+
+def load_training_data():
+    wd = pd.read_hdf(groundwater_data.joinpath('final_water_data.hdf'), 'wl_store_key')
+    md = pd.read_hdf(groundwater_data.joinpath('final_metadata.hdf'), 'metadata')
+    return {'wd': wd, 'md': md}
+
+def find_min_distance_to_target(grid, target, mask):
+    nrows, ncols = grid.shape
+    directions = [
+        (0, 1),  (1, 0),  (0, -1), (-1, 0),  # Right, Down, Left, Up
+        (1, 1),  (1, -1), (-1, -1), (-1, 1)  # Diagonal movements
+    ]
+    result = np.full_like(grid, np.inf)  # Initialize result grid with infinity for unreached
+
+    # Helper function to perform BFS from a given cell
+    def bfs(r, c):
+        queue = deque([(r, c, 0, grid[r][c])])  # row, col, distance, cumulative sum
+        visited = set([(r, c)])
+
+        while queue:
+            cr, cc, dist, cum_sum = queue.popleft()
+
+            # Check if the cumulative sum meets or exceeds the target
+            if cum_sum >= target:
+                return dist
+
+            # Explore the possible directions
+            for dr, dc in directions:
+                nr, nc = cr + dr, cc + dc
+                if 0 <= nr < nrows and 0 <= nc < ncols and (nr, nc) not in visited and mask[nr][nc]:
+                    visited.add((nr, nc))
+                    queue.append((nr, nc, dist + 1, cum_sum + grid[nr][nc]))
+
+        return np.inf  # Return infinity if target is not reached
+
+    # Perform BFS for each cell in the grid that is allowed by the mask and has a positive value
+    for r in range(nrows):
+        for c in range(ncols):
+            if grid[r][c] >= 0 and mask[r][c]:
+                result[r][c] = bfs(r, c)
+            else:
+                result[r][c] = -1  # For cells that are not viable starting points
+
+    return result
+
+
+
+temp_smt = RectangularModelTools.modeltools_from_shapefile(shapefile=KslEnv.large_working.joinpath('UNbacked',
+                                                                                                   'OLW_predictor_datasets',
+                                                                                                   'NZ_hydrogeologicalsystems_June2019',
+                                                                                                   'NZ_hydrogeologicalsystem_polygon.shp'),
+                                                           delr=1000, delc=1000, layer_type=1, layers=1,
+
+                                                           model_version_name='mf6',
+                                                           epsg_num=2193)
+
+def _calc_noflow(recalc=False):
+
+    save_path = Path('/home/patrick/PycharmProjects/komanawa-nz-depth-to-water/spatial/no_flow.npz')
+    if not recalc and save_path.exists():
+        return np.load(save_path)['no_flow']
+    else:
+
+        no_flow_path = '/home/patrick/PycharmProjects/komanawa-nz-depth-to-water/spatial/NZ_hydrogeologicalsystem_polygon.shp'
+        no_flow = smt.io.shape_file_to_model_array(no_flow_path, 'HS_id', alltouched=True, overlapping_action='first')
+        no_flow = np.where(no_flow >= 1, 1, 0)
+        # convert to boolean
+        no_flow = no_flow.astype(bool)
+        # convert to 3d array
+        no_flow = no_flow[np.newaxis]
+        # save to npz
+        np.savez(save_path, no_flow=no_flow)
+        return no_flow
+
+
+smt = RectangularModelTools(llx=temp_smt.llx, lly=temp_smt.lly,
+                            rows=temp_smt.rows,
+                            cols=temp_smt.cols,
+                            model_version_name='mf5',
+                            delr=1000, delc=1000,
+                            layer_type=1,
+                            layers=1,
+                            epsg_num=2193,
+                            no_flow_calc= _calc_noflow,
+                            )
+
+
+if __name__ == '__main__':
+    density_plot_sites(recalc=True)
+
