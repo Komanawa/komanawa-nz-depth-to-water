@@ -366,7 +366,14 @@ def exceedance_prob(outdir, wd, md, depth_cat=1):
 
 def density_plot_sites(recalc=False):
     """
+    This function calculates the density of sites in the model domain and saves the results to .tiff files.
+    It checks if recalculation is requested. If recalculation is requested, it calculates the density of sites based on the loaded data and saves the results to .tiff files.
 
+    Parameters:
+    recalc (bool): A flag indicating whether to recalculate the density of sites. Default is False.
+
+    Returns:
+    None. The function saves the results to .tiff files.
     """
 
     if recalc:
@@ -386,19 +393,19 @@ def density_plot_sites(recalc=False):
         array = array[0]
 
         # Initialize a 2D array with NaN values
-
         grid = array.copy()*np.nan
 
         # Update the 2D array with the count of the number of sites in each cell
         df = new_df.groupby(['i', 'j']).size().reset_index(name='count')
         grid[df['i'], df['j']] = df['count']
-        # repalce nans in grid with 0
+        # replace nans in grid with 0
         grid = np.nan_to_num(grid)
 
         # now make copy of array again and find the number of cells to the nearest non nan cell in grid
         distance_grid_nearest_site = find_min_distance_to_target(grid, 1, array)
         distance_grid_nearest_10_sites = find_min_distance_to_target(grid, 10, array)
 
+        # Save the results to .tiff files
         smt.io.array_to_raster(KslEnv.large_working.joinpath('UNbacked', 'Fut', f'obs_loc_dist1.tiff'), distance_grid_nearest_site, no_flow_layer=0)
         smt.io.array_to_raster(KslEnv.large_working.joinpath('UNbacked', 'Fut', f'obs_loc_dist_10_sites.tiff'), distance_grid_nearest_10_sites, no_flow_layer=0)
 
@@ -412,6 +419,18 @@ def load_training_data():
     return {'wd': wd, 'md': md}
 
 def find_min_distance_to_target(grid, target, mask):
+    """
+    This function finds the minimum distance from each cell in a 2D grid to a target cell. It uses a Breadth-First Search (BFS) algorithm to traverse the grid.
+
+    Parameters:
+    grid (numpy.ndarray): A 2D numpy array representing the grid. The value in each cell represents the cumulative sum of sites in that cell.
+    target (int): The target cumulative sum of sites. The function will stop BFS when this target is reached or exceeded.
+    mask (numpy.ndarray): A 2D numpy array of the same shape as grid. It represents a mask for the grid where True indicates the cell is included in the BFS and False indicates it is not.
+
+    Returns:
+    result (numpy.ndarray): A 2D numpy array of the same shape as grid. Each cell contains the minimum distance to a cell in grid where the cumulative sum of sites meets or exceeds the target.
+    """
+
     nrows, ncols = grid.shape
     directions = [
         (0, 1),  (1, 0),  (0, -1), (-1, 0),  # Right, Down, Left, Up
@@ -462,20 +481,31 @@ temp_smt = RectangularModelTools.modeltools_from_shapefile(shapefile=KslEnv.larg
                                                            epsg_num=2193)
 
 def _calc_noflow(recalc=False):
+    """
+    This function calculates the no-flow areas in the model domain. It checks if a pre-calculated no-flow array exists and loads it if it does.
+    If the array does not exist or if recalculation is requested, it calculates the no-flow areas based on a shapefile and saves the result to a .npz file.
+
+    Parameters:
+    recalc (bool): A flag indicating whether to recalculate the no-flow areas even if a pre-calculated array exists. Default is False.
+
+    Returns:
+    no_flow (numpy.ndarray): A 3D numpy array representing the no-flow areas in the model domain. Each cell in the array is a boolean value indicating whether the corresponding cell in the model domain is a no-flow area.
+    """
 
     save_path = Path('/home/patrick/PycharmProjects/komanawa-nz-depth-to-water/spatial/no_flow.npz')
     if not recalc and save_path.exists():
         return np.load(save_path)['no_flow']
     else:
-
         no_flow_path = '/home/patrick/PycharmProjects/komanawa-nz-depth-to-water/spatial/NZ_hydrogeologicalsystem_polygon.shp'
+        # Convert the shapefile to a model array. The 'HS_id' field is used to determine the no-flow areas.
         no_flow = smt.io.shape_file_to_model_array(no_flow_path, 'HS_id', alltouched=True, overlapping_action='first')
+        # Convert the model array to a binary array where 1 represents a no-flow area and 0 represents a flow area.
         no_flow = np.where(no_flow >= 1, 1, 0)
-        # convert to boolean
+        # Convert the binary array to a boolean array.
         no_flow = no_flow.astype(bool)
-        # convert to 3d array
+        # Convert the 2D array to a 3D array.
         no_flow = no_flow[np.newaxis]
-        # save to npz
+        # Save the boolean array to a .npz file.
         np.savez(save_path, no_flow=no_flow)
         return no_flow
 
