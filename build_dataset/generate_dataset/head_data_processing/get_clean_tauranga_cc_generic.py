@@ -23,7 +23,7 @@ from build_dataset.generate_dataset.head_data_processing.data_processing_functio
 from build_dataset.generate_dataset.head_data_processing.merge_rows import merge_rows_if_possible
 
 
-def _get_metadata(local_paths, file_name, skiprows=0): # todo
+def _get_metadata(local_paths, file_name, skiprows=1):
     """
     Reads in metadata from an Excel or CSV spreadsheet.
     :param file_path: Path to the file (Excel or CSV) containing metadata.
@@ -140,13 +140,14 @@ def convert_data_to_csv(local_paths):
         # Print completion of the current sheet
         print(f"Completed saving {sheet_name} to CSV")
 
-def _get_wl_tcc_data(local_paths):
+def _get_wl_tcc_data(local_paths, metadata):
     """This reads in the continuous timeseries data"""
     # need to read each sheet as it contains each sites data
-    save_path = local_paths['local_path'].joinpath('combined_wl_data.csv')
+    save_path = local_paths['local_path'].joinpath('tcc_wls.csv')
 
     if save_path.exists():
-        combined_df = pd.read_csv(save_path)
+        merged = pd.read_csv(save_path)
+        return merged
     else:
 
         data_path = local_paths['local_path']
@@ -171,56 +172,58 @@ def _get_wl_tcc_data(local_paths):
         combined_df = pd.concat(dataframes_to_concat, ignore_index=True)
         combined_df.to_csv(local_paths['local_path'].joinpath('combined_wl_data.csv'))
 
-    data_quality = combined_df[combined_df['site_name']== "Qualities"]
-    wl_data = combined_df[combined_df['site_name'] != "Qualities"]
-    # drop the first column in wl_data eg Qualities
-    wl_data = wl_data.drop(columns=['Qualities:'])
-    wl_data.reset_index(drop=True, inplace=True)
-    wl_data = wl_data.rename(columns={'Bore Level (m)': 'gw_elev', 'site_name': 'well_name', 'Date': 'date', 'Time': 'time'})
-    # merge date and time
-    wl_data['date'] = pd.to_datetime(wl_data['date'], errors='coerce').dt.date
+        data_quality = combined_df[combined_df['site_name']== "Qualities"]
+        wl_data = combined_df[combined_df['site_name'] != "Qualities"]
+        # drop the first column in wl_data eg Qualities
+        wl_data = wl_data.drop(columns=['Qualities:'])
+        wl_data.reset_index(drop=True, inplace=True)
+        wl_data = wl_data.rename(columns={'Bore Level (m)': 'gw_elev', 'site_name': 'well_name', 'Date': 'date', 'Time': 'time'})
+        # merge date and time
+        wl_data['date'] = pd.to_datetime(wl_data['date'], errors='coerce').dt.date
 
-    # join date and time as new column
-    wl_data['date_time'] = (wl_data['date'].astype(str) + ' ' + wl_data['time'].astype(str))
-    wl_data['date_time'] = pd.to_datetime(wl_data['date_time'], errors='coerce')
-    wl_data.drop(columns=['date', 'time'], inplace=True)
+        # join date and time as new column
+        wl_data['date_time'] = (wl_data['date'].astype(str) + ' ' + wl_data['time'].astype(str))
+        wl_data['date_time'] = pd.to_datetime(wl_data['date_time'], errors='coerce')
+        wl_data.drop(columns=['date', 'time'], inplace=True)
 
 
-    df = wl_data.copy()
-    df['data_source'] = "tcc"
-    df['elevation_datum'] = "nzvd2016"
-    # to account for the fact the data is average for period between midnight to midnight
-    df = df.sort_values(['well_name', 'date_time'])
-    df['site_name'] = df['well_name'] + '_tcc'
 
- # todo only up to here
-    rl_data = metadata[
-        ['well_name', 'rl_elevation', 'well_depth_elevation_NZVD', 'well_depth', 'diff_moturiki_nzdv2016']]
+        df = wl_data.copy()
+        df['data_source'] = "tcc"
+        df['elevation_datum'] = "nzvd2016"
+        # to account for the fact the data is average for period between midnight to midnight
+        df = df.sort_values(['well_name', 'date_time'])
+        # drop the '.GW' from the well name
+        df['well_name'] = df['well_name'].str.replace('.GW', '')
+        df['site_name'] = df['well_name'] + '_tcc'
+        df = df[['well_name', 'date_time', 'gw_elev', 'data_source', 'site_name']]
+        # make well_name and site_name lower case
+        df['well_name'] = df['well_name'].str.lower()
+        df['site_name'] = df['site_name'].str.lower()
+        metadata['well_name'] = metadata['well_name'].str.lower()
 
-    rl_key, rl_key1 = process_reference_levels(rl_data)
-    ts_wl = process_ts_wl(df, rl_key, rl_key1)
-    assign_flags_based_on_null_values(ts_wl, 'depth_to_water', 'dtw_flag', 1, 0)
-    # Assign 'water_elev_flag' based on 'gw_elevation'
-    assign_flags_based_on_null_values(ts_wl, 'gw_elevation', 'water_elev_flag', 1, 0)
-    ts_wl = ts_wl.loc[:,
-            ['well_name', 'date', 'depth_to_water', 'gw_elevation', 'dtw_flag', 'water_elev_flag', 'data_source',
-             'elevation_datum', 'other']]
+        merged = df.merge(metadata, how='left', on='well_name')
+        merged = merged.dropna()
+        merged['rl_elevation'] = merged['rl_elevation'].astype(float)
+        merged['gw_elev'] = merged['gw_elev'].astype(float)
+        merged['depth_to_water'] = merged['rl_elevation'] - merged['gw_elev']
+        merged= merged.rename(columns={'gw_elev': 'gw_elevation', 'date_time': 'date'})
+        merged['other'] = 'na'
+        merged['elevation_datum'] = 'nzvd2016'
 
-    # create static wl data
-    st_wl = metadata.loc[:, ['well_name', 'depth_to_water_static']]
-    st_wl = process_st_wl(st_wl, rl_key)
-    assign_flags_based_on_null_values(st_wl, 'depth_to_water', 'dtw_flag', 2, 0)
-    # Assign 'water_elev_flag' based on 'gw_elevation'
-    assign_flags_based_on_null_values(st_wl, 'gw_elevation', 'water_elev_flag', 2, 0)
-    st_wl = st_wl.loc[:,
-            ['well_name', 'date', 'depth_to_water', 'gw_elevation', 'dtw_flag', 'water_elev_flag', 'data_source',
-             'elevation_datum', 'other']]
 
-    # merge ts and static wl data
-    wl_output = pd.concat([ts_wl, st_wl[~st_wl['well_name'].isin(ts_wl['well_name'])]])
-    wl_output.dropna(subset=['gw_elevation'], inplace=True)
+        assign_flags_based_on_null_values(merged, 'depth_to_water', 'dtw_flag', 1, 0)
+        # Assign 'water_elev_flag' based on 'gw_elevation'
+        assign_flags_based_on_null_values(merged, 'gw_elevation', 'water_elev_flag', 1, 0)
 
-    return wl_output
+        merged = merged.loc[:,
+                ['well_name', 'date', 'depth_to_water', 'gw_elevation', 'dtw_flag', 'water_elev_flag', 'data_source',
+                 'elevation_datum', 'other']]
+        merged.to_csv(local_paths['local_path'].joinpath('tcc_wls.csv'))
+
+        merged.dropna(subset=['gw_elevation'], inplace=True)
+
+    return merged
 
 
 def output(local_paths, meta_data_requirements, recalc=False):  #todo
@@ -240,84 +243,20 @@ def output(local_paths, meta_data_requirements, recalc=False):  #todo
                                   'dtw_flag': "int",
                                   'water_elev_flag': 'int', 'data_source': 'str', 'elevation_datum': "str",
                                   'other': "str"}
+        needed_gw_columns = ['well_name', 'depth_to_water', 'gw_elevation',
+                                  'dtw_flag','water_elev_flag', 'data_source', 'elevation_datum',
+                                  'other']
 
-        # tcc_metadata = _get_metadata(local_paths=local_paths, file_name='Bore data for Komanawa.xlsx')
-        # tcc_metadata = tcc_metadata.drop(
-        #     columns=['WMA', 'SiteName_Address', 'AquariusID', 'NERMN_Code', 'LAWA_ID', 'Groundwater_Zone',
-        #              'Current', 'Telemetred', 'Bore_use', 'Logger', 'Temp', 'Casing Dia', 'Unnamed: 25'])
-        # tcc_metadata = tcc_metadata.rename(
-        #     columns={'Bore_number': 'well_name', 'Aquifer': 'aquifer_type', 'HGU': 'hgu', 'HSU': 'hsu',
-        #              'Easting': 'nztm_x', 'Northing': 'nztm_y', 'Monitoring_Frequency': 'monitoring_freq',
-        #              'Monitoring_Type': 'monitoring_type', 'Comment': 'comment',
-        #              'Bore_depth_(m)': 'well_depth',
-        #              'Static_WL': 'depth_to_water_static', 'Casing_depth': 'casing_depth',
-        #              'RL_collar': 'rl_elevation'})
-        #
-        # extra_tcc_metadata_path = _get_metadata(local_paths=local_paths,
-        #                                         file_name='Static water level for Komanawa.xlsx')
-        #
-        # extra_tcc_metadata_path = extra_tcc_metadata_path.drop(
-        #     columns=['Bore Status', 'Site Address', 'Bore Use', 'Bore Type', 'Aquarius Site #',
-        #              'Screen Type',
-        #              'Geothermal Field', 'Allocation Zone', 'Water Management Area',
-        #              'Bore Temperature (Celsius)', 'Casing Diameter mm ', 'Screen Diameter mm ',
-        #              'Water Level Before \nPumping (mRL_NZVD)'])
-        #
-        # extra_tcc_metadata_path = extra_tcc_metadata_path.rename(
-        #     columns={'Record ID': 'well_name', 'NZTM Easting': 'nztm_x', 'NZTM Northing': 'nztm_y',
-        #              'Data Quality': 'qa_comment', 'Data Source': 'data_source',
-        #              'Hydrogeological Unit': 'hgu',
-        #              'Water Level Before \nPumping (m)': 'depth_to_water_static',
-        #              'Bore Depth m ': 'well_depth', 'Bore Depth mRL_NZVD': 'well_depth_elevation_NZVD',
-        #              'Casing Depth m ': 'casing_depth', 'Screen Set from m ': 'top_topscreen',
-        #              'Screen Set to m ': 'bottom_bottomscreen',
-        #              'Reduced Level of measuring point m ': 'rl_elevation',
-        #              'Geological Unit Screened': 'hgu_screened',
-        #              'Bore is Flowing Artesian ': 'temp_artesian',
-        #              'DEM_2011_NZVD2016': 'diff_moturiki_nzdv2016'
-        #              })
-        #
-        # rl_tcc_metadata = _get_metadata(local_paths=local_paths, file_name='NERMN Bore Elevations.xlsx')
-        # rl_tcc_metadata = rl_tcc_metadata.drop(columns=['WMA', 'SiteName_Address', 'AquariusID', 'Temp', 'BM measure',
-        #                                                 'Groundelevation_Moturiki', 'RL_collar_Moturiki',
-        #                                                 'Monitoring_Type',
-        #                                                 'Unnamed: 16', 'Unnamed: 17', 'Unnamed: 18', 'Unnamed: 19',
-        #                                                 'Unnamed: 20',
-        #                                                 'Groundelevation_NZVD2016', 'RL_collar_ NZVD2016'])
-        #
-        # rl_tcc_metadata = rl_tcc_metadata.rename(
-        #     columns={'Bore_number': 'well_name', 'Easting': 'nztm_x', 'Northing': 'nztm_y',
-        #              'Bore_depth_m ': 'well_depth',
-        #              'Casing_depth': 'casing_depth', 'Bore_depth_(m)': 'well_depth',
-        #              'Static_WL': 'depth_to_water_static'})
-        #
-        # ts_metadata = _get_metadata(local_paths=local_paths, file_name='Groundwater Level Site List.xlsx', skiprows=1)
-        # ts_metadata = ts_metadata.drop(columns=['Location', 'Data Set Id', 'Location Folder', 'Value', 'Status'])
-        # ts_metadata = ts_metadata.rename(columns={'Start of Record': 'start_date', 'End of Record': 'end_date'})
-        #
-        # combined_metadata = pd.concat([tcc_metadata, extra_tcc_metadata_path, rl_tcc_metadata, ts_metadata],
-        #                               ignore_index=True)
-        # default_precision = 0.1  # for example, default precision is 2 decimal places
-        # # create dict of precisis ofr none str columns
-        # precisions = {col: default_precision for col in combined_metadata.columns
-        #               if combined_metadata[col].dtype != object and not pd.api.types.is_datetime64_any_dtype(
-        #         combined_metadata[col])}
-        # precisions['nztm_x'] = 50
-        # precisions['nztm_y'] = 50
-        #
-        # # Create a list of columns to skip, which are of string type
-        # skip_cols = [col for col in combined_metadata.columns
-        #              if
-        #              combined_metadata[col].dtype == object or pd.api.types.is_datetime64_any_dtype(
-        #                  combined_metadata[col])]
-        #
-        # aggregation_functions = {col: np.nanmean for col in precisions}
-        # combined_metadata = merge_rows_if_possible(combined_metadata, on='well_name', precision=precisions,
-        #                                            skip_cols=skip_cols, actions=aggregation_functions)
+        tcc_metadata = _get_metadata(local_paths=local_paths, file_name='GW Bore Metadata - For Breda.xlsx')
+        tcc_metadata = tcc_metadata.drop(
+            columns=['Coordinates World Geodetic System 1972 Easting ', 'Coordinates World Geodetic System 1972 Northing'])
+        tcc_metadata = tcc_metadata.rename(
+            columns={'HYDSTRA ID': 'well_name',
+                     'Easting': 'nztm_x', 'Northing': 'nztm_y',
+                     'Bore Depth (m)': 'well_depth',
+                     'Ground Elevation (RL)\n': 'rl_elevation'})
 
-        combined_water_data = _get_wl_tcc_data(local_paths=local_paths,
-                                               folder_path=local_paths['local_path'] / 'EDS-686541',
-                                               metadata=combined_metadata)
+        combined_water_data = _get_wl_tcc_data(local_paths=local_paths, metadata=tcc_metadata)
 
         combined_water_data['date'] = pd.to_datetime(combined_water_data['date']).dt.date
         combined_water_data['date'] = pd.to_datetime(combined_water_data['date'])
@@ -327,12 +266,14 @@ def output(local_paths, meta_data_requirements, recalc=False):  #todo
 
         stats = _get_summary_stats(combined_water_data)
         stats = stats.set_index('well_name')
+        combined_metadata = tcc_metadata.copy()
+        combined_metadata['well_name'] = combined_metadata['well_name'].str.lower()
         combined_metadata = combined_metadata.set_index('well_name')
+
         combined_metadata = combined_metadata.combine_first(stats)
         combined_metadata = combined_metadata.reset_index()
+        combined_metadata = combined_metadata.dropna()
 
-        combined_metadata = merge_rows_if_possible(combined_metadata, on='well_name', precision=precisions,
-                                                   skip_cols=skip_cols, actions=aggregation_functions)
         combined_metadata = combined_metadata.sort_values(by='well_name')
         combined_metadata = combined_metadata.reset_index(drop=True)
         combined_metadata = combined_metadata.dropna(subset=['well_name'])
@@ -399,6 +340,14 @@ def output(local_paths, meta_data_requirements, recalc=False):  #todo
                                         col not in cols_to_keep and col != 'other'],
                                inplace=True)
 
+        combined_water_data = combined_water_data[needed_gw_columns]
+        # set to the right data types from dict
+        combined_water_data = combined_water_data.astype(needed_gw_columns_type)
+
+        # check save path exists
+        if not local_paths['save_path'].parent.exists():
+            os.makedirs(local_paths['save_path'].parent)
+
         renew_hdf5_store(new_data=combined_water_data, old_path=local_paths['save_path'],
                          store_key=local_paths['wl_store_key'])
         renew_hdf5_store(new_data=combined_metadata, old_path=local_paths['save_path'],
@@ -463,11 +412,11 @@ def get_tcc_data(recalc=False, redownload=False):
 
 save_path = groundwater_data.joinpath('gwl_tauranga', 'cleaned_data', 'combined_tcc_data.hdf')
 wl_store_key = 'tcc_gwl_data'
-gisborne_metadata_store_key = 'tcc_metadata'
+tauranga_metadata_store_key = 'tcc_metadata'
 
 if __name__ == '__main__':
     local_paths = _get_folder_and_local_paths(source_dir=groundwater_data.joinpath('gwl_tauranga'),
                                               local_dir=unbacked_dir.joinpath('tcc_working/'), redownload=False)
-    wl = _get_wl_tcc_data(local_paths)
+    data = get_tcc_data(recalc=False, redownload=False)
 
-    # data = get_tcc_data(recalc=True, redownload=True)
+    t=1
