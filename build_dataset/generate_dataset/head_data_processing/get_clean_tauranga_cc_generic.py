@@ -418,5 +418,5 @@ if __name__ == '__main__':
     local_paths = _get_folder_and_local_paths(source_dir=groundwater_data.joinpath('gwl_tauranga'),
                                               local_dir=unbacked_dir.joinpath('tcc_working/'), redownload=False)
     data = get_tcc_data(recalc=False, redownload=False)
-
+    # keynote gwc1ai is unreliable
     t=1
