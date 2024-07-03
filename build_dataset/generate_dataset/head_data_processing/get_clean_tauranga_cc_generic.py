@@ -243,7 +243,7 @@ def output(local_paths, meta_data_requirements, recalc=False):  #todo
                                   'dtw_flag': "int",
                                   'water_elev_flag': 'int', 'data_source': 'str', 'elevation_datum': "str",
                                   'other': "str"}
-        needed_gw_columns = ['well_name', 'depth_to_water', 'gw_elevation',
+        needed_gw_columns = ['well_name', 'date', 'depth_to_water', 'gw_elevation',
                                   'dtw_flag','water_elev_flag', 'data_source', 'elevation_datum',
                                   'other']
 
