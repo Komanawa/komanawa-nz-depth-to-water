@@ -5,11 +5,10 @@ on: 18/04/24
 """
 
 from pathlib import Path
-
+import psutil
 import numpy as np
 import pandas as pd
-from komanawa.ksl_tools.spatial.lidar_support.build_lidar_support import KslEnv
-from komanawa.modeltools import RectangularModelTools
+
 from matplotlib import pyplot as plt
 from scipy.stats import johnsonsu, kurtosis
 from collections import deque
@@ -364,141 +363,189 @@ def exceedance_prob(outdir, wd, md, depth_cat=1):
     plt.close(fig)
 
 
-def density_plot_sites(recalc=False):
-    """
-    This function calculates the density of sites in the model domain and saves the results to .tiff files.
-    It checks if recalculation is requested. If recalculation is requested, it calculates the density of sites based on the loaded data and saves the results to .tiff files.
+class density_grid():
+    shape = (1476, 1003)
+    grid_space = 1000  # km scale
+    ulx = 1089955.1968999996
+    uly = 6223863.661699999
+    data_path = Path(__file__).parents[2].joinpath('src/komanawa/nz_depth_to_water/data', 'model_grid.npz')
 
-    Parameters:
-    recalc (bool): A flag indicating whether to recalculate the density of sites. Default is False.
-
-    Returns:
-    None. The function saves the results to .tiff files.
-    """
-
-    if recalc:
-        # Load prior results and convert to DataFrame
-        data = load_training_data()
-        wd = data['wd']
-        md = data['md']
-
-        # Copy the data and reset the index
-        new_df = md.copy().reset_index(drop=True)
-        i, j = smt.convert_coords_to_matix(new_df['nztm_x'], new_df['nztm_y'], coords_out_domain='coerce')
-        new_df['i'] = i
-        new_df['j'] = j
-
-        array = smt.get_no_flow()
-        # make array 2d
-        array = array[0]
-
-        # Initialize a 2D array with NaN values
-        grid = array.copy()*np.nan
-
-        # Update the 2D array with the count of the number of sites in each cell
-        df = new_df.groupby(['i', 'j']).size().reset_index(name='count')
-        grid[df['i'], df['j']] = df['count']
-        # replace nans in grid with 0
-        grid = np.nan_to_num(grid)
-
-        # now make copy of array again and find the number of cells to the nearest non nan cell in grid
-        distance_grid_nearest_site = find_min_distance_to_target(grid, 1, array)
-        distance_grid_nearest_10_sites = find_min_distance_to_target(grid, 10, array)
-
-        # Save the results to .tiff files
-        smt.io.array_to_raster(KslEnv.large_working.joinpath('UNbacked', 'Fut', f'obs_loc_dist1.tiff'), distance_grid_nearest_site, no_flow_layer=0)
-        smt.io.array_to_raster(KslEnv.large_working.joinpath('UNbacked', 'Fut', f'obs_loc_dist_10_sites.tiff'), distance_grid_nearest_10_sites, no_flow_layer=0)
-
-    else:
+    def __init__(self):
         pass
 
+    def export_density_to_tif(self, array, path):
+        from osgeo import gdal, osr
+        path = str(path)
+        null_val = -999999
 
-def load_training_data():
-    wd = pd.read_hdf(groundwater_data.joinpath('final_water_data.hdf'), 'wl_store_key')
-    md = pd.read_hdf(groundwater_data.joinpath('final_metadata.hdf'), 'metadata')
-    return {'wd': wd, 'md': md}
+        if array.shape != (self.shape):
+            raise ValueError('array must match model 2d grid shape')
+        no_flow = self.get_nan_layer()
+        array[~no_flow] = null_val
+        output_raster = gdal.GetDriverByName('GTiff').Create(path, array.shape[1], array.shape[0], 1,
+                                                             gdal.GDT_Float32)  # Open the file
+        geotransform = (self.ulx, self.grid_space, 0, self.uly, 0, -self.grid_space)
+        output_raster.SetGeoTransform(geotransform)  # Specify its coordinates
+        srs = osr.SpatialReference()  # Establish its coordinate encoding
+        srs.ImportFromEPSG(2193)  # set the georefernce to NZTM
+        output_raster.SetProjection(srs.ExportToWkt())  # Exports the coordinate system
+        # to the file
+        band = output_raster.GetRasterBand(1)
+        band.WriteArray(array)  # Writes my array to the raster
+        band.FlushCache()
+        band.SetNoDataValue(null_val)
 
-def find_min_distance_to_target(grid, target, mask):
+    def get_nan_layer(self):
+        t = np.load(self.data_path)
+        return t['ibound']
+
+    def get_xy(self):
+        t = np.load(self.data_path)
+        return t['mx'], t['my']
+
+    def plot_density(self, array, island, nsites):
+        import cartopy.crs as ccrs
+        import cartopy.io.img_tiles as cimgt
+        bound_sets = {
+            'both': dict()
+        }
+        if island == 'both':
+            zoom_level = 7
+            ymin, ymax, xmin, xmax = -46.7, -34.3, 166.4, 178.6
+        elif island == 'n':
+            zoom_level = 8
+            ymin, ymax, xmin, xmax = -41.7, -34.3, 172.6, 178.6
+        elif island == 's':
+            zoom_level = 8
+            ymin, ymax, xmin, xmax = -46.7, -40.5, 166.4, 174.25
+        else:
+            raise ValueError('island must be one of n, s, or both')
+
+        request = cimgt.OSM()
+        fig, (ax) = plt.subplots(nrows=1, figsize=(8.3 * 0.9, 11.4 * 0.9), subplot_kw={'projection': request.crs},
+                                 gridspec_kw={'height_ratios': [1, 0.05]})
+
+        ax.set_extent([xmin, xmax, ymin, ymax])
+        ax.add_image(request, zoom_level)
+        transform = ccrs.PlateCarree()
+        x, y = self.get_xy()
+        nans = self.get_nan_layer()
+        array[nans] = np.nan
+        temp = ax.contourf(x, y, array, transform=transform, cmap='magma', alpha=0.5,
+                           levels=[1, 2, 5, 10, 20, 50])
+
+        fig.colorbar(temp, ax=ax, orientation='horizontal', fraction=0.05, pad=0.05,
+                     label=f'Distance to nearest {nsites} sites (km)')
+        fig.tight_layout()
+        return fig, ax
+
+
+def density_calc_sites(md):  # todo test
     """
-    This function finds the minimum distance from each cell in a 2D grid to a target cell. It uses a Breadth-First Search (BFS) algorithm to traverse the grid.
-
-    Parameters:
-    grid (numpy.ndarray): A 2D numpy array representing the grid. The value in each cell represents the cumulative sum of sites in that cell.
-    target (int): The target cumulative sum of sites. The function will stop BFS when this target is reached or exceeded.
-    mask (numpy.ndarray): A 2D numpy array of the same shape as grid. It represents a mask for the grid where True indicates the cell is included in the BFS and False indicates it is not.
-
-    Returns:
-    result (numpy.ndarray): A 2D numpy array of the same shape as grid. Each cell contains the minimum distance to a cell in grid where the cumulative sum of sites meets or exceeds the target.
+    create data_density
+    :param md:
+    :param recalc:
+    :return:
     """
+    dg = density_grid()
+    mx, my = dg.get_xy()
+    nans = dg.get_nan_layer()
+    use_mx = mx[~nans]
+    use_my = my[~nans]
+    data_x = md['nztm_x'].values
+    data_y = md['nztm_y'].values
+    print(f'Calculating distance to nearest {len(data_x)} sites for {len(use_mx)} grid points')
+    one_grid_size = 5 * data_x.nbytes
+    avalible_memory = psutil.virtual_memory().available * 0.75  # leave 25% free
+    n_grid_points = int(avalible_memory / one_grid_size)
+    assert n_grid_points > 0, 'not enough memory to calculate distance to nearest sites'
+    nchunks = int(np.ceil(len(use_mx) / n_grid_points))
 
-    nrows, ncols = grid.shape
-    directions = [
-        (0, 1),  (1, 0),  (0, -1), (-1, 0),  # Right, Down, Left, Up
-        (1, 1),  (1, -1), (-1, -1), (-1, 1)  # Diagonal movements
-    ]
-    result = np.full_like(grid, np.inf)  # Initialize result grid with infinity for unreached
+    outdata_1 = np.zeros_like(use_mx, dtype=float)
+    outdata_10 = np.zeros_like(use_mx, dtype=float)
+    for i in range(nchunks):
+        print(f'Calculating chunk {i + 1} of {nchunks}')
+        start_idx = i * n_grid_points
+        if i == nchunks - 1:
+            end_idx = len(use_mx)
+        else:
+            end_idx = (i + 1) * n_grid_points
+        temp = _distance_to_data(use_mx[start_idx:end_idx], use_my[start_idx:end_idx],
+                                 data_x, data_y, [1, 10])
+        outdata_1[start_idx:end_idx] = temp[0]
+        outdata_10[start_idx:end_idx] = temp[1]
+    for npoints, outdata in zip([1, 10], [outdata_1, outdata_10]):
+        all_out = np.zeros_like(mx, dtype=float)
+        all_out[~nans] = outdata
 
-    # Helper function to perform BFS from a given cell
-    def bfs(r, c):
-        queue = deque([(r, c, 0, grid[r][c])])  # row, col, distance, cumulative sum
-        visited = set([(r, c)])
-
-        while queue:
-            cr, cc, dist, cum_sum = queue.popleft()
-
-            # Check if the cumulative sum meets or exceeds the target
-            if cum_sum >= target:
-                return dist
-
-            # Explore the possible directions
-            for dr, dc in directions:
-                nr, nc = cr + dr, cc + dc
-                if 0 <= nr < nrows and 0 <= nc < ncols and (nr, nc) not in visited and mask[nr][nc]:
-                    visited.add((nr, nc))
-                    queue.append((nr, nc, dist + 1, cum_sum + grid[nr][nc]))
-
-        return np.inf  # Return infinity if target is not reached
-
-    # Perform BFS for each cell in the grid that is allowed by the mask and has a positive value
-    for r in range(nrows):
-        for c in range(ncols):
-            if grid[r][c] >= 0 and mask[r][c]:
-                result[r][c] = bfs(r, c)
-            else:
-                result[r][c] = -1  # For cells that are not viable starting points
-
-    return result
+        # save to tiff
+        dg.export_density_to_tif(all_out, dg.data_path.parent.joinpath(f'distance_m_to_nearest_{npoints}_data.tif'))
 
 
+def plot_density():
+    dg = density_grid()
+    figdir = Path(__file__).parents[2].joinpath('docs_build', '_static')
+    # plot
+    for npoints in [1, 10]:
+        datapath = dg.data_path.parent.joinpath(f'distance_m_to_nearest_{npoints}_data.tiff')
+        data = plt.imread(datapath)
+        for island in ['both', 'n', 's']:
+            fig, ax = dg.plot_density(data, 'both', npoints)
+            plt.show()
+            fig.savefig(figdir.joinpath(f'data_coverage_{npoints}{island}.png'))
 
-temp_smt = RectangularModelTools.modeltools_from_shapefile(shapefile=KslEnv.large_working.joinpath('UNbacked',
-                                                                                                   'OLW_predictor_datasets',
-                                                                                                   'NZ_hydrogeologicalsystems_June2019',
-                                                                                                   'NZ_hydrogeologicalsystem_polygon.shp'),
-                                                           delr=1000, delc=1000, layer_type=1, layers=1,
 
-                                                           model_version_name='mf6',
-                                                           epsg_num=2193)
-
-def _calc_noflow(recalc=False):
+def _distance_to_data(xs, ys, data_x, data_y, npoints):
     """
-    This function calculates the no-flow areas in the model domain. It checks if a pre-calculated no-flow array exists and loads it if it does.
-    If the array does not exist or if recalculation is requested, it calculates the no-flow areas based on a shapefile and saves the result to a .npz file.
-
-    Parameters:
-    recalc (bool): A flag indicating whether to recalculate the no-flow areas even if a pre-calculated array exists. Default is False.
-
-    Returns:
-    no_flow (numpy.ndarray): A 3D numpy array representing the no-flow areas in the model domain. Each cell in the array is a boolean value indicating whether the corresponding cell in the model domain is a no-flow area.
+    return the dist to the nearest n points of data
+    :param xs: grid xs
+    :param ys: grid ys
+    :param data_x: data x
+    :param data_y
+    :param npoints: number of points to consider
+    :return:
     """
+    distance = ((xs[:, np.newaxis] - data_x[np.newaxis, :]) ** 2
+                + (ys[:, np.newaxis] - data_y[np.newaxis, :]) ** 2) ** 0.5
+    distance = np.sort(distance, axis=1)
+    return [distance[:, n - 1] for n in npoints]
 
-    save_path = Path('/home/patrick/PycharmProjects/komanawa-nz-depth-to-water/spatial/no_flow.npz')
-    if not recalc and save_path.exists():
-        return np.load(save_path)['no_flow']
-    else:
-        no_flow_path = '/home/patrick/PycharmProjects/komanawa-nz-depth-to-water/spatial/NZ_hydrogeologicalsystem_polygon.shp'
+
+def _make_input_grid():
+    """
+    make the input grid for the distance calculation, should not need to be re-run.
+    :return:
+    """
+    from komanawa.kslcore import KslEnv
+    from komanawa.modeltools import RectangularModelTools
+
+    temp_smt = RectangularModelTools.modeltools_from_shapefile(
+        shapefile=KslEnv.large_working.joinpath('UNbacked',
+                                                'OLW_predictor_datasets',
+                                                'NZ_hydrogeologicalsystems_June2019',
+                                                'NZ_hydrogeologicalsystem_polygon.shp'),
+        delr=1000, delc=1000, layer_type=1, layers=1,
+
+        model_version_name='mf6',
+        epsg_num=2193)
+
+    def _calc_noflow():
+        """
+        This function calculates the no-flow areas in the model domain. It checks if a pre-calculated no-flow array exists and loads it if it does.
+        If the array does not exist or if recalculation is requested, it calculates the no-flow areas based on a shapefile and saves the result to a .npz file.
+
+        Parameters:
+        recalc (bool): A flag indicating whether to recalculate the no-flow areas even if a pre-calculated array exists. Default is False.
+
+        Returns:
+        no_flow (numpy.ndarray): A 3D numpy array representing the no-flow areas in the model domain. Each cell in the array is a boolean value indicating whether the corresponding cell in the model domain is a no-flow area.
+        """
+
+        no_flow_path = KslEnv.large_working.joinpath(
+            'UNbacked/OLW_predictor_datasets/NZ_hydrogeologicalsystems_June2019/NZ_hydrogeologicalsystem_polygon.shp')
         # Convert the shapefile to a model array. The 'HS_id' field is used to determine the no-flow areas.
-        no_flow = smt.io.shape_file_to_model_array(no_flow_path, 'HS_id', alltouched=True, overlapping_action='first')
+        no_flow = smt.io.shape_file_to_model_array(no_flow_path, 'HS_id', alltouched=True,
+                                                   overlapping_action='ignore')
         # Convert the model array to a binary array where 1 represents a no-flow area and 0 represents a flow area.
         no_flow = np.where(no_flow >= 1, 1, 0)
         # Convert the binary array to a boolean array.
@@ -506,22 +553,29 @@ def _calc_noflow(recalc=False):
         # Convert the 2D array to a 3D array.
         no_flow = no_flow[np.newaxis]
         # Save the boolean array to a .npz file.
-        np.savez(save_path, no_flow=no_flow)
         return no_flow
 
+    smt = RectangularModelTools(llx=temp_smt.llx, lly=temp_smt.lly,
+                                rows=temp_smt.rows,
+                                cols=temp_smt.cols,
+                                model_version_name='mf5',
+                                delr=1000, delc=1000,
+                                layer_type=1,
+                                layers=1,
+                                epsg_num=2193,
+                                no_flow_calc=_calc_noflow,
+                                )
+    print(smt.get_xlim_ylim())
+    print(smt.model_shape)
+    mx, my = smt.get_model_x_y()
+    ibound = smt.get_no_flow(0).astype(bool)
+    savepath = Path(__file__).parents[2].joinpath('src/komanawa/nz_depth_to_water/data', 'model_grid.npz')
+    np.savez_compressed(savepath, mx=mx, my=my, ibound=ibound)
 
-smt = RectangularModelTools(llx=temp_smt.llx, lly=temp_smt.lly,
-                            rows=temp_smt.rows,
-                            cols=temp_smt.cols,
-                            model_version_name='mf5',
-                            delr=1000, delc=1000,
-                            layer_type=1,
-                            layers=1,
-                            epsg_num=2193,
-                            no_flow_calc= _calc_noflow,
-                            )
 
+if __name__ == '__main__':  # todo problems with 10, fix, save to repo, make not dependent on ksl_tools and make figures... what zones...
+    from komanawa.nz_depth_to_water.get_data import get_nz_depth_to_water
 
-if __name__ == '__main__':
-    density_plot_sites(recalc=True)
-
+    water_level_data, metadata = get_nz_depth_to_water()
+    density_calc_sites(metadata)
+    plot_density()
