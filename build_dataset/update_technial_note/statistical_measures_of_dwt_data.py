@@ -423,7 +423,7 @@ class density_grid():
 
         request = cimgt.OSM()
         fig, (ax) = plt.subplots(nrows=1, figsize=(8.3 * 0.9, 11.4 * 0.9), subplot_kw={'projection': request.crs},
-                                 gridspec_kw={'height_ratios': [1, 0.05]})
+                                 )
 
         ax.set_extent([xmin, xmax, ymin, ymax])
         ax.add_image(request, zoom_level)
@@ -475,8 +475,10 @@ def density_calc_sites(md):  # todo test
         outdata_1[start_idx:end_idx] = temp[0]
         outdata_10[start_idx:end_idx] = temp[1]
     for npoints, outdata in zip([1, 10], [outdata_1, outdata_10]):
-        all_out = np.zeros_like(mx, dtype=float)
-        all_out[~nans] = outdata
+        all_out = np.zeros_like(mx, dtype=np.float32)
+        all_out[~nans] = outdata.astype(np.float32)
+        all_out[nans] = np.nan
+        np.save(dg.data_path.parent.joinpath(f'distance_m_to_nearest_{npoints}_data.npy'), all_out)
 
         # save to tiff
         dg.export_density_to_tif(all_out, dg.data_path.parent.joinpath(f'distance_m_to_nearest_{npoints}_data.tif'))
@@ -485,10 +487,14 @@ def density_calc_sites(md):  # todo test
 def plot_density():
     dg = density_grid()
     figdir = Path(__file__).parents[2].joinpath('docs_build', '_static')
+    from osgeo import gdal
     # plot
     for npoints in [1, 10]:
-        datapath = dg.data_path.parent.joinpath(f'distance_m_to_nearest_{npoints}_data.tiff')
-        data = plt.imread(datapath)
+        datapath = dg.data_path.parent.joinpath(f'distance_m_to_nearest_{npoints}_data.tif')
+        dataset = gdal.Open(str(datapath), gdal.GA_ReadOnly)
+        band = dataset.GetRasterBand(1)
+        data = band.ReadAsArray()
+
         for island in ['both', 'n', 's']:
             fig, ax = dg.plot_density(data, 'both', npoints)
             plt.show()
