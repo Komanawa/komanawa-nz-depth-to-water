@@ -12,7 +12,7 @@ import pandas as pd
 from matplotlib import pyplot as plt
 from scipy.stats import johnsonsu, kurtosis
 from collections import deque
-
+from komanawa.nz_depth_to_water.density_grid import DensityGrid
 from build_dataset.generate_dataset.project_base import groundwater_data
 from build_dataset.update_technial_note.data_stats import write_rst_table_with_tabulate
 
@@ -363,83 +363,6 @@ def exceedance_prob(outdir, wd, md, depth_cat=1):
     plt.close(fig)
 
 
-class density_grid():
-    shape = (1476, 1003)
-    grid_space = 1000  # km scale
-    ulx = 1089955.1968999996
-    uly = 6223863.661699999
-    data_path = Path(__file__).parents[2].joinpath('src/komanawa/nz_depth_to_water/data', 'model_grid.npz')
-
-    def __init__(self):
-        pass
-
-    def export_density_to_tif(self, array, path):
-        from osgeo import gdal, osr
-        path = str(path)
-        null_val = -999999
-
-        if array.shape != (self.shape):
-            raise ValueError('array must match model 2d grid shape')
-        no_flow = self.get_nan_layer()
-        array[~no_flow] = null_val
-        output_raster = gdal.GetDriverByName('GTiff').Create(path, array.shape[1], array.shape[0], 1,
-                                                             gdal.GDT_Float32)  # Open the file
-        geotransform = (self.ulx, self.grid_space, 0, self.uly, 0, -self.grid_space)
-        output_raster.SetGeoTransform(geotransform)  # Specify its coordinates
-        srs = osr.SpatialReference()  # Establish its coordinate encoding
-        srs.ImportFromEPSG(2193)  # set the georefernce to NZTM
-        output_raster.SetProjection(srs.ExportToWkt())  # Exports the coordinate system
-        # to the file
-        band = output_raster.GetRasterBand(1)
-        band.WriteArray(array)  # Writes my array to the raster
-        band.FlushCache()
-        band.SetNoDataValue(null_val)
-
-    def get_nan_layer(self):
-        t = np.load(self.data_path)
-        return t['ibound']
-
-    def get_xy(self):
-        t = np.load(self.data_path)
-        return t['mx'], t['my']
-
-    def plot_density(self, array, island, nsites):
-        import cartopy.crs as ccrs
-        import cartopy.io.img_tiles as cimgt
-        bound_sets = {
-            'both': dict()
-        }
-        if island == 'both':
-            zoom_level = 7
-            ymin, ymax, xmin, xmax = -46.7, -34.3, 166.4, 178.6
-        elif island == 'n':
-            zoom_level = 8
-            ymin, ymax, xmin, xmax = -41.7, -34.3, 172.6, 178.6
-        elif island == 's':
-            zoom_level = 8
-            ymin, ymax, xmin, xmax = -46.7, -40.5, 166.4, 174.25
-        else:
-            raise ValueError('island must be one of n, s, or both')
-
-        request = cimgt.OSM()
-        fig, (ax) = plt.subplots(nrows=1, figsize=(8.3 * 0.9, 11.4 * 0.9), subplot_kw={'projection': request.crs},
-                                 )
-
-        ax.set_extent([xmin, xmax, ymin, ymax])
-        ax.add_image(request, zoom_level)
-        transform = ccrs.PlateCarree()
-        x, y = self.get_xy()
-        nans = self.get_nan_layer()
-        array[nans] = np.nan
-        temp = ax.contourf(x, y, array, transform=transform, cmap='magma', alpha=0.5,
-                           levels=[1, 2, 5, 10, 20, 50])
-
-        fig.colorbar(temp, ax=ax, orientation='horizontal', fraction=0.05, pad=0.05,
-                     label=f'Distance to nearest {nsites} sites (km)')
-        fig.tight_layout()
-        return fig, ax
-
-
 def density_calc_sites(md):  # todo test
     """
     create data_density
@@ -447,7 +370,7 @@ def density_calc_sites(md):  # todo test
     :param recalc:
     :return:
     """
-    dg = density_grid()
+    dg = DensityGrid()
     mx, my = dg.get_xy()
     nans = dg.get_nan_layer()
     use_mx = mx[~nans]
@@ -460,9 +383,7 @@ def density_calc_sites(md):  # todo test
     n_grid_points = int(avalible_memory / one_grid_size)
     assert n_grid_points > 0, 'not enough memory to calculate distance to nearest sites'
     nchunks = int(np.ceil(len(use_mx) / n_grid_points))
-
-    outdata_1 = np.zeros_like(use_mx, dtype=float)
-    outdata_10 = np.zeros_like(use_mx, dtype=float)
+    outdata = {n: np.zeros_like(use_mx, dtype=float) for n in dg.npoints}
     for i in range(nchunks):
         print(f'Calculating chunk {i + 1} of {nchunks}')
         start_idx = i * n_grid_points
@@ -471,32 +392,29 @@ def density_calc_sites(md):  # todo test
         else:
             end_idx = (i + 1) * n_grid_points
         temp = _distance_to_data(use_mx[start_idx:end_idx], use_my[start_idx:end_idx],
-                                 data_x, data_y, [1, 10])
-        outdata_1[start_idx:end_idx] = temp[0]
-        outdata_10[start_idx:end_idx] = temp[1]
-    for npoints, outdata in zip([1, 10], [outdata_1, outdata_10]):
+                                 data_x, data_y, dg.npoints)
+        for npoints, out in zip(dg.npoints, temp):
+            outdata[npoints][start_idx:end_idx] = out
+    for npoints in dg.npoints:
         all_out = np.zeros_like(mx, dtype=np.float32)
-        all_out[~nans] = outdata.astype(np.float32)
+        all_out[~nans] = outdata[npoints].astype(np.float32)
         all_out[nans] = np.nan
         np.save(dg.data_path.parent.joinpath(f'distance_m_to_nearest_{npoints}_data.npy'), all_out)
 
-        # save to tiff
-        dg.export_density_to_tif(all_out, dg.data_path.parent.joinpath(f'distance_m_to_nearest_{npoints}_data.tif'))
-
 
 def plot_density():
-    dg = density_grid()
+    dg = DensityGrid()
     figdir = Path(__file__).parents[2].joinpath('docs_build', '_static')
     from osgeo import gdal
     # plot
-    for npoints in [1, 10]:
-        datapath = dg.data_path.parent.joinpath(f'distance_m_to_nearest_{npoints}_data.tif')
-        dataset = gdal.Open(str(datapath), gdal.GA_ReadOnly)
-        band = dataset.GetRasterBand(1)
-        data = band.ReadAsArray()
+    for npoints in dg.npoints:
+        data = np.load(dg.data_path.parent.joinpath(f'distance_m_to_nearest_{npoints}_data.npy'))
+
+        dg.export_density_to_tif(data, dg.data_path.parent.joinpath(f'distance_m_to_nearest_{npoints}_data.tif'))
 
         for island in ['both', 'n', 's']:
-            fig, ax = dg.plot_density(data, 'both', npoints)
+            fig, ax = dg.plot_density(data/1000, island, vmin=0, vmax=10,
+                                      cbarlab=f'Distance to nearest {npoints} sites (km)')
             plt.show()
             fig.savefig(figdir.joinpath(f'data_coverage_{npoints}{island}.png'))
 
@@ -515,6 +433,71 @@ def _distance_to_data(xs, ys, data_x, data_y, npoints):
                 + (ys[:, np.newaxis] - data_y[np.newaxis, :]) ** 2) ** 0.5
     distance = np.sort(distance, axis=1)
     return [distance[:, n - 1] for n in npoints]
+
+
+def _npoints_in_dist_(xs, ys, data_x, data_y, distances):
+    distance = ((xs[:, np.newaxis] - data_x[np.newaxis, :]) ** 2
+                + (ys[:, np.newaxis] - data_y[np.newaxis, :]) ** 2) ** 0.5
+    return [(distance < d).sum(axis=1) for d in distances]
+
+
+def npoints_in_dist_calc_sites(md):  # todo test/run
+    """
+    create data_density
+    :param md:
+    :param recalc:
+    :return:
+    """
+    dg = DensityGrid()
+    mx, my = dg.get_xy()
+    nans = dg.get_nan_layer()
+    use_mx = mx[~nans]
+    use_my = my[~nans]
+    data_x = md['nztm_x'].values
+    data_y = md['nztm_y'].values
+    print(f'Calculating distance to nearest {len(data_x)} sites for {len(use_mx)} grid points')
+    one_grid_size = 5 * data_x.nbytes
+    avalible_memory = psutil.virtual_memory().available * 0.75  # leave 25% free
+    n_grid_points = int(avalible_memory / one_grid_size)
+    assert n_grid_points > 0, 'not enough memory to calculate distance to nearest sites'
+    nchunks = int(np.ceil(len(use_mx) / n_grid_points))
+
+    outdata = {d: np.zeros_like(use_mx, dtype=float) for d in dg.distlims}
+
+    for i in range(nchunks):
+        print(f'Calculating chunk {i + 1} of {nchunks}')
+        start_idx = i * n_grid_points
+        if i == nchunks - 1:
+            end_idx = len(use_mx)
+        else:
+            end_idx = (i + 1) * n_grid_points
+        temp = _npoints_in_dist_(use_mx[start_idx:end_idx], use_my[start_idx:end_idx],
+                                 data_x, data_y, dg.distlims)
+        for d, out in zip(dg.distlims, temp):
+            outdata[d][start_idx:end_idx] = out
+
+    for distlim in dg.distlims:
+        all_out = np.zeros_like(mx, dtype=np.float32)
+        all_out[~nans] = outdata[d].astype(np.float32)
+        all_out[nans] = np.nan
+        np.save(dg.data_path.parent.joinpath(f'npoins_nearest_{distlim}.npy'), all_out)
+
+
+def plot_points_in_dist():
+    dg = DensityGrid()
+    figdir = Path(__file__).parents[2].joinpath('docs_build', '_static')
+    from osgeo import gdal
+    # plot
+    for distlim in dg.distlims:
+        data = np.load(dg.data_path.parent.joinpath(f'npoins_nearest_{distlim}.npy'))
+
+        dg.export_density_to_tif(data, dg.data_path.parent.joinpath(f'npoins_nearest_{distlim}_m.tif'))
+
+        for island in ['both', 'n', 's']:
+            fig, ax = dg.plot_density(data, island, vmin=0, vmax=100,
+                                      cbarlab=f'The number of sites within {distlim / 1000} km')
+            plt.show()
+            fig.savefig(figdir.joinpath(f'npoins_nearest_{distlim}_m{island}.png'))
 
 
 def _make_input_grid():
@@ -583,5 +566,7 @@ if __name__ == '__main__':  # todo problems with 10, fix, save to repo, make not
     from komanawa.nz_depth_to_water.get_data import get_nz_depth_to_water
 
     water_level_data, metadata = get_nz_depth_to_water()
-    density_calc_sites(metadata)
-    plot_density()
+    npoints_in_dist_calc_sites(metadata)  # todo run this...
+    #density_calc_sites(metadata)
+    plot_points_in_dist()
+    plot_density() # todo check geotifs
