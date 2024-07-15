@@ -4,6 +4,13 @@ Developing a National Depth to Water Dataset for New Zealand
 .. include:: last_updated.rst
 
 
+Abstract
+==========
+
+Groundwater level data is a fundamental dataset for water resource and shallow water table hazard investigation, but the data are often held in a fragmented and diverse array of databases across New Zealand. Here we describe a National New Zealand dataset of depth to water and groundwater elevation data.
+
+
+
 Introduction and Background
 =============================
 
@@ -143,9 +150,29 @@ Further summary statistics of the data by the source are provided below.
 .. include:: ../tables/by_source_summary.rst
 
 
+Spatial Distribution
+--------------------------
 
-.. todo spatial coverage of data (by n records)
-.. todo data add data density layer calculation here???
+To better describe the spatial extent of the dataset we have plotted the number of monitoring points within 5 km of each monitoring point and the distance to the nearest groundwater monitoring site. The figures below show the results of these analyses below. In addition, these figures and geotiffs of the data coverage are available in the supplementary material and the Github repository.
+
+
+.. figure:: ../_static/data_coverage_1both.png
+   :alt: Distance to the nearest groundwater monitoring site
+   :align: center
+
+   Distance to the nearest groundwater monitoring site
+
+
+.. figure:: ../_static/npoins_nearest_5000_mboth.png
+   :alt: Number of monitoring points within 5 km
+   :align: center
+
+   Number of monitoring points within 5 km
+
+
+.. raw:: latex
+
+    \clearpage
 
 
 Statistical Description of Depth to Water Variance

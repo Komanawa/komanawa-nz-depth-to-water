@@ -363,7 +363,7 @@ def exceedance_prob(outdir, wd, md, depth_cat=1):
     plt.close(fig)
 
 
-def density_calc_sites(md):  # todo test
+def density_calc_sites(md):
     """
     create data_density
     :param md:
@@ -413,7 +413,7 @@ def plot_density():
         dg.export_density_to_tif(data, dg.data_path.parent.joinpath(f'distance_m_to_nearest_{npoints}_data.tif'))
 
         for island in ['both', 'n', 's']:
-            fig, ax = dg.plot_density(data/1000, island, vmin=0, vmax=10,
+            fig, ax = dg.plot_density(data / 1000, island, vmin=0.1, vmax=None, log=True,
                                       cbarlab=f'Distance to nearest {npoints} sites (km)')
             plt.show()
             fig.savefig(figdir.joinpath(f'data_coverage_{npoints}{island}.png'))
@@ -441,7 +441,7 @@ def _npoints_in_dist_(xs, ys, data_x, data_y, distances):
     return [(distance < d).sum(axis=1) for d in distances]
 
 
-def npoints_in_dist_calc_sites(md):  # todo test/run
+def npoints_in_dist_calc_sites(md):
     """
     create data_density
     :param md:
@@ -494,9 +494,8 @@ def plot_points_in_dist():
         dg.export_density_to_tif(data, dg.data_path.parent.joinpath(f'npoins_nearest_{distlim}_m.tif'))
 
         for island in ['both', 'n', 's']:
-            fig, ax = dg.plot_density(data, island, vmin=0, vmax=100,
+            fig, ax = dg.plot_density(data, island, vmin=None, vmax=None, cmap='magma', log=True,
                                       cbarlab=f'The number of sites within {distlim / 1000} km')
-            plt.show()
             fig.savefig(figdir.joinpath(f'npoins_nearest_{distlim}_m{island}.png'))
 
 
@@ -562,11 +561,11 @@ def _make_input_grid():
     np.savez_compressed(savepath, mx=mx, my=my, ibound=ibound)
 
 
-if __name__ == '__main__':  # todo problems with 10, fix, save to repo, make not dependent on ksl_tools and make figures... what zones...
+if __name__ == '__main__':
     from komanawa.nz_depth_to_water.get_data import get_nz_depth_to_water
 
     water_level_data, metadata = get_nz_depth_to_water()
-    npoints_in_dist_calc_sites(metadata)  # todo run this...
+    #npoints_in_dist_calc_sites(metadata)
     #density_calc_sites(metadata)
     plot_points_in_dist()
-    plot_density() # todo check geotifs
+    plot_density()

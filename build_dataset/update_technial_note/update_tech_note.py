@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 from build_dataset.update_technial_note.data_stats import get_data_stats, write_rst_table_with_tabulate, \
     get_running_totals
 from build_dataset.update_technial_note.statistical_measures_of_dwt_data import hist_sd, exceedance_prob, \
-    density_calc_sites, plot_density
+    density_calc_sites, plot_density, npoints_in_dist_calc_sites, plot_points_in_dist
 
 docs_build_dir = Path(__file__).parents[2].joinpath('docs_build')
 assert docs_build_dir.exists(), f'{docs_build_dir} does not exist. should not get here'
@@ -52,8 +52,11 @@ def update_tech_note(wl_data, metadata, base_outdir=docs_build_dir):
     density_calc_sites(metadata)
     plot_density()
 
+    npoints_in_dist_calc_sites(metadata)
+    plot_points_in_dist()
 
-if __name__ == '__main__': # todo run this when updated... (and we can include TCC)
+
+if __name__ == '__main__':  # todo run this when updated... (and we can include TCC)
     import pandas as pd
     from komanawa.nz_depth_to_water.get_data import get_nz_depth_to_water
 

@@ -144,10 +144,6 @@ Further summary statistics of the data by the source are provided below.
 
 
 
-.. todo spatial coverage of data (by n records)
-.. todo data add data density layer calculation here???
-
-
 Statistical Description of Depth to Water Variance
 -------------------------------------------------------
 

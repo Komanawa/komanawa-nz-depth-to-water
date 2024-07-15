@@ -173,3 +173,4 @@ out/*
 
 # sphinx autoapi build files
 /docs_build/autoapi/
+*.tif.aux.xml

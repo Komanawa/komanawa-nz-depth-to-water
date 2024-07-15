@@ -52,7 +52,7 @@ class DensityGrid():
         t = np.load(self.data_path)
         return t['mx'], t['my']
 
-    def plot_density(self, array, island, vmin, vmax, cbarlab):
+    def plot_density(self, array, island, vmin, vmax, cbarlab, cmap='magma_r', log=False):
         import cartopy.crs as ccrs
         import cartopy.io.img_tiles as cimgt
         array = array.copy()
@@ -93,11 +93,25 @@ class DensityGrid():
         use_y = use_y.reshape(use_shape)
         edgecolors = 'face'
         linewidth = 0
-        temp = ax.pcolormesh(use_x, use_y, array,
-                             transform=transform,
-                             cmap='magma_r', vmin=vmin, vmax=vmax,
-                             alpha=0.5, edgecolors=edgecolors, linewidth=linewidth,antialiased=True
-                             )
+        if log:
+            non_zero_array = array.copy()
+            non_zero_array[array == 0] = 0.1
+            zero_array = array.copy()
+            zero_array[array != 0] = np.nan
+            from matplotlib.colors import LogNorm
+
+            temp = ax.pcolormesh(use_x, use_y, non_zero_array,
+                                 transform=transform,
+                                 cmap=cmap, norm=LogNorm(vmin, vmax),
+                                 alpha=0.5, edgecolors=edgecolors, linewidth=linewidth, antialiased=True
+                                 )
+
+        else:
+            temp = ax.pcolormesh(use_x, use_y, array,
+                                 transform=transform,
+                                 cmap=cmap, vmin=vmin, vmax=vmax,
+                                 alpha=0.5, edgecolors=edgecolors, linewidth=linewidth, antialiased=True
+                                 )
 
         fig.colorbar(temp, ax=ax, orientation='horizontal', fraction=0.05, pad=0.05,
                      label=cbarlab)
