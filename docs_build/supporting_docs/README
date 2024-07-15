@@ -1,3 +1,4 @@
 # to create pdf from the rst (in your downloads directory)
 # cd to the supporting docs directory
 pandoc -V geometry:margin=1in Technial_note.rst -o ~/Downloads/data_paper.pdf
+pandoc -V geometry:margin=1in Technial_note.rst -o ~/Downloads/data_paper.docx -t docx
