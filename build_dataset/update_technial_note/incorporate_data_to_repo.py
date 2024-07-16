@@ -71,7 +71,7 @@ def check_new_data(md, wld):
             assert (got_wld[col].values == wld[col].values).all(), f'{col} not equal'
 
 
-if __name__ == '__main__':  # todo run this (once we can include TCC)
+if __name__ == '__main__':
     import pandas as pd
     from komanawa.kslcore import KslEnv
 

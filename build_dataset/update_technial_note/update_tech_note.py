@@ -56,7 +56,7 @@ def update_tech_note(wl_data, metadata, base_outdir=docs_build_dir):
     plot_points_in_dist()
 
 
-if __name__ == '__main__':  # todo run this when updated... (and we can include TCC)
+if __name__ == '__main__':
     import pandas as pd
     from komanawa.nz_depth_to_water.get_data import get_nz_depth_to_water
 

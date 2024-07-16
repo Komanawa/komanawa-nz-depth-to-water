@@ -5,11 +5,11 @@
 ==========================  ==========
 Metric                      Value
 ==========================  ==========
-N sites                     113,430
-N obs.                      5,456,573
+N sites                     113,526
+N obs.                      5,691,851
 Start date                  1899-12-29
-End date                    2024-04-30
-Mean n obs./site            49.22
+End date                    2024-05-13
+Mean n obs./site            51.29
 N sites with only one obs.  94,110
 N sites < 10 obs.           102,282
 ==========================  ==========

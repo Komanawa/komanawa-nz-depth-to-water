@@ -226,7 +226,7 @@ def _get_wl_tcc_data(local_paths, metadata):
     return merged
 
 
-def output(local_paths, meta_data_requirements, recalc=False):  #todo
+def output(local_paths, meta_data_requirements, recalc=False):
     """This function pulls all the data and metadata together and outputs it to a hdf5 file
     :return: dataframe"""
     water_data_store_path = local_paths['save_path']
