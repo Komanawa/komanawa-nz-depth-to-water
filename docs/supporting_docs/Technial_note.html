@@ -377,16 +377,18 @@
                   
   <section id="developing-a-national-depth-to-water-dataset-for-new-zealand">
 <h1>Developing a National Depth to Water Dataset for New Zealand<a class="headerlink" href="#developing-a-national-depth-to-water-dataset-for-new-zealand" title="Link to this heading">#</a></h1>
-<dl class="field-list simple">
-<dt class="field-odd">Last updated<span class="colon">:</span></dt>
-<dd class="field-odd"><p>2024-06-02</p>
-</dd>
-</dl>
+<p>Patrick Durney:sup:<cite>1*</cite>, Evelyn Charlesworth:sup:<cite>1</cite>, and Matt Dumont:sup:<cite>1</cite></p>
+<p><sup>1.</sup> Komanawa Solutions Ltd, Christchurch, New Zealand
+<sup>*</sup> Corresponding author</p>
+<section id="abstract">
+<h2>Abstract<a class="headerlink" href="#abstract" title="Link to this heading">#</a></h2>
+<p>Groundwater level data is a fundamental dataset for water resource and shallow water table hazard investigation, but the data are often held in a fragmented and diverse array of databases across New Zealand. Here we describe a National New Zealand dataset of depth to water and groundwater elevation data. This dataset has been made publicly available via a python package and is available at <a class="github reference external" href="https://github.com/Komanawa-Solutions-Ltd/komanawa-nz-depth-to-water">Komanawa-Solutions-Ltd/komanawa-nz-depth-to-water</a>.  We have provided a pathway for future updates and for users to identify and flag issues with the dataset. We hope this dataset can save future researchers time and effort in collecting and processing groundwater level data and can be used for a range of applied science and research activities.</p>
+</section>
 <section id="introduction-and-background">
 <h2>Introduction and Background<a class="headerlink" href="#introduction-and-background" title="Link to this heading">#</a></h2>
-<p>Groundwater level data are a key input for a broad range of water resource investigation, management and research activities. Access to national groundwater level data in New Zealand is challenging, however, because the data are held in the various Regional Council and Unitary Authority databases and in the New Zealand Geotechnical Database under a wide array of data architectures. The quality of the data and metadata varies significantly; in some instances, the data are subject to rigorous quality assurance processes and include accurate measurement point elevations and spatial coordinates. In other instances, the data comprise single readings of unknown quality with no information on the measurement point elevation or even the depth of the well</p>
-<p>Future Coasts Aotearoa is a NIWA led MBIE Endeavour research programme that combines expertise in Indigenous culture, economics, social, and physical sciences to tackle the issue of sea-level rise in coastal lowland communities by enhancing the evidence base for sea-level rise risks. Key groundwater science outputs include develop impact and adaptation thresholds for shallow groundwater hazards, a national coastal groundwater hazard exposure assessment, and national and local models of seawater intrusion and water table shoaling.</p>
-<p>This technical note outlines the data collected, the methods used to produce and analyse a national depth to water dataset for New Zealand for the Future Coasts research programme. The dataset will be valuable for a range of applied science and research activities.</p>
+<p>Groundwater level data are a key input for a broad range of water resource investigation, management and research activities. Access to national groundwater level data in New Zealand is challenging, however, because the data are held in the various Regional Council and Unitary Authority databases and in the New Zealand Geotechnical Database under a wide array of data architectures. The quality of the data and associated metadata varies significantly; in some instances, the data are subject to rigorous quality assurance processes and include accurate measurement point elevations and spatial coordinates. In other instances, the data comprise single readings of unknown quality with no information on the measurement point elevation or even the depth of the well.</p>
+<p>Future Coasts Aotearoa is a NIWA led Ministry of Business, Innovation and Employment (MBIE) Endeavour research programme that combines expertise in Indigenous culture, economics, social, and physical sciences to tackle the issue of sea-level rise in coastal lowland communities by enhancing the evidence base for sea-level rise risks. Key groundwater science outputs include: developing impact and adaptation thresholds for shallow groundwater hazards, producing a national coastal groundwater hazard exposure assessment and national and local models of seawater intrusion and water table shoaling.</p>
+<p>This technical note outlines the data collected and the methods used to produce and analyse a national depth to water dataset for New Zealand for the Future Coasts research programme. The dataset will be valuable for a range of applied science and research activities.</p>
 </section>
 <section id="methodology">
 <h2>Methodology<a class="headerlink" href="#methodology" title="Link to this heading">#</a></h2>
@@ -396,7 +398,7 @@
 </section>
 <section id="data-request">
 <h3>Data Request<a class="headerlink" href="#data-request" title="Link to this heading">#</a></h3>
-<p>A data request was sent out to 16 New Zealand councils in March 2023; this included all 11 regional councils and five unitary authorities. The data request sought all groundwater level data; this included sites additional to any NGMP monitoring sites, as well as any discontinuous or sporadic readings. The aim was to collect as much national data as possible, including sites with a single. We were open to receiving both groundwater depth and/or groundwater elevation data on the proviso that it was specified to reduce data processing error. We also requested standard metadata for each site, with a minimum metadata requirement of:</p>
+<p>A data request was sent out to 16 New Zealand councils in March 2023; this included all 11 regional councils and five unitary authorities. A further data request was sent out to all of the District and City Councils. However, this did not uncover any new data, and most recommended we contact the Regional Council in their area instead. The data request sought all groundwater level data; this included sites additional to any NGMP monitoring sites, as well as any discontinuous or sporadic readings. The aim was to collect as much national data as possible, including sites with a single reading. We were open to receiving both groundwater depth and/or groundwater elevation data on the proviso that it was specified to reduce data processing error. We also requested standard metadata for each site, with a minimum metadata requirement of:</p>
 <ul class="simple">
 <li><p>Unique site identifier (e.g. site number)</p></li>
 <li><p>Grid reference in NZTM</p></li>
@@ -408,8 +410,8 @@
 <li><p>Surveyed elevation of the ground surface at the measuring point</p></li>
 <li><p>The distance between the measuring point and the general ground surface.</p></li>
 </ul>
-<p>The data were received in Excel and csv formats, with various degrees of completeness and processing. Data management and storage varied from council to council hence processing to standardise the data was required.</p>
-<p>Alongside the direct requests to regional councils and unitary authorities, data was also pulled from Tethys (<a class="github reference external" href="https://github.com/tethys-ts">tethys-ts</a>), which allows hilltop based data to be accessed and downloaded. For councils that had relevant and up-to-date data in Hilltop, it meant we did not have to rely on a response to the direct request, and saved time in the data collection and processing.</p>
+<p>The data were received in Excel and csv formats, with various degrees of completeness and processing. Data management and storage varied from council to council, hence processing to standardise the data was required.</p>
+<p>Alongside the direct requests to regional councils and unitary authorities, data was also pulled from Tethys (<a class="github reference external" href="https://github.com/tethys-ts">tethys-ts</a>), which allows Hilltop based data to be accessed and downloaded. For councils that had relevant and up-to-date data in Hilltop, it meant we did not have to rely on a response to the direct request, and saved time in the data collection and processing.</p>
 <p>A brief summary of the data collected from each council is provided below.</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -493,7 +495,7 @@
 <li><p>Anomalies such as negative values or readings beyond expected ranges were meticulously examined and rectified. Erroneous NaN values were also purged from the dataset.</p></li>
 <li><p>All spatial data were transformed into the NZGD 2000 Transverse Mercator projection and NZVD2016 vertical datum.</p></li>
 <li><p>The data was resampled to a consistent temporal resolution, ergo standardised to daily intervals.</p></li>
-<li><p>The data was checked for any duplicates and removed</p></li>
+<li><p>The data was checked for any duplicates and these were removed.</p></li>
 </ul>
 </dd>
 </dl>
@@ -526,7 +528,7 @@
 <li><dl class="simple">
 <dt>Assumptions and Usage Considerations</dt><dd><ul>
 <li><p>A fundamental assumption is that depth-to-groundwater measurements below the ground surface are positive, with negative readings indicative of artesian conditions. This necessitated sign adjustments and validation against council records.</p></li>
-<li><p>In cases where well depth information was unavailable, wells were presumed shallow rather than being excluded from the dataset; however the well depth is still flagged as a nan value.</p></li>
+<li><p>In cases where well depth information was unavailable, wells were presumed shallow rather than being excluded from the dataset; however the well depth is still flagged as a NaN value.</p></li>
 <li><p>Specific regional peculiarities, such as the assumed + 100 m offset for coastal groundwater elevations provided by the Otago Regional Council, were duly considered and adjusted.</p></li>
 <li><p>For wells where the maximum depth to water exceeded the reported well depth, an assumption was made that the well depth equaled the maximum depth to water plus an additional 3 metres.</p></li>
 </ul>
@@ -541,10 +543,15 @@
 <ul class="simple">
 <li><dl class="simple">
 <dt>Categorization by Depth:</dt><dd><ul>
-<li><p>The dataset was divided into three depth categories:</p></li>
+<li><dl class="simple">
+<dt>The dataset was divided into three depth categories:</dt><dd><ul>
 <li><p>Category 1: Sites with DTW less than 10 meters.</p></li>
 <li><p>Category 2: Sites with DTW between 10 and 30 meters.</p></li>
 <li><p>Category 3: Sites with DTW greater than 30 meters.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
 </ul>
 </dd>
 </dl>
@@ -575,24 +582,24 @@
 <li><dl class="simple">
 <dt>Grouping by Mean DTW:</dt><dd><ul>
 <li><p>The categories were prescribed with breakpoints of: 0.1, 0.5, 1, 1.5, 2, 3, 5, 10, 15, 20, 30, 50, 75, 100 meters</p></li>
-<li><p>The data was further grouped by the mean DTW to analyze combined statistics across different groups. This grouping allows for a comparison of water level characteristics across sites with similar mean DTW values.</p></li>
+<li><p>The data was further grouped by the mean DTW to analyse combined statistics across different groups. This grouping allows for a comparison of water level characteristics across sites with similar mean DTW values.</p></li>
 </ul>
 </dd>
 </dl>
 </li>
 </ul>
-<p>This structured approach to data analysis supports a comprehensive understanding of the depth to water across various sites. By categorising, sub-setting, and computing key statistics, we can identify patterns and traits that are crucial for assessing groundwater inundation risks on a national scale.</p>
+<p>This structured approach to data analysis supports a comprehensive understanding of the DTW across various sites. By categorising, sub-setting, and computing key statistics, we can identify patterns and traits that are crucial for assessing groundwater inundation risks at a national scale.</p>
 </section>
 </section>
 <section id="results-and-discussion">
 <h2>Results and discussion<a class="headerlink" href="#results-and-discussion" title="Link to this heading">#</a></h2>
 <section id="dataset-access">
 <h3>Dataset access<a class="headerlink" href="#dataset-access" title="Link to this heading">#</a></h3>
-<p>The final dataset is available via a python package at <a class="github reference external" href="https://github.com/Komanawa-Solutions-Ltd/komanawa-nz-depth-to-water">Komanawa-Solutions-Ltd/komanawa-nz-depth-to-water</a>. The package readme includes installation instructions, usage examples, metadata descriptions, and instructions for contributing and maintaining the dataset.</p>
+<p>The final dataset is available via a Python package at <a class="github reference external" href="https://github.com/Komanawa-Solutions-Ltd/komanawa-nz-depth-to-water">Komanawa-Solutions-Ltd/komanawa-nz-depth-to-water</a>. The package readme includes installation instructions, usage examples, metadata descriptions, and instructions for contributing and maintaining the dataset.</p>
 </section>
 <section id="description-of-dataset">
 <h3>Description of Dataset<a class="headerlink" href="#description-of-dataset" title="Link to this heading">#</a></h3>
-<p>The dataset comprises a comprehensive collection of groundwater monitoring sites, spanning a significant temporal range from as early as December 29, 1899, but is overwhelmingly composed of younger data. More than half of the sites and records being measured after the mid-late 2000s as shown in the figure below.  The cumulative number of sites and records shown by data source is available in the supplementary material and <a class="reference external" href="https://github.com/Komanawa-Solutions-Ltd/komanawa-nz-depth-to-water">GitHub repository</a>.</p>
+<p>The dataset comprises a comprehensive collection of groundwater monitoring sites, spanning a significant temporal range from as early as December 29, 1899, but is overwhelmingly composed of younger data. More than half of the sites and records are measured after the mid-late 2000s, as shown in the figure below.  The cumulative number of sites and records shown by data source is available in the supplementary material and <a class="reference external" href="https://github.com/Komanawa-Solutions-Ltd/komanawa-nz-depth-to-water">GitHub repository</a>.</p>
 <figure class="align-center" id="id2">
 <img alt="Cumulative number of records by source" src="../_images/cumulative_n_records.png" />
 <figcaption>
@@ -609,19 +616,19 @@
 </thead>
 <tbody>
 <tr class="row-even"><td><p>N sites</p></td>
-<td><p>113,430</p></td>
+<td><p>113,526</p></td>
 </tr>
 <tr class="row-odd"><td><p>N obs.</p></td>
-<td><p>5,456,573</p></td>
+<td><p>5,691,851</p></td>
 </tr>
 <tr class="row-even"><td><p>Start date</p></td>
 <td><p>1899-12-29</p></td>
 </tr>
 <tr class="row-odd"><td><p>End date</p></td>
-<td><p>2024-04-30</p></td>
+<td><p>2024-05-13</p></td>
 </tr>
 <tr class="row-even"><td><p>Mean n obs./site</p></td>
-<td><p>49.22</p></td>
+<td><p>51.29</p></td>
 </tr>
 <tr class="row-odd"><td><p>N sites with only one obs.</p></td>
 <td><p>94,110</p></td>
@@ -633,7 +640,7 @@
 </table>
 </div>
 <p>Investigating the dataset by source reveals distinct patterns in data collection and density.
-Notably, Environment Canterbury (Ecan) stands out with the highest number of observations.
+Notably, Environment Canterbury (ECan) stands out with the highest number of observations.
 This contrasts the New Zealand Geotechnical Database (NZGD) which has many fewer observations per site (frequently &lt;= 2 readings/site).
 Otago Regional Council (ORC) provided data for fewer monitoring sites, but with a high average reading count per site.
 These variations highlight the diversity of monitoring efforts and data densities across different sources.
@@ -756,7 +763,15 @@ Further summary statistics of the data by the source are provided below.</p>
 <td><p>144.36</p></td>
 <td><p>641</p></td>
 </tr>
-<tr class="row-odd"><td><p>TDC</p></td>
+<tr class="row-odd"><td><p>TCC</p></td>
+<td><p>96</p></td>
+<td><p>2000-02-28</p></td>
+<td><p>2024-05-13</p></td>
+<td><p>235,278</p></td>
+<td><p>2,450.81</p></td>
+<td><p>96</p></td>
+</tr>
+<tr class="row-even"><td><p>TDC</p></td>
 <td><p>2,456</p></td>
 <td><p>1900-01-01</p></td>
 <td><p>2023-03-20</p></td>
@@ -764,7 +779,7 @@ Further summary statistics of the data by the source are provided below.</p>
 <td><p>207.69</p></td>
 <td><p>1,252</p></td>
 </tr>
-<tr class="row-even"><td><p>TRC</p></td>
+<tr class="row-odd"><td><p>TRC</p></td>
 <td><p>2,365</p></td>
 <td><p>1958-11-17</p></td>
 <td><p>2023-12-04</p></td>
@@ -772,7 +787,7 @@ Further summary statistics of the data by the source are provided below.</p>
 <td><p>75.46</p></td>
 <td><p>286</p></td>
 </tr>
-<tr class="row-odd"><td><p>WCRC</p></td>
+<tr class="row-even"><td><p>WCRC</p></td>
 <td><p>216</p></td>
 <td><p>1995-01-03</p></td>
 <td><p>2024-01-09</p></td>
@@ -780,7 +795,7 @@ Further summary statistics of the data by the source are provided below.</p>
 <td><p>12.52</p></td>
 <td><p>29</p></td>
 </tr>
-<tr class="row-even"><td><p>WRC</p></td>
+<tr class="row-odd"><td><p>WRC</p></td>
 <td><p>8,058</p></td>
 <td><p>1979-05-25</p></td>
 <td><p>2023-02-17</p></td>
@@ -792,11 +807,27 @@ Further summary statistics of the data by the source are provided below.</p>
 </table>
 </div>
 </section>
+<section id="spatial-distribution">
+<h3>Spatial Distribution<a class="headerlink" href="#spatial-distribution" title="Link to this heading">#</a></h3>
+<p>To better describe the spatial extent of the dataset we have plotted the number of monitoring points within 5 km of each monitoring point and the distance to the nearest groundwater monitoring site. The figures below show the results of these analyses below. In addition, these figures and geotiffs of the data coverage are available in the supplementary material and the Github repository.</p>
+<figure class="align-center" id="id3">
+<img alt="Distance to the nearest groundwater monitoring site" src="../_images/data_coverage_1both.png" />
+<figcaption>
+<p><span class="caption-text">Distance to the nearest groundwater monitoring site</span><a class="headerlink" href="#id3" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id4">
+<img alt="Number of monitoring points within 5 km" src="../_images/npoins_nearest_5000_mboth.png" />
+<figcaption>
+<p><span class="caption-text">Number of monitoring points within 5 km</span><a class="headerlink" href="#id4" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+</section>
 <section id="statistical-description-of-depth-to-water-variance">
 <h3>Statistical Description of Depth to Water Variance<a class="headerlink" href="#statistical-description-of-depth-to-water-variance" title="Link to this heading">#</a></h3>
-<p>Overview depth to water variance statistics for shallow wells are provided below with more detailed statistics are provided in the supplementary material and available on the <a class="reference external" href="https://github.com/Komanawa-Solutions-Ltd/komanawa-nz-depth-to-water">GitHub repository</a>.</p>
+<p>Overview depth to water variance statistics for shallow wells are provided below. More detailed statistics are provided in the supplementary material and available on the <a class="reference external" href="https://github.com/Komanawa-Solutions-Ltd/komanawa-nz-depth-to-water">GitHub repository</a>.</p>
 <p>In depth category 1 (shallow wells, &lt; 10m), the depth to water exhibits little variation in the shallower bins, suggesting proximity to boundary condition and/or high (unconfined) storage coefficients.
-As depth increases, the variability in the depth to water also increases, as evidenced by larger ranges and higher standard deviations. For instance, in depth category 1, the standard deviation median increases from 0.077 in the &lt;0.1m bin to 0.48 in the 6.36m bin. Notably, the skewness suggests a tendency towards shallower water levels in many records, despite the large possible ranges in depth. This is observed in the negative skewness values that become more pronounced with increasing depth, indicating that while the average water levels are deeper, there are frequent instances of shallower depths. The kurtosis values further highlight the presence of notable outliers and extreme values. As depth increases, the kurtosis medians remain high or increase, indicating distributions with frequent extreme values. This pattern is consistent across other depth categories, where deeper bins show increased kurtosis, suggesting that extreme values become more apparent with depth. Overall, the statistics indicate that as depth increases, not only does the variability in water levels increase, but the presence of outliers and extreme values also becomes more pronounced. Finally, the statistics suggest the data is skewed and leptokurtic, meaning the data is not normally distributed and the mean and standard deviation are not necessarily representative of the data.</p>
+As depth increases, the variability in the depth to water also increases, as evidenced by larger ranges and higher standard deviations. For instance, in depth category 1, the standard deviation median increases from 0.077 in the &lt;0.1 m bin to 0.48 in the 6.36 m bin. Notably, the skewness suggests a tendency towards shallower water levels in many records, despite the large possible ranges in depth. This is observed in the negative skewness values that become more pronounced with increasing depth, indicating that while the average water levels are deeper, there are frequent instances of shallower depths. The kurtosis values further highlight the presence of notable outliers and extreme values. As depth increases, the kurtosis medians remain high or increase, indicating distributions with frequent extreme values. This pattern is consistent across other depth categories, where deeper bins show increased kurtosis, suggesting that extreme values become more apparent with depth. Overall, the statistics indicate that as depth increases, not only does the variability in water levels increase, but the presence of outliers and extreme values also becomes more pronounced. Finally, the statistics suggest the data is skewed and leptokurtic, meaning the data is not normally distributed and the mean and standard deviation are not necessarily representative of the data.</p>
 <p class="rubric">Summary of variance and skewness for well depth &lt; 10m or unknown depth and max dtw &lt; 10m</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -816,81 +847,81 @@ As depth increases, the variability in the depth to water also increases, as evi
 <td><p>0.08</p></td>
 <td><p>0.0 - 0.494</p></td>
 <td><p>0.67</p></td>
-<td><p>-2.491 - 12.26</p></td>
+<td><p>-2.49 - 12.26</p></td>
 <td><p>2.92</p></td>
 <td><p>-0.556 - 178.626</p></td>
 <td><p>14,708</p></td>
 <td><p>36</p></td>
 </tr>
 <tr class="row-odd"><td><p>0.1m to 0.5m</p></td>
-<td><p>0.16</p></td>
-<td><p>0.02 - 0.662</p></td>
-<td><p>0.35</p></td>
-<td><p>-1.206 - 4.735</p></td>
-<td><p>0.10</p></td>
-<td><p>-1.378 - 26.625</p></td>
-<td><p>79,019</p></td>
-<td><p>97</p></td>
+<td><p>0.17</p></td>
+<td><p>0.02 - 0.654</p></td>
+<td><p>0.38</p></td>
+<td><p>-1.199 - 4.808</p></td>
+<td><p>0.23</p></td>
+<td><p>-1.367 - 36.245</p></td>
+<td><p>93,228</p></td>
+<td><p>103</p></td>
 </tr>
 <tr class="row-even"><td><p>0.5m to 1m</p></td>
 <td><p>0.20</p></td>
-<td><p>0.055 - 0.723</p></td>
-<td><p>0.01</p></td>
-<td><p>-1.874 - 5.324</p></td>
-<td><p>0.49</p></td>
-<td><p>-1.32 - 30.268</p></td>
-<td><p>255,800</p></td>
-<td><p>409</p></td>
+<td><p>0.056 - 0.744</p></td>
+<td><p>0.02</p></td>
+<td><p>-1.871 - 5.3</p></td>
+<td><p>0.56</p></td>
+<td><p>-1.323 - 30.208</p></td>
+<td><p>294,730</p></td>
+<td><p>426</p></td>
 </tr>
 <tr class="row-odd"><td><p>1m to 1.5m</p></td>
 <td><p>0.23</p></td>
-<td><p>0.077 - 0.815</p></td>
+<td><p>0.077 - 0.812</p></td>
 <td><p>-0.02</p></td>
-<td><p>-2.824 - 4.081</p></td>
-<td><p>0.48</p></td>
-<td><p>-1.378 - 25.565</p></td>
-<td><p>271,885</p></td>
-<td><p>498</p></td>
+<td><p>-2.818 - 4.033</p></td>
+<td><p>0.50</p></td>
+<td><p>-1.372 - 24.998</p></td>
+<td><p>297,096</p></td>
+<td><p>511</p></td>
 </tr>
 <tr class="row-even"><td><p>1.5m to 2m</p></td>
 <td><p>0.26</p></td>
-<td><p>0.074 - 1.314</p></td>
+<td><p>0.075 - 1.313</p></td>
 <td><p>-0.11</p></td>
-<td><p>-3.595 - 3.837</p></td>
-<td><p>0.78</p></td>
-<td><p>-1.274 - 24.486</p></td>
-<td><p>241,975</p></td>
-<td><p>392</p></td>
+<td><p>-3.548 - 3.792</p></td>
+<td><p>0.80</p></td>
+<td><p>-1.27 - 25.755</p></td>
+<td><p>268,677</p></td>
+<td><p>402</p></td>
 </tr>
 <tr class="row-odd"><td><p>2m to 3m</p></td>
 <td><p>0.33</p></td>
-<td><p>0.081 - 1.494</p></td>
-<td><p>-0.16</p></td>
-<td><p>-3.652 - 3.635</p></td>
-<td><p>0.45</p></td>
-<td><p>-1.18 - 28.304</p></td>
-<td><p>322,851</p></td>
-<td><p>539</p></td>
+<td><p>0.08 - 1.479</p></td>
+<td><p>-0.18</p></td>
+<td><p>-3.972 - 3.794</p></td>
+<td><p>0.48</p></td>
+<td><p>-1.179 - 33.08</p></td>
+<td><p>376,760</p></td>
+<td><p>560</p></td>
 </tr>
 <tr class="row-even"><td><p>3m to 5m</p></td>
 <td><p>0.47</p></td>
-<td><p>0.115 - 2.253</p></td>
-<td><p>-0.14</p></td>
-<td><p>-4.131 - 3.296</p></td>
-<td><p>0.22</p></td>
-<td><p>-1.365 - 30.752</p></td>
-<td><p>324,202</p></td>
-<td><p>475</p></td>
+<td><p>0.115 - 2.237</p></td>
+<td><p>-0.15</p></td>
+<td><p>-4.096 - 3.168</p></td>
+<td><p>0.24</p></td>
+<td><p>-1.347 - 29.979</p></td>
+<td><p>368,603</p></td>
+<td><p>492</p></td>
 </tr>
 <tr class="row-odd"><td><p>5m to 10m</p></td>
-<td><p>0.48</p></td>
-<td><p>0.141 - 2.02</p></td>
+<td><p>0.47</p></td>
+<td><p>0.13 - 2.02</p></td>
 <td><p>-0.32</p></td>
-<td><p>-6.205 - 3.443</p></td>
+<td><p>-6.193 - 3.431</p></td>
 <td><p>0.13</p></td>
-<td><p>-1.295 - 53.598</p></td>
-<td><p>189,834</p></td>
-<td><p>283</p></td>
+<td><p>-1.292 - 85.168</p></td>
+<td><p>199,509</p></td>
+<td><p>287</p></td>
 </tr>
 </tbody>
 </table>
@@ -903,20 +934,20 @@ As depth increases, the variability in the depth to water also increases, as evi
 New Zealand’s current groundwater monitoring network is diverse and fragmented, with each provider having unique monitoring objectives, methodologies, and data storage and management systems.
 Some national approaches have been undertaken to standardise data collection and storage, such as the National Groundwater Monitoring Programme (NGMP) and the New Zealand Geotechnical Database (NZGD), but these are not comprehensive, do not cover the full breadth of groundwater monitoring data, and often have a specific focus (i.e. regional groundwater resource characterisation or shallow geotechnical investigations, respectively).</p>
 <p>The current state of groundwater level data availability in New Zealand provides a significant barrier to and inefficiency in understanding and adapting to the impacts of climate change and sea-level rise on groundwater systems.</p>
-<p>A comprehensive set of discrete and regular groundwater level readings and metadata were collated from Regional Councils, Unitary Authorities and the New Zealand Geotechnical Database and processed into a consistent format. The output of this work is a national depth to water and groundwater elevation dataset for New Zealand; the groundwater level data and metadata are available as a complete dataset which can be used to better understand shallow groundwater hazards in New Zealand and for a range of other applied science and research activities such as well interference assessments, stormwater detention pond groundwater depth assessments and regional and  national groundwater modelling.
+<p>A comprehensive set of discrete and regular groundwater level readings and metadata were collated from Regional Councils, Unitary Authorities and the New Zealand Geotechnical Database and processed into a consistent format. The output of this work is a national depth to water and groundwater elevation dataset for New Zealand; the groundwater level data and metadata are available as a complete dataset which can be used to better understand shallow groundwater hazards in New Zealand and for a range of other applied science and research activities such as well interference assessments, stormwater detention pond groundwater depth assessments and regional and national groundwater modelling.
 Although the database provides a comprehensive set of groundwater level data at the time of writing, the value of this database will decline over time as new data is collected.</p>
 <p>We are aware of efforts to create a national wells database, which would likely provide significant improvements in data quality and accessibility. However, it is unclear when this database will be available and what data it will contain. We would recommend that a pragmatic set of standards be adopted for all data held by councils and other organisations that collect groundwater data. These standards should include the following:</p>
 <ol class="arabic simple">
 <li><p>All public data held by an organisation should be made available via a public API.</p></li>
 <li><p>All public datasets should include metadata.  Ideally this metadata would be in a standard machine readable format, but as an interim solution or for less frequently used data, a simple publicly visible document discussing the data structure and any peculiarities would be a good start.</p></li>
 <li><p>All public datasets should have a mechanism for users to report errors or issues with the data and these issues should be publicly visible. Even if organisations do not have the resources to fix all these issues, there is value in collating them. At the moment each researcher must discover these issues themselves, which is challenging and time consuming. Consider the value of forums like Stack Exchange or GitHub issues for this purpose in the software development world.</p></li>
-<li><p>All public dataset should have consistent +ve or -ve signs for depth to water above or below gwl. Ideally this would be a national standard, but minimally should be an organisational standard and documented.</p></li>
+<li><p>All public dataset should have consistent +ve or -ve signs for depth to water above or below ground level. Ideally this would be a national standard, but minimally should be an organisational standard and documented.</p></li>
 <li><p>All public datasets should have a consistent way of specifying the elevation of the measuring point. This could be as simple as a GPS elevation, but minimally should be documented.</p></li>
 </ol>
-<p>Additionally, we would like to commend the NZGD for their work in providing a national database of geotechnical data. The dataset was of enormous value to this project, particularly in data sparce regions; however our use case may have been beyond the expected purpose of the NZGD. Specifically, we often found significantly conflicting data points in close proximity. Based on our analysis, we suspect that these discrepancies likely stem from variations in the drilling locations, such as greenfield sites versus foundation pits. The NZDG could significantly improve their database for shallow groundwater hazard management by:</p>
+<p>Additionally, we would like to commend the NZGD for their work in providing a national database of geotechnical data. The dataset was of enormous value to this project, particularly in data sparce regions; however our use case may have been beyond the expected purpose of the NZGD. Specifically, we often found significantly conflicting data points in close proximity. Based on our analysis, we suspect that these discrepancies likely stem from variations in the drilling locations, such as greenfield sites versus foundation pits. The NZGD could significantly improve their database for shallow groundwater hazard management by:</p>
 <ol class="arabic simple">
 <li><p>Included a field to specify whether measurements at a point are relative to the average surrounding land surface or taken in foundation excavations.</p></li>
-<li><p>Include and possibly mandate the the provision of GPS elevation data for the depth to water measuring point and/or a measured distance between the measuring point and the general surrounding ground surface (e.g. depth of foundation excavation).</p></li>
+<li><p>Include and possibly mandate the provision of GPS elevation data for the depth to water measuring point and/or a measured distance between the measuring point and the general surrounding ground surface (e.g. depth of foundation excavation).</p></li>
 <li><dl class="simple">
 <dt>As discussed above the NZGD would also benefit from:</dt><dd><ol class="arabic simple">
 <li><p>A public API for data access.</p></li>
@@ -946,16 +977,14 @@ We are aware of limitations of this work which are listed below:</p>
 <li><p>The data is only as good as the data provided by the councils; we did not have the resources nor all the information to fully quality-assure the data.</p></li>
 <li><p>For many sites, the elevation of the measuring point is unknown. We have used LiDAR data to estimate the elevation of the ground, but this will likely reduce the accuracy of the groundwater elevation depending on the resolution of the LiDAR data.</p></li>
 <li><p>We have assumed that the depth to water from ground level is correct, and therefore any errors in the depth to water data will be reflected in the groundwater elevation values.</p></li>
-<li><p>There may be unknown regional data handling / reporting peculiarities that we were not aware of that could affect the data.</p></li>
+<li><p>There may be unknown regional data handling/reporting peculiarities that we were not aware of that could affect the data.</p></li>
 <li><p>The dataset is not exhaustive, and there may be more data available that has not been included in this dataset.</p></li>
 </ul>
 </section>
 <section id="acknowledgements">
 <h2>Acknowledgements<a class="headerlink" href="#acknowledgements" title="Link to this heading">#</a></h2>
-<p>This work could not have been completed without the support of the regional councils, unitary authorities, and other scientists who provided us with data and assistance. We would like to acknowledge the following people and organisations:</p>
+<p>This work could not have been completed without the support of the Regional Councils, Unitary Authorities, and other scientists who provided us with data and assistance. We would like to acknowledge the Regional Councils and Unitary Authorities, especially their environmental data teams, for providing us with the required data, and for responding to our data requests and subsequent questions. We would like to acknowledge the following people and organisations:</p>
 <ul class="simple">
-<li><dl class="simple">
-<dt>We would like to acknowledge the regional councils and unitary authorities, especially their environmental data teams, for providing us with the required data, and for responding to our data requests and subsequent questions. We appreciate your work in collecting and maintaining this data. Thank you specifically to:</dt><dd><ul>
 <li><p>Freya Green from Auckland Council</p></li>
 <li><p>Paul Scholes &amp; Rochelle Gardner from Bay of Plenty Regional Council</p></li>
 <li><p>Jennifer Tregurtha from Environment Canterbury</p></li>
@@ -973,10 +1002,6 @@ We are aware of limitations of this work which are listed below:</p>
 <li><p>Jonny Horrox from West Coast Regional Council</p></li>
 <li><p>Simon Matthews from the New Zealand Geotechnical Database</p></li>
 <li><p>Chris Strang from Nelson City Council</p></li>
-</ul>
-</dd>
-</dl>
-</li>
 <li><p>Mike Kitteridge for his development of Tethys, and for providing assistance in using the platform and accessing data.</p></li>
 <li><p>The New Zealand Geotechnical Database for providing us with groundwater level data.</p></li>
 <li><p>Armandine Bosserelle for providing us with groundwater level data for the Christchurch area.</p></li>
@@ -989,16 +1014,16 @@ We are aware of limitations of this work which are listed below:</p>
 <section id="cumulative-records-and-sites-per-source">
 <h3>Cumulative records and sites per source<a class="headerlink" href="#cumulative-records-and-sites-per-source" title="Link to this heading">#</a></h3>
 <p>The following figures show the cumulative number of records and sites over time per data source.</p>
-<figure class="align-center" id="id3">
+<figure class="align-center" id="id5">
 <img alt="../_images/cumulative_n_records_per_source.png" src="../_images/cumulative_n_records_per_source.png" />
 <figcaption>
-<p><span class="caption-text">The growth in the number of records by source over time.</span><a class="headerlink" href="#id3" title="Link to this image">#</a></p>
+<p><span class="caption-text">The growth in the number of records by source over time.</span><a class="headerlink" href="#id5" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<figure class="align-center" id="id4">
+<figure class="align-center" id="id6">
 <img alt="../_images/cumulative_n_sites_per_source.png" src="../_images/cumulative_n_sites_per_source.png" />
 <figcaption>
-<p><span class="caption-text">The growth in the number of sites by source over time.</span><a class="headerlink" href="#id4" title="Link to this image">#</a></p>
+<p><span class="caption-text">The growth in the number of sites by source over time.</span><a class="headerlink" href="#id6" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 </section>
@@ -1024,81 +1049,81 @@ We are aware of limitations of this work which are listed below:</p>
 <td><p>0.08</p></td>
 <td><p>0.0 - 0.494</p></td>
 <td><p>0.67</p></td>
-<td><p>-2.491 - 12.26</p></td>
+<td><p>-2.49 - 12.26</p></td>
 <td><p>2.92</p></td>
 <td><p>-0.556 - 178.626</p></td>
 <td><p>14,708</p></td>
 <td><p>36</p></td>
 </tr>
 <tr class="row-odd"><td><p>0.1m to 0.5m</p></td>
-<td><p>0.16</p></td>
-<td><p>0.02 - 0.662</p></td>
-<td><p>0.35</p></td>
-<td><p>-1.206 - 4.735</p></td>
-<td><p>0.10</p></td>
-<td><p>-1.378 - 26.625</p></td>
-<td><p>79,019</p></td>
-<td><p>97</p></td>
+<td><p>0.17</p></td>
+<td><p>0.02 - 0.654</p></td>
+<td><p>0.38</p></td>
+<td><p>-1.199 - 4.808</p></td>
+<td><p>0.23</p></td>
+<td><p>-1.367 - 36.245</p></td>
+<td><p>93,228</p></td>
+<td><p>103</p></td>
 </tr>
 <tr class="row-even"><td><p>0.5m to 1m</p></td>
 <td><p>0.20</p></td>
-<td><p>0.055 - 0.723</p></td>
-<td><p>0.01</p></td>
-<td><p>-1.874 - 5.324</p></td>
-<td><p>0.49</p></td>
-<td><p>-1.32 - 30.268</p></td>
-<td><p>255,800</p></td>
-<td><p>409</p></td>
+<td><p>0.056 - 0.744</p></td>
+<td><p>0.02</p></td>
+<td><p>-1.871 - 5.3</p></td>
+<td><p>0.56</p></td>
+<td><p>-1.323 - 30.208</p></td>
+<td><p>294,730</p></td>
+<td><p>426</p></td>
 </tr>
 <tr class="row-odd"><td><p>1m to 1.5m</p></td>
 <td><p>0.23</p></td>
-<td><p>0.077 - 0.815</p></td>
+<td><p>0.077 - 0.812</p></td>
 <td><p>-0.02</p></td>
-<td><p>-2.824 - 4.081</p></td>
-<td><p>0.48</p></td>
-<td><p>-1.378 - 25.565</p></td>
-<td><p>271,885</p></td>
-<td><p>498</p></td>
+<td><p>-2.818 - 4.033</p></td>
+<td><p>0.50</p></td>
+<td><p>-1.372 - 24.998</p></td>
+<td><p>297,096</p></td>
+<td><p>511</p></td>
 </tr>
 <tr class="row-even"><td><p>1.5m to 2m</p></td>
 <td><p>0.26</p></td>
-<td><p>0.074 - 1.314</p></td>
+<td><p>0.075 - 1.313</p></td>
 <td><p>-0.11</p></td>
-<td><p>-3.595 - 3.837</p></td>
-<td><p>0.78</p></td>
-<td><p>-1.274 - 24.486</p></td>
-<td><p>241,975</p></td>
-<td><p>392</p></td>
+<td><p>-3.548 - 3.792</p></td>
+<td><p>0.80</p></td>
+<td><p>-1.27 - 25.755</p></td>
+<td><p>268,677</p></td>
+<td><p>402</p></td>
 </tr>
 <tr class="row-odd"><td><p>2m to 3m</p></td>
 <td><p>0.33</p></td>
-<td><p>0.081 - 1.494</p></td>
-<td><p>-0.16</p></td>
-<td><p>-3.652 - 3.635</p></td>
-<td><p>0.45</p></td>
-<td><p>-1.18 - 28.304</p></td>
-<td><p>322,851</p></td>
-<td><p>539</p></td>
+<td><p>0.08 - 1.479</p></td>
+<td><p>-0.18</p></td>
+<td><p>-3.972 - 3.794</p></td>
+<td><p>0.48</p></td>
+<td><p>-1.179 - 33.08</p></td>
+<td><p>376,760</p></td>
+<td><p>560</p></td>
 </tr>
 <tr class="row-even"><td><p>3m to 5m</p></td>
 <td><p>0.47</p></td>
-<td><p>0.115 - 2.253</p></td>
-<td><p>-0.14</p></td>
-<td><p>-4.131 - 3.296</p></td>
-<td><p>0.22</p></td>
-<td><p>-1.365 - 30.752</p></td>
-<td><p>324,202</p></td>
-<td><p>475</p></td>
+<td><p>0.115 - 2.237</p></td>
+<td><p>-0.15</p></td>
+<td><p>-4.096 - 3.168</p></td>
+<td><p>0.24</p></td>
+<td><p>-1.347 - 29.979</p></td>
+<td><p>368,603</p></td>
+<td><p>492</p></td>
 </tr>
 <tr class="row-odd"><td><p>5m to 10m</p></td>
-<td><p>0.48</p></td>
-<td><p>0.141 - 2.02</p></td>
+<td><p>0.47</p></td>
+<td><p>0.13 - 2.02</p></td>
 <td><p>-0.32</p></td>
-<td><p>-6.205 - 3.443</p></td>
+<td><p>-6.193 - 3.431</p></td>
 <td><p>0.13</p></td>
-<td><p>-1.295 - 53.598</p></td>
-<td><p>189,834</p></td>
-<td><p>283</p></td>
+<td><p>-1.292 - 85.168</p></td>
+<td><p>199,509</p></td>
+<td><p>287</p></td>
 </tr>
 </tbody>
 </table>
@@ -1144,7 +1169,7 @@ We are aware of limitations of this work which are listed below:</p>
 <td><p>0.07</p></td>
 <td><p>-1.218 - 13.79</p></td>
 <td><p>0.29</p></td>
-<td><p>-1.533 - 394.8</p></td>
+<td><p>-1.533 - 394.803</p></td>
 <td><p>36,542</p></td>
 <td><p>35</p></td>
 </tr>
@@ -1162,41 +1187,41 @@ We are aware of limitations of this work which are listed below:</p>
 <td><p>0.37</p></td>
 <td><p>0.137 - 2.776</p></td>
 <td><p>0.37</p></td>
-<td><p>-1.64 - 12.844</p></td>
+<td><p>-1.64 - 12.843</p></td>
 <td><p>1.56</p></td>
-<td><p>-1.242 - 445.546</p></td>
+<td><p>-1.242 - 445.507</p></td>
 <td><p>47,132</p></td>
 <td><p>51</p></td>
 </tr>
 <tr class="row-odd"><td><p>2m to 3m</p></td>
 <td><p>0.40</p></td>
-<td><p>0.083 - 2.072</p></td>
+<td><p>0.084 - 2.6</p></td>
 <td><p>0.07</p></td>
-<td><p>-2.893 - 4.226</p></td>
+<td><p>-2.892 - 4.221</p></td>
 <td><p>0.69</p></td>
-<td><p>-1.281 - 24.547</p></td>
-<td><p>109,078</p></td>
-<td><p>112</p></td>
+<td><p>-1.28 - 24.533</p></td>
+<td><p>112,205</p></td>
+<td><p>113</p></td>
 </tr>
 <tr class="row-even"><td><p>3m to 5m</p></td>
 <td><p>0.77</p></td>
-<td><p>0.142 - 3.416</p></td>
+<td><p>0.142 - 3.414</p></td>
 <td><p>0.12</p></td>
-<td><p>-2.287 - 8.437</p></td>
+<td><p>-2.283 - 8.332</p></td>
 <td><p>0.25</p></td>
-<td><p>-1.358 - 72.867</p></td>
-<td><p>242,191</p></td>
-<td><p>205</p></td>
+<td><p>-1.358 - 71.736</p></td>
+<td><p>247,927</p></td>
+<td><p>207</p></td>
 </tr>
 <tr class="row-odd"><td><p>5m to 10m</p></td>
 <td><p>1.02</p></td>
-<td><p>0.17 - 4.507</p></td>
+<td><p>0.17 - 4.504</p></td>
 <td><p>-0.06</p></td>
-<td><p>-4.283 - 3.741</p></td>
+<td><p>-4.275 - 3.711</p></td>
 <td><p>0.22</p></td>
-<td><p>-1.473 - 60.505</p></td>
-<td><p>300,095</p></td>
-<td><p>408</p></td>
+<td><p>-1.472 - 60.086</p></td>
+<td><p>307,509</p></td>
+<td><p>411</p></td>
 </tr>
 <tr class="row-even"><td><p>10m to 15m</p></td>
 <td><p>0.93</p></td>
@@ -1260,9 +1285,9 @@ We are aware of limitations of this work which are listed below:</p>
 <td><p>0.28</p></td>
 <td><p>0.203 - 0.69</p></td>
 <td><p>2.33</p></td>
-<td><p>0.163 - 52.197</p></td>
+<td><p>0.163 - 52.198</p></td>
 <td><p>4.80</p></td>
-<td><p>-1.024 - 3718.508</p></td>
+<td><p>-1.024 - 3718.589</p></td>
 <td><p>7,229</p></td>
 <td><p>8</p></td>
 </tr>
@@ -1280,9 +1305,9 @@ We are aware of limitations of this work which are listed below:</p>
 <td><p>0.51</p></td>
 <td><p>0.128 - 2.95</p></td>
 <td><p>0.59</p></td>
-<td><p>-1.904 - 15.667</p></td>
+<td><p>-1.904 - 15.666</p></td>
 <td><p>-0.04</p></td>
-<td><p>-1.227 - 291.263</p></td>
+<td><p>-1.227 - 291.255</p></td>
 <td><p>45,987</p></td>
 <td><p>40</p></td>
 </tr>
@@ -1292,7 +1317,7 @@ We are aware of limitations of this work which are listed below:</p>
 <td><p>0.65</p></td>
 <td><p>-0.738 - 3.274</p></td>
 <td><p>0.24</p></td>
-<td><p>-1.026 - 14.994</p></td>
+<td><p>-1.026 - 14.992</p></td>
 <td><p>88,291</p></td>
 <td><p>28</p></td>
 </tr>
@@ -1302,25 +1327,25 @@ We are aware of limitations of this work which are listed below:</p>
 <td><p>0.45</p></td>
 <td><p>-3.08 - 17.436</p></td>
 <td><p>0.64</p></td>
-<td><p>-1.485 - 620.588</p></td>
+<td><p>-1.485 - 620.586</p></td>
 <td><p>145,570</p></td>
 <td><p>72</p></td>
 </tr>
 <tr class="row-even"><td><p>3m to 5m</p></td>
-<td><p>0.83</p></td>
-<td><p>0.144 - 3.8</p></td>
+<td><p>0.84</p></td>
+<td><p>0.144 - 4.449</p></td>
 <td><p>0.61</p></td>
-<td><p>-2.757 - 8.648</p></td>
-<td><p>0.43</p></td>
-<td><p>-1.289 - 79.34</p></td>
-<td><p>138,440</p></td>
-<td><p>138</p></td>
+<td><p>-2.743 - 8.635</p></td>
+<td><p>0.44</p></td>
+<td><p>-1.289 - 79.165</p></td>
+<td><p>141,289</p></td>
+<td><p>139</p></td>
 </tr>
 <tr class="row-odd"><td><p>5m to 10m</p></td>
 <td><p>1.15</p></td>
 <td><p>0.161 - 6.928</p></td>
 <td><p>0.59</p></td>
-<td><p>-3.872 - 8.25</p></td>
+<td><p>-3.871 - 8.25</p></td>
 <td><p>0.29</p></td>
 <td><p>-1.318 - 77.494</p></td>
 <td><p>191,908</p></td>
@@ -1342,7 +1367,7 @@ We are aware of limitations of this work which are listed below:</p>
 <td><p>0.26</p></td>
 <td><p>-4.368 - 10.787</p></td>
 <td><p>0.17</p></td>
-<td><p>-1.509 - 133.019</p></td>
+<td><p>-1.509 - 133.018</p></td>
 <td><p>116,993</p></td>
 <td><p>125</p></td>
 </tr>
@@ -1352,7 +1377,7 @@ We are aware of limitations of this work which are listed below:</p>
 <td><p>0.09</p></td>
 <td><p>-5.467 - 4.662</p></td>
 <td><p>0.16</p></td>
-<td><p>-1.552 - 130.091</p></td>
+<td><p>-1.552 - 130.09</p></td>
 <td><p>212,539</p></td>
 <td><p>237</p></td>
 </tr>
@@ -1362,7 +1387,7 @@ We are aware of limitations of this work which are listed below:</p>
 <td><p>-0.03</p></td>
 <td><p>-42.384 - 5.576</p></td>
 <td><p>0.27</p></td>
-<td><p>-1.798 - 2546.243</p></td>
+<td><p>-1.798 - 2546.244</p></td>
 <td><p>301,687</p></td>
 <td><p>302</p></td>
 </tr>
@@ -1372,7 +1397,7 @@ We are aware of limitations of this work which are listed below:</p>
 <td><p>0.03</p></td>
 <td><p>-47.791 - 5.213</p></td>
 <td><p>-0.02</p></td>
-<td><p>-1.595 - 2617.439</p></td>
+<td><p>-1.595 - 2617.438</p></td>
 <td><p>184,962</p></td>
 <td><p>170</p></td>
 </tr>
@@ -1392,7 +1417,7 @@ We are aware of limitations of this work which are listed below:</p>
 <td><p>-0.20</p></td>
 <td><p>-52.647 - 1.727</p></td>
 <td><p>-0.06</p></td>
-<td><p>-1.607 - 2785.338</p></td>
+<td><p>-1.607 - 2785.339</p></td>
 <td><p>115,829</p></td>
 <td><p>104</p></td>
 </tr>
@@ -1417,98 +1442,98 @@ We are aware of limitations of this work which are listed below:</p>
 </thead>
 <tbody>
 <tr class="row-even"><td><p>&lt;0.1m</p></td>
-<td><p>340.10</p></td>
-<td><p>37.23</p></td>
-<td><p>223.24</p></td>
+<td><p>340.77</p></td>
+<td><p>36.15</p></td>
+<td><p>223.31</p></td>
 <td><p>365.00</p></td>
 <td><p>0.93</p></td>
 <td><p>0.10</p></td>
 </tr>
 <tr class="row-odd"><td><p>0.1m to 0.5m</p></td>
-<td><p>73.67</p></td>
-<td><p>90.78</p></td>
+<td><p>72.00</p></td>
+<td><p>91.63</p></td>
 <td><p>0.00</p></td>
-<td><p>350.50</p></td>
+<td><p>359.55</p></td>
 <td><p>0.20</p></td>
 <td><p>0.25</p></td>
 </tr>
 <tr class="row-even"><td><p>0.5m to 1m</p></td>
-<td><p>7.45</p></td>
-<td><p>26.13</p></td>
+<td><p>7.12</p></td>
+<td><p>23.41</p></td>
 <td><p>0.00</p></td>
-<td><p>364.81</p></td>
+<td><p>364.65</p></td>
 <td><p>0.02</p></td>
-<td><p>0.07</p></td>
+<td><p>0.06</p></td>
 </tr>
 <tr class="row-odd"><td><p>1m to 1.5m</p></td>
-<td><p>2.95</p></td>
-<td><p>16.01</p></td>
+<td><p>2.92</p></td>
+<td><p>15.21</p></td>
 <td><p>0.00</p></td>
-<td><p>349.01</p></td>
+<td><p>331.28</p></td>
 <td><p>0.01</p></td>
 <td><p>0.04</p></td>
 </tr>
 <tr class="row-even"><td><p>1.5m to 2m</p></td>
-<td><p>1.25</p></td>
-<td><p>4.61</p></td>
+<td><p>1.40</p></td>
+<td><p>5.33</p></td>
 <td><p>0.00</p></td>
-<td><p>56.96</p></td>
+<td><p>58.95</p></td>
 <td><p>0.00</p></td>
 <td><p>0.01</p></td>
 </tr>
 <tr class="row-odd"><td><p>2m to 3m</p></td>
-<td><p>1.11</p></td>
-<td><p>3.52</p></td>
+<td><p>1.16</p></td>
+<td><p>4.12</p></td>
 <td><p>0.00</p></td>
-<td><p>30.21</p></td>
+<td><p>65.28</p></td>
 <td><p>0.00</p></td>
 <td><p>0.01</p></td>
 </tr>
 <tr class="row-even"><td><p>3m to 5m</p></td>
-<td><p>0.99</p></td>
-<td><p>3.98</p></td>
+<td><p>1.06</p></td>
+<td><p>4.31</p></td>
 <td><p>0.00</p></td>
-<td><p>72.62</p></td>
+<td><p>71.28</p></td>
 <td><p>0.00</p></td>
 <td><p>0.01</p></td>
 </tr>
 <tr class="row-odd"><td><p>5m to 10m</p></td>
-<td><p>0.77</p></td>
-<td><p>2.92</p></td>
+<td><p>0.82</p></td>
+<td><p>3.08</p></td>
 <td><p>0.00</p></td>
-<td><p>39.20</p></td>
+<td><p>39.22</p></td>
 <td><p>0.00</p></td>
 <td><p>0.01</p></td>
 </tr>
 <tr class="row-even"><td><p>10m to 15m</p></td>
-<td><p>0.81</p></td>
-<td><p>4.07</p></td>
+<td><p>0.80</p></td>
+<td><p>4.08</p></td>
 <td><p>0.00</p></td>
-<td><p>65.35</p></td>
+<td><p>65.34</p></td>
 <td><p>0.00</p></td>
 <td><p>0.01</p></td>
 </tr>
 <tr class="row-odd"><td><p>15m to 20m</p></td>
-<td><p>2.34</p></td>
-<td><p>22.80</p></td>
+<td><p>2.44</p></td>
+<td><p>22.92</p></td>
 <td><p>0.00</p></td>
-<td><p>342.24</p></td>
+<td><p>337.64</p></td>
 <td><p>0.01</p></td>
 <td><p>0.06</p></td>
 </tr>
 <tr class="row-even"><td><p>20m to 30m</p></td>
 <td><p>0.61</p></td>
-<td><p>4.64</p></td>
+<td><p>4.66</p></td>
 <td><p>0.00</p></td>
-<td><p>73.50</p></td>
+<td><p>73.74</p></td>
 <td><p>0.00</p></td>
 <td><p>0.01</p></td>
 </tr>
 <tr class="row-odd"><td><p>30m to 50m</p></td>
-<td><p>0.56</p></td>
-<td><p>3.31</p></td>
+<td><p>0.74</p></td>
+<td><p>4.79</p></td>
 <td><p>0.00</p></td>
-<td><p>41.26</p></td>
+<td><p>60.59</p></td>
 <td><p>0.00</p></td>
 <td><p>0.01</p></td>
 </tr>
@@ -1516,7 +1541,7 @@ We are aware of limitations of this work which are listed below:</p>
 <td><p>0.78</p></td>
 <td><p>4.79</p></td>
 <td><p>0.00</p></td>
-<td><p>53.06</p></td>
+<td><p>53.10</p></td>
 <td><p>0.00</p></td>
 <td><p>0.01</p></td>
 </tr>
@@ -1524,7 +1549,7 @@ We are aware of limitations of this work which are listed below:</p>
 <td><p>0.27</p></td>
 <td><p>1.47</p></td>
 <td><p>0.00</p></td>
-<td><p>11.62</p></td>
+<td><p>11.61</p></td>
 <td><p>0.00</p></td>
 <td><p>0.00</p></td>
 </tr>
@@ -1553,98 +1578,98 @@ We are aware of limitations of this work which are listed below:</p>
 </thead>
 <tbody>
 <tr class="row-even"><td><p>&lt;0.1m</p></td>
-<td><p>360.39</p></td>
-<td><p>13.84</p></td>
-<td><p>280.94</p></td>
+<td><p>361.02</p></td>
+<td><p>10.46</p></td>
+<td><p>314.03</p></td>
 <td><p>365.00</p></td>
 <td><p>0.99</p></td>
-<td><p>0.04</p></td>
+<td><p>0.03</p></td>
 </tr>
 <tr class="row-odd"><td><p>0.1m to 0.5m</p></td>
-<td><p>290.97</p></td>
-<td><p>58.92</p></td>
+<td><p>291.12</p></td>
+<td><p>58.87</p></td>
 <td><p>158.44</p></td>
 <td><p>365.00</p></td>
 <td><p>0.80</p></td>
 <td><p>0.16</p></td>
 </tr>
 <tr class="row-even"><td><p>0.5m to 1m</p></td>
-<td><p>53.31</p></td>
-<td><p>61.30</p></td>
+<td><p>53.28</p></td>
+<td><p>60.23</p></td>
 <td><p>0.00</p></td>
-<td><p>364.89</p></td>
+<td><p>364.79</p></td>
 <td><p>0.15</p></td>
 <td><p>0.17</p></td>
 </tr>
 <tr class="row-odd"><td><p>1m to 1.5m</p></td>
-<td><p>9.96</p></td>
-<td><p>23.80</p></td>
+<td><p>9.93</p></td>
+<td><p>23.24</p></td>
 <td><p>0.00</p></td>
-<td><p>353.06</p></td>
+<td><p>337.95</p></td>
 <td><p>0.03</p></td>
-<td><p>0.07</p></td>
+<td><p>0.06</p></td>
 </tr>
 <tr class="row-even"><td><p>1.5m to 2m</p></td>
-<td><p>3.44</p></td>
-<td><p>9.76</p></td>
+<td><p>3.57</p></td>
+<td><p>10.03</p></td>
 <td><p>0.00</p></td>
-<td><p>87.39</p></td>
+<td><p>87.51</p></td>
 <td><p>0.01</p></td>
 <td><p>0.03</p></td>
 </tr>
 <tr class="row-odd"><td><p>2m to 3m</p></td>
-<td><p>2.13</p></td>
-<td><p>6.08</p></td>
+<td><p>2.17</p></td>
+<td><p>6.45</p></td>
 <td><p>0.00</p></td>
-<td><p>62.32</p></td>
+<td><p>67.24</p></td>
 <td><p>0.01</p></td>
 <td><p>0.02</p></td>
 </tr>
 <tr class="row-even"><td><p>3m to 5m</p></td>
-<td><p>1.44</p></td>
-<td><p>4.97</p></td>
+<td><p>1.52</p></td>
+<td><p>5.28</p></td>
 <td><p>0.00</p></td>
-<td><p>80.46</p></td>
+<td><p>79.14</p></td>
 <td><p>0.00</p></td>
 <td><p>0.01</p></td>
 </tr>
 <tr class="row-odd"><td><p>5m to 10m</p></td>
-<td><p>0.89</p></td>
-<td><p>3.22</p></td>
+<td><p>0.95</p></td>
+<td><p>3.40</p></td>
 <td><p>0.00</p></td>
-<td><p>40.85</p></td>
+<td><p>40.87</p></td>
 <td><p>0.00</p></td>
 <td><p>0.01</p></td>
 </tr>
 <tr class="row-even"><td><p>10m to 15m</p></td>
-<td><p>0.86</p></td>
-<td><p>4.19</p></td>
+<td><p>0.85</p></td>
+<td><p>4.20</p></td>
 <td><p>0.00</p></td>
-<td><p>65.91</p></td>
+<td><p>65.90</p></td>
 <td><p>0.00</p></td>
 <td><p>0.01</p></td>
 </tr>
 <tr class="row-odd"><td><p>15m to 20m</p></td>
-<td><p>2.40</p></td>
-<td><p>23.27</p></td>
+<td><p>2.51</p></td>
+<td><p>23.46</p></td>
 <td><p>0.00</p></td>
-<td><p>349.43</p></td>
+<td><p>346.02</p></td>
 <td><p>0.01</p></td>
 <td><p>0.06</p></td>
 </tr>
 <tr class="row-even"><td><p>20m to 30m</p></td>
 <td><p>0.63</p></td>
-<td><p>4.68</p></td>
+<td><p>4.69</p></td>
 <td><p>0.00</p></td>
-<td><p>73.82</p></td>
+<td><p>74.07</p></td>
 <td><p>0.00</p></td>
 <td><p>0.01</p></td>
 </tr>
 <tr class="row-odd"><td><p>30m to 50m</p></td>
-<td><p>0.56</p></td>
-<td><p>3.34</p></td>
+<td><p>0.75</p></td>
+<td><p>4.81</p></td>
 <td><p>0.00</p></td>
-<td><p>41.41</p></td>
+<td><p>60.77</p></td>
 <td><p>0.00</p></td>
 <td><p>0.01</p></td>
 </tr>
@@ -1652,7 +1677,7 @@ We are aware of limitations of this work which are listed below:</p>
 <td><p>0.78</p></td>
 <td><p>4.80</p></td>
 <td><p>0.00</p></td>
-<td><p>53.15</p></td>
+<td><p>53.19</p></td>
 <td><p>0.00</p></td>
 <td><p>0.01</p></td>
 </tr>
@@ -1660,7 +1685,7 @@ We are aware of limitations of this work which are listed below:</p>
 <td><p>0.27</p></td>
 <td><p>1.47</p></td>
 <td><p>0.00</p></td>
-<td><p>11.67</p></td>
+<td><p>11.66</p></td>
 <td><p>0.00</p></td>
 <td><p>0.00</p></td>
 </tr>
@@ -1689,40 +1714,40 @@ We are aware of limitations of this work which are listed below:</p>
 </thead>
 <tbody>
 <tr class="row-even"><td><p>&lt;0.1m</p></td>
-<td><p>362.39</p></td>
-<td><p>11.35</p></td>
-<td><p>287.45</p></td>
+<td><p>363.01</p></td>
+<td><p>7.35</p></td>
+<td><p>319.73</p></td>
 <td><p>365.00</p></td>
 <td><p>0.99</p></td>
-<td><p>0.03</p></td>
+<td><p>0.02</p></td>
 </tr>
 <tr class="row-odd"><td><p>0.1m to 0.5m</p></td>
-<td><p>356.20</p></td>
-<td><p>14.74</p></td>
-<td><p>268.12</p></td>
+<td><p>357.17</p></td>
+<td><p>11.74</p></td>
+<td><p>313.57</p></td>
 <td><p>365.00</p></td>
 <td><p>0.98</p></td>
-<td><p>0.04</p></td>
+<td><p>0.03</p></td>
 </tr>
 <tr class="row-even"><td><p>0.5m to 1m</p></td>
-<td><p>300.58</p></td>
-<td><p>56.32</p></td>
-<td><p>122.87</p></td>
+<td><p>299.90</p></td>
+<td><p>56.54</p></td>
+<td><p>122.86</p></td>
 <td><p>365.00</p></td>
 <td><p>0.82</p></td>
 <td><p>0.15</p></td>
 </tr>
 <tr class="row-odd"><td><p>1m to 1.5m</p></td>
-<td><p>72.81</p></td>
-<td><p>62.55</p></td>
+<td><p>72.71</p></td>
+<td><p>62.27</p></td>
 <td><p>0.00</p></td>
-<td><p>355.10</p></td>
+<td><p>341.51</p></td>
 <td><p>0.20</p></td>
 <td><p>0.17</p></td>
 </tr>
 <tr class="row-even"><td><p>1.5m to 2m</p></td>
-<td><p>15.25</p></td>
-<td><p>30.57</p></td>
+<td><p>15.33</p></td>
+<td><p>30.35</p></td>
 <td><p>0.00</p></td>
 <td><p>227.96</p></td>
 <td><p>0.04</p></td>
@@ -1730,57 +1755,57 @@ We are aware of limitations of this work which are listed below:</p>
 </tr>
 <tr class="row-odd"><td><p>2m to 3m</p></td>
 <td><p>5.61</p></td>
-<td><p>13.27</p></td>
+<td><p>13.33</p></td>
 <td><p>0.00</p></td>
-<td><p>127.79</p></td>
+<td><p>127.89</p></td>
 <td><p>0.02</p></td>
 <td><p>0.04</p></td>
 </tr>
 <tr class="row-even"><td><p>3m to 5m</p></td>
-<td><p>2.66</p></td>
-<td><p>7.86</p></td>
+<td><p>2.78</p></td>
+<td><p>8.34</p></td>
 <td><p>0.00</p></td>
-<td><p>90.91</p></td>
+<td><p>89.64</p></td>
 <td><p>0.01</p></td>
 <td><p>0.02</p></td>
 </tr>
 <tr class="row-odd"><td><p>5m to 10m</p></td>
-<td><p>1.15</p></td>
-<td><p>3.77</p></td>
+<td><p>1.21</p></td>
+<td><p>3.98</p></td>
 <td><p>0.00</p></td>
-<td><p>43.08</p></td>
+<td><p>43.11</p></td>
 <td><p>0.00</p></td>
 <td><p>0.01</p></td>
 </tr>
 <tr class="row-even"><td><p>10m to 15m</p></td>
 <td><p>0.93</p></td>
-<td><p>4.36</p></td>
+<td><p>4.37</p></td>
 <td><p>0.00</p></td>
-<td><p>66.63</p></td>
+<td><p>66.62</p></td>
 <td><p>0.00</p></td>
 <td><p>0.01</p></td>
 </tr>
 <tr class="row-odd"><td><p>15m to 20m</p></td>
-<td><p>2.46</p></td>
-<td><p>23.44</p></td>
+<td><p>2.56</p></td>
+<td><p>23.66</p></td>
 <td><p>0.00</p></td>
-<td><p>351.90</p></td>
+<td><p>348.94</p></td>
 <td><p>0.01</p></td>
 <td><p>0.06</p></td>
 </tr>
 <tr class="row-even"><td><p>20m to 30m</p></td>
 <td><p>0.65</p></td>
-<td><p>4.73</p></td>
+<td><p>4.74</p></td>
 <td><p>0.00</p></td>
-<td><p>74.23</p></td>
+<td><p>74.47</p></td>
 <td><p>0.00</p></td>
 <td><p>0.01</p></td>
 </tr>
 <tr class="row-odd"><td><p>30m to 50m</p></td>
-<td><p>0.57</p></td>
-<td><p>3.37</p></td>
+<td><p>0.76</p></td>
+<td><p>4.84</p></td>
 <td><p>0.00</p></td>
-<td><p>41.59</p></td>
+<td><p>60.99</p></td>
 <td><p>0.00</p></td>
 <td><p>0.01</p></td>
 </tr>
@@ -1788,7 +1813,7 @@ We are aware of limitations of this work which are listed below:</p>
 <td><p>0.79</p></td>
 <td><p>4.82</p></td>
 <td><p>0.00</p></td>
-<td><p>53.27</p></td>
+<td><p>53.31</p></td>
 <td><p>0.00</p></td>
 <td><p>0.01</p></td>
 </tr>
@@ -1796,7 +1821,7 @@ We are aware of limitations of this work which are listed below:</p>
 <td><p>0.28</p></td>
 <td><p>1.48</p></td>
 <td><p>0.00</p></td>
-<td><p>11.73</p></td>
+<td><p>11.71</p></td>
 <td><p>0.00</p></td>
 <td><p>0.00</p></td>
 </tr>
@@ -1815,34 +1840,34 @@ We are aware of limitations of this work which are listed below:</p>
 <section id="histograms-of-depth-to-water">
 <h3>Histograms of depth to water<a class="headerlink" href="#histograms-of-depth-to-water" title="Link to this heading">#</a></h3>
 <p>The following figures show histograms of the mean depth to water, the standard deviation of depth to water (at each site) and the cumulative probability of depth to water (across time) for all sites in given depth categories.</p>
-<figure class="align-center" id="id5">
+<figure class="align-center" id="id7">
 <img alt="../_images/cdf_depth_to_water_depth_cat_1.png" src="../_images/cdf_depth_to_water_depth_cat_1.png" />
 <figcaption>
-<p><span class="caption-text">Cumulative probability of depth to water for shallow wells</span><a class="headerlink" href="#id5" title="Link to this image">#</a></p>
-</figcaption>
-</figure>
-<figure class="align-center" id="id6">
-<img alt="../_images/hist_sd_depth_to_water_lt_inf.png" src="../_images/hist_sd_depth_to_water_lt_inf.png" />
-<figcaption>
-<p><span class="caption-text">The mean depth to water, histogram of the standard deviation of depth to water and the cumulative probability of depth to water for all sites.</span><a class="headerlink" href="#id6" title="Link to this image">#</a></p>
-</figcaption>
-</figure>
-<figure class="align-center" id="id7">
-<img alt="../_images/hist_sd_depth_to_water_lt_0.5.png" src="../_images/hist_sd_depth_to_water_lt_0.5.png" />
-<figcaption>
-<p><span class="caption-text">The mean depth to water, histogram of the standard deviation of depth to water and the cumulative probability of depth to water for all sites where the mean depth to water is less than 0.5 m.</span><a class="headerlink" href="#id7" title="Link to this image">#</a></p>
+<p><span class="caption-text">Cumulative probability of depth to water for shallow wells</span><a class="headerlink" href="#id7" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <figure class="align-center" id="id8">
-<img alt="../_images/hist_sd_depth_to_water_lt_1.png" src="../_images/hist_sd_depth_to_water_lt_1.png" />
+<img alt="../_images/hist_sd_depth_to_water_lt_inf.png" src="../_images/hist_sd_depth_to_water_lt_inf.png" />
 <figcaption>
-<p><span class="caption-text">The mean depth to water, histogram of the standard deviation of depth to water and the cumulative probability of depth to water for all sites where the mean depth to water is less than 1 m.</span><a class="headerlink" href="#id8" title="Link to this image">#</a></p>
+<p><span class="caption-text">The mean depth to water, histogram of the standard deviation of depth to water and the cumulative probability of depth to water for all sites.</span><a class="headerlink" href="#id8" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <figure class="align-center" id="id9">
+<img alt="../_images/hist_sd_depth_to_water_lt_0.5.png" src="../_images/hist_sd_depth_to_water_lt_0.5.png" />
+<figcaption>
+<p><span class="caption-text">The mean depth to water, histogram of the standard deviation of depth to water and the cumulative probability of depth to water for all sites where the mean depth to water is less than 0.5 m.</span><a class="headerlink" href="#id9" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id10">
+<img alt="../_images/hist_sd_depth_to_water_lt_1.png" src="../_images/hist_sd_depth_to_water_lt_1.png" />
+<figcaption>
+<p><span class="caption-text">The mean depth to water, histogram of the standard deviation of depth to water and the cumulative probability of depth to water for all sites where the mean depth to water is less than 1 m.</span><a class="headerlink" href="#id10" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id11">
 <img alt="../_images/hist_sd_depth_to_water_lt_2.png" src="../_images/hist_sd_depth_to_water_lt_2.png" />
 <figcaption>
-<p><span class="caption-text">The mean depth to water, histogram of the standard deviation of depth to water and the cumulative probability of depth to water for all sites where the mean depth to water is less than 2 m.</span><a class="headerlink" href="#id9" title="Link to this image">#</a></p>
+<p><span class="caption-text">The mean depth to water, histogram of the standard deviation of depth to water and the cumulative probability of depth to water for all sites where the mean depth to water is less than 2 m.</span><a class="headerlink" href="#id11" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 </section>
@@ -1886,6 +1911,7 @@ We are aware of limitations of this work which are listed below:</p>
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#abstract">Abstract</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction-and-background">Introduction and Background</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#methodology">Methodology</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-gathering-scope">Data gathering scope</a></li>
@@ -1897,6 +1923,7 @@ We are aware of limitations of this work which are listed below:</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#results-and-discussion">Results and discussion</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dataset-access">Dataset access</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#description-of-dataset">Description of Dataset</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#spatial-distribution">Spatial Distribution</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#statistical-description-of-depth-to-water-variance">Statistical Description of Depth to Water Variance</a></li>
 </ul>
 </li>

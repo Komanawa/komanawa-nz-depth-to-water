@@ -15,18 +15,44 @@ Functions
 
 .. autoapisummary::
 
+   komanawa.nz_depth_to_water.get_data.copy_geotifs
    komanawa.nz_depth_to_water.get_data.export_dtw_to_csv
+   komanawa.nz_depth_to_water.get_data.get_distance_to_nearest
+   komanawa.nz_depth_to_water.get_data.get_npoint_in_radius
    komanawa.nz_depth_to_water.get_data.get_nz_depth_to_water
 
 
 Module Contents
 ---------------
 
+.. py:function:: copy_geotifs(outdir)
+
+   copy the geotifs of distance to nearest [1|10] points and number of points within [1|5|10|20] km to the outdir.
+   :param outdir: directory to copy the geotifs to.
+   :return:
+
+
 .. py:function:: export_dtw_to_csv(outdir)
 
    Export the depth to water data to csv files.
 
    :return:
+
+
+.. py:function:: get_distance_to_nearest(npoints)
+
+   Get the distance to the nearest [1|10] points for each point in the model grid.
+
+   :param npoints: int, the number of points to consider.
+   :return: distance(m), mx, my (np.ndarray, np.ndarray, np.ndarray) gridded output
+
+
+.. py:function:: get_npoint_in_radius(distlim)
+
+   Get the number of points within [1|5|10|20] km of each point in the model grid.
+
+   :param distlim: int, the distance limit in meters.
+   :return: ndatapoints, mx, my (np.ndarray, np.ndarray, np.ndarray) gridded output
 
 
 .. py:function:: get_nz_depth_to_water()

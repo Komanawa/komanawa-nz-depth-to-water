@@ -379,10 +379,12 @@
 <span class="sd">created matt_dumont </span>
 <span class="sd">on: 7/05/24</span>
 <span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">komanawa.nz_depth_to_water.density_grid</span> <span class="kn">import</span> <span class="n">DensityGrid</span>
 
 <span class="n">md_convert_cols</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">bottom_bottomscreen</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
                        <span class="n">dist_mp_to_ground_level</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
@@ -516,6 +518,62 @@
     <span class="n">water_level_data</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">outdir</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s1">&#39;water_level_data.csv&#39;</span><span class="p">))</span>
     <span class="n">metadata</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">outdir</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s1">&#39;metadata.csv&#39;</span><span class="p">))</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Exported data to </span><span class="si">{</span><span class="n">outdir</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_npoint_in_radius">
+<a class="viewcode-back" href="../../../autoapi/komanawa/nz_depth_to_water/get_data/index.html#komanawa.nz_depth_to_water.export_to_csv.get_npoint_in_radius">[docs]</a>
+<span class="k">def</span> <span class="nf">get_npoint_in_radius</span><span class="p">(</span><span class="n">distlim</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the number of points within [1|5|10|20] km of each point in the model grid.</span>
+
+<span class="sd">    :param distlim: int, the distance limit in meters.</span>
+<span class="sd">    :return: ndatapoints, mx, my (np.ndarray, np.ndarray, np.ndarray) gridded output</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">dg</span> <span class="o">=</span> <span class="n">DensityGrid</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">distlim</span> <span class="ow">in</span> <span class="n">dg</span><span class="o">.</span><span class="n">distlims</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">distlim</span><span class="si">}</span><span class="s1"> not in </span><span class="si">{</span><span class="n">dg</span><span class="o">.</span><span class="n">distlims</span><span class="si">}</span><span class="s1">&#39;</span>
+    <span class="n">nans</span> <span class="o">=</span> <span class="n">dg</span><span class="o">.</span><span class="n">get_nan_layer</span><span class="p">()</span>
+    <span class="n">mx</span><span class="p">,</span> <span class="n">my</span> <span class="o">=</span> <span class="n">dg</span><span class="o">.</span><span class="n">get_xy</span><span class="p">()</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">dg</span><span class="o">.</span><span class="n">data_path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;npoins_nearest_</span><span class="si">{</span><span class="n">distlim</span><span class="si">}</span><span class="s1">.npy&#39;</span><span class="p">))</span>
+    <span class="n">data</span><span class="p">[</span><span class="n">nans</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+    <span class="k">return</span> <span class="n">data</span><span class="p">,</span> <span class="n">mx</span><span class="p">,</span> <span class="n">my</span></div>
+
+
+
+<div class="viewcode-block" id="get_distance_to_nearest">
+<a class="viewcode-back" href="../../../autoapi/komanawa/nz_depth_to_water/get_data/index.html#komanawa.nz_depth_to_water.export_to_csv.get_distance_to_nearest">[docs]</a>
+<span class="k">def</span> <span class="nf">get_distance_to_nearest</span><span class="p">(</span><span class="n">npoints</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the distance to the nearest [1|10] points for each point in the model grid.</span>
+
+<span class="sd">    :param npoints: int, the number of points to consider.</span>
+<span class="sd">    :return: distance(m), mx, my (np.ndarray, np.ndarray, np.ndarray) gridded output</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dg</span> <span class="o">=</span> <span class="n">DensityGrid</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">npoints</span> <span class="ow">in</span> <span class="n">dg</span><span class="o">.</span><span class="n">npoints</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">npoints</span><span class="si">}</span><span class="s1"> not in </span><span class="si">{</span><span class="n">dg</span><span class="o">.</span><span class="n">npoints</span><span class="si">}</span><span class="s1">&#39;</span>
+    <span class="n">nans</span> <span class="o">=</span> <span class="n">dg</span><span class="o">.</span><span class="n">get_nan_layer</span><span class="p">()</span>
+    <span class="n">mx</span><span class="p">,</span> <span class="n">my</span> <span class="o">=</span> <span class="n">dg</span><span class="o">.</span><span class="n">get_xy</span><span class="p">()</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">dg</span><span class="o">.</span><span class="n">data_path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;distance_m_to_nearest_</span><span class="si">{</span><span class="n">npoints</span><span class="si">}</span><span class="s1">_data.npy&#39;</span><span class="p">))</span>
+    <span class="n">data</span><span class="p">[</span><span class="n">nans</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+    <span class="k">return</span> <span class="n">data</span><span class="p">,</span> <span class="n">mx</span><span class="p">,</span> <span class="n">my</span></div>
+
+
+
+<div class="viewcode-block" id="copy_geotifs">
+<a class="viewcode-back" href="../../../autoapi/komanawa/nz_depth_to_water/get_data/index.html#komanawa.nz_depth_to_water.export_to_csv.copy_geotifs">[docs]</a>
+<span class="k">def</span> <span class="nf">copy_geotifs</span><span class="p">(</span><span class="n">outdir</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    copy the geotifs of distance to nearest [1|10] points and number of points within [1|5|10|20] km to the outdir.</span>
+<span class="sd">    :param outdir: directory to copy the geotifs to.</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">outdir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">outdir</span><span class="p">)</span>
+    <span class="n">outdir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">datadir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">)</span>
+    <span class="n">tifs</span> <span class="o">=</span> <span class="n">datadir</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*.tif&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">tif</span> <span class="ow">in</span> <span class="n">tifs</span><span class="p">:</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">tif</span><span class="p">,</span> <span class="n">outdir</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="n">tif</span><span class="o">.</span><span class="n">name</span><span class="p">))</span></div>
 
 </pre></div>
 
