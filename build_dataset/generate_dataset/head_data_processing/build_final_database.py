@@ -17,7 +17,7 @@ from build_dataset.generate_dataset.head_data_processing import get_bop_data, ge
     get_gdc_data, get_hbrc_data, \
     get_hrc_data, get_mdc_data, get_ncc_data, get_nrc_data, get_orc_data, get_src_data, get_trc_data, get_tdc_data, \
     get_wrc_data, \
-    get_gwrc_data, get_wcrc_data, get_nzgd_data
+    get_gwrc_data, get_wcrc_data, get_nzgd_data, get_tcc_data
 from build_dataset.generate_dataset.head_data_processing import data_processing_functions
 from build_dataset.generate_dataset.project_base import project_dir, groundwater_data
 
@@ -50,6 +50,7 @@ def build_final_meta_data(recalc=False):
         wcrc = get_wcrc_data(recalc=False, redownload=False)
         nzgd = get_nzgd_data(recalc=False, redownload=False)
         ecan = get_ecan_data(recalc=False)
+        tcc = get_tcc_data(recalc=False)
 
         bop = bop['combined_metadata']
         auk = auk['combined_metadata']
@@ -68,6 +69,7 @@ def build_final_meta_data(recalc=False):
         wcrc = wcrc['combined_metadata']
         nzgd = nzgd['nzgd_metadata']
         ecan = ecan['combined_metadata']
+        tcc = tcc['combined_metadata']
 
         bop['source'] = 'bop'
         auk['source'] = 'auk'
@@ -86,10 +88,11 @@ def build_final_meta_data(recalc=False):
         wcrc['source'] = 'wcrc'
         nzgd['source'] = 'nzgd'
         ecan['source'] = 'ecan'
+        tcc['source'] = 'tcc'
 
         # combine all the data into a single dataframe
 
-        metadata = pd.concat([auk, bop, gdc, hbrc, hrc, mdc, nrc, ncc, orc, src, trc, tdc, wrc, gwrc, wcrc, nzgd, ecan],
+        metadata = pd.concat([auk, bop, gdc, hbrc, hrc, mdc, nrc, ncc, orc, src, trc, tdc, wrc, gwrc, wcrc, nzgd, ecan, tcc],
                              axis=0,
                              ignore_index=True)
 
@@ -184,7 +187,8 @@ def build_final_water_data(recalc=False, recalc_sub=False, redownload=False):
             (get_gwrc_data, 'gwrc'),
             (get_wcrc_data, 'wcrc'),
             (get_ecan_data, 'ecan'),
-            (get_nzgd_data, 'nzgd')
+            (get_nzgd_data, 'nzgd'),
+            (get_tcc_data, 'tcc')
         ]
 
 
@@ -267,4 +271,5 @@ def check_repaired_function():
 
 if __name__ == '__main__':
     # build_final_meta_data(recalc=True)
-    build_final_water_data(recalc_sub=False, recalc=True)
+    data = build_final_water_data(recalc_sub=False, recalc=False)
+    raise ValueError('Stop here')

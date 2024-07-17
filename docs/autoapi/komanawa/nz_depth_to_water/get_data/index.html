@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>komanawa.nz_depth_to_water.get_data &#8212; komanawa-nz-depth-to-water v0.1.0 documentation</title>
+    <title>komanawa.nz_depth_to_water.get_data &#8212; komanawa-nz-depth-to-water v0.1.1 documentation</title>
   
   
   
@@ -36,7 +36,7 @@
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341" />
   <script src="../../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=3ee479438cf8b5e0d341"></script>
 
-    <script src="../../../../_static/documentation_options.js?v=fa47ad08"></script>
+    <script src="../../../../_static/documentation_options.js?v=5e3f2911"></script>
     <script src="../../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'autoapi/komanawa/nz_depth_to_water/get_data/index';</script>
@@ -123,7 +123,7 @@
     <script>document.write(`<img src="" class="logo__image only-dark" alt=""/>`);</script>
   
   
-    <p class="title logo__title">Nz-Depth-To-Water v0.1.0 Overview</p>
+    <p class="title logo__title">Nz-Depth-To-Water v0.1.1 Overview</p>
   
 </a></div>
     
@@ -387,10 +387,19 @@ on: 7/05/24</p>
 <h2>Functions<a class="headerlink" href="#functions" title="Link to this heading">#</a></h2>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#komanawa.nz_depth_to_water.get_data.export_dtw_to_csv" title="komanawa.nz_depth_to_water.get_data.export_dtw_to_csv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">export_dtw_to_csv</span></code></a>(outdir)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#komanawa.nz_depth_to_water.get_data.copy_geotifs" title="komanawa.nz_depth_to_water.get_data.copy_geotifs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy_geotifs</span></code></a>(outdir)</p></td>
+<td><p>copy the geotifs of distance to nearest [1|10] points and number of points within [1|5|10|20] km to the outdir.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#komanawa.nz_depth_to_water.get_data.export_dtw_to_csv" title="komanawa.nz_depth_to_water.get_data.export_dtw_to_csv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">export_dtw_to_csv</span></code></a>(outdir)</p></td>
 <td><p>Export the depth to water data to csv files.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#komanawa.nz_depth_to_water.get_data.get_nz_depth_to_water" title="komanawa.nz_depth_to_water.get_data.get_nz_depth_to_water"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_nz_depth_to_water</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#komanawa.nz_depth_to_water.get_data.get_distance_to_nearest" title="komanawa.nz_depth_to_water.get_data.get_distance_to_nearest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_distance_to_nearest</span></code></a>(npoints)</p></td>
+<td><p>Get the distance to the nearest [1|10] points for each point in the model grid.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#komanawa.nz_depth_to_water.get_data.get_npoint_in_radius" title="komanawa.nz_depth_to_water.get_data.get_npoint_in_radius"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_npoint_in_radius</span></code></a>(distlim)</p></td>
+<td><p>Get the number of points within [1|5|10|20] km of each point in the model grid.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#komanawa.nz_depth_to_water.get_data.get_nz_depth_to_water" title="komanawa.nz_depth_to_water.get_data.get_nz_depth_to_water"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_nz_depth_to_water</span></code></a>()</p></td>
 <td><p>load the depth to water data and metadata and return them as pandas DataFrames.</p></td>
 </tr>
 </tbody>
@@ -400,12 +409,48 @@ on: 7/05/24</p>
 <section id="module-contents">
 <h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading">#</a></h2>
 <dl class="py function">
+<dt class="sig sig-object py" id="komanawa.nz_depth_to_water.get_data.copy_geotifs">
+<span class="sig-name descname"><span class="pre">copy_geotifs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">outdir</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/komanawa/nz_depth_to_water/get_data.html#copy_geotifs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#komanawa.nz_depth_to_water.get_data.copy_geotifs" title="Link to this definition">#</a></dt>
+<dd><p>copy the geotifs of distance to nearest [1|10] points and number of points within [1|5|10|20] km to the outdir.
+:param outdir: directory to copy the geotifs to.
+:return:</p>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="komanawa.nz_depth_to_water.get_data.export_dtw_to_csv">
 <span class="sig-name descname"><span class="pre">export_dtw_to_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">outdir</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/komanawa/nz_depth_to_water/get_data.html#export_dtw_to_csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#komanawa.nz_depth_to_water.get_data.export_dtw_to_csv" title="Link to this definition">#</a></dt>
 <dd><p>Export the depth to water data to csv files.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="komanawa.nz_depth_to_water.get_data.get_distance_to_nearest">
+<span class="sig-name descname"><span class="pre">get_distance_to_nearest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">npoints</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/komanawa/nz_depth_to_water/get_data.html#get_distance_to_nearest"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#komanawa.nz_depth_to_water.get_data.get_distance_to_nearest" title="Link to this definition">#</a></dt>
+<dd><p>Get the distance to the nearest [1|10] points for each point in the model grid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>npoints</strong> – int, the number of points to consider.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>distance(m), mx, my (np.ndarray, np.ndarray, np.ndarray) gridded output</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="komanawa.nz_depth_to_water.get_data.get_npoint_in_radius">
+<span class="sig-name descname"><span class="pre">get_npoint_in_radius</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">distlim</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/komanawa/nz_depth_to_water/get_data.html#get_npoint_in_radius"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#komanawa.nz_depth_to_water.get_data.get_npoint_in_radius" title="Link to this definition">#</a></dt>
+<dd><p>Get the number of points within [1|5|10|20] km of each point in the model grid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>distlim</strong> – int, the distance limit in meters.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>ndatapoints, mx, my (np.ndarray, np.ndarray, np.ndarray) gridded output</p>
 </dd>
 </dl>
 </dd></dl>
@@ -472,7 +517,10 @@ on: 7/05/24</p>
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module Contents</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#komanawa.nz_depth_to_water.get_data.copy_geotifs"><code class="docutils literal notranslate"><span class="pre">copy_geotifs()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#komanawa.nz_depth_to_water.get_data.export_dtw_to_csv"><code class="docutils literal notranslate"><span class="pre">export_dtw_to_csv()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#komanawa.nz_depth_to_water.get_data.get_distance_to_nearest"><code class="docutils literal notranslate"><span class="pre">get_distance_to_nearest()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#komanawa.nz_depth_to_water.get_data.get_npoint_in_radius"><code class="docutils literal notranslate"><span class="pre">get_npoint_in_radius()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#komanawa.nz_depth_to_water.get_data.get_nz_depth_to_water"><code class="docutils literal notranslate"><span class="pre">get_nz_depth_to_water()</span></code></a></li>
 </ul>
 </li>

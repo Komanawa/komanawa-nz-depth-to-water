@@ -4,11 +4,16 @@ created by: Patrick_Durney
 on: 18/04/24
 """
 
+from pathlib import Path
+import psutil
 import numpy as np
 import pandas as pd
+
 from matplotlib import pyplot as plt
 from scipy.stats import johnsonsu, kurtosis
-from pathlib import Path
+from collections import deque
+from komanawa.nz_depth_to_water.density_grid import DensityGrid
+from build_dataset.generate_dataset.project_base import groundwater_data
 from build_dataset.update_technial_note.data_stats import write_rst_table_with_tabulate
 
 depth_categories_desc = {1: 'well depth < 10m or unknown depth and max dtw < 10m',
@@ -109,14 +114,15 @@ def quantile_99(x):
 
 def _calculate_stats(data, depth_cat):
     data_filtered = data[data['depth_cat'] == depth_cat]
-    stats = data_filtered.groupby('mean_depth_bin').agg({
+    stats = data_filtered.groupby('mean_depth_bin', observed=False).agg({
         'mean': ['mean', quantile_01, quantile_99],
         'std': ['median', quantile_01, quantile_99],
         'max': ['max'],
         'min': ['min'],
         'skew': ['median', quantile_01, quantile_99],
         'kurtosis': ['median', quantile_01, quantile_99],
-        'reading_count': 'sum'
+        'reading_count': 'sum',
+        'site_name': 'nunique'
     })
     # round to 3 dp
     stats = stats.round(3)
@@ -134,12 +140,13 @@ def _calculate_stats(data, depth_cat):
                                 'kurtosis_quantile_01', 'kurtosis_quantile_99', 'max_max', 'min_min'])
     stats = stats[
         ['depth_cat', 'mean_mean', 'mean_dtw_range', 'dtw_range', 'std_median', 'std_range', 'skew_median',
-         'skew_range', 'kurtosis_median', 'kurtosis_range', 'reading_count_sum']]
+         'skew_range', 'kurtosis_median', 'kurtosis_range', 'reading_count_sum', 'site_name_nunique']]
     stats = stats.rename(columns={'mean_mean': 'mean', 'mean_dtw_range': 'mean_range',
                                   'std_median': 'std_median', 'std_range': 'std_range',
                                   'skew_median': 'skew_median', 'skew_range': 'skew_range',
                                   'kurtosis_median': 'kurtosis_median', 'kurtosis_range': 'kurtosis_range',
-                                  'dtw_range': 'dtw_range', 'reading_count_sum': 'observation_reading_count'})
+                                  'dtw_range': 'dtw_range', 'reading_count_sum': 'observation_reading_count',
+                                  'site_name_nunique': 'n_sites'})
     return stats
 
 
@@ -180,18 +187,9 @@ def hist_sd(outdir, wd, md):
     # Calculate number of readings per site
     stats_detail = data
 
-    # todo patrick is this codes still needed????? if not let's get rid of it
-    # stats_detail['reading_count'] = stats_detail.groupby('site_name')['site_name'].transform('size')
-    # stats_detail = stats_detail[
-    #     stats_detail['reading_count'] >= 30]  # n=30 stats rule of thumb for min n for sd calculation
-
     # Select unique sites
     unique_sites = stats_detail.drop_duplicates(
         subset='site_name')  # 3210 sites accross all depth clats that have mre than 30 points
-
-    # unique_sites = unique_sites[unique_sites['depth_cat'] == depth_cat]  # 1537 sites in depth cat 1 with more than 30 obs
-    # # we are only concerned with well that represent the shallow resource, hence the filter for depth cat 1
-    # stats_detail = stats_detail[stats_detail['depth_cat'] == depth_cat]
 
     # Then, add the reading count as a new column
     stats_detail['reading_count'] = stats_detail.groupby('site_name')['site_name'].transform('size')
@@ -219,7 +217,7 @@ def hist_sd(outdir, wd, md):
     stats['mean_depth_bin'] = pd.cut(stats['mean'], bins=bins, labels=bin_labels)
     # Check if any entries are in the '>5.0' category
     print(stats[stats['mean_depth_bin'] == '>5.0'])
-    stats_useful = stats.drop(columns=['site_name'])
+    stats_useful = stats.copy()
 
     stats_depth_cat1 = _calculate_stats(stats_useful, 1)
     stats_depth_cat2 = _calculate_stats(stats_useful, 2)
@@ -234,18 +232,12 @@ def hist_sd(outdir, wd, md):
         stats_depth['n_obs.'] = stats_depth['observation_reading_count']
         stats_depth = stats_depth[['std_median',
                                    'std_range', 'skew_median', 'skew_range', 'kurtosis_median',
-                                   'kurtosis_range', 'n_obs.']]
+                                   'kurtosis_range', 'n_obs.', 'n_sites']]
         stats_depth.columns = [e.replace('_', ' ').capitalize() for e in stats_depth.columns]
         write_rst_table_with_tabulate(stats_depth, outdir.joinpath('tables', f'stats_depth_cat_{depth_cat}.rst'),
                                       f'Summary of variance and skewness for {depth_categories_desc[depth_cat]}')
 
-    all_stats = pd.concat([stats_depth_cat1, stats_depth_cat2, stats_depth_cat3], axis=0)
-    all_stats = all_stats.dropna()
     # Extract data and headers from the DataFrame
-
-    # Save the stats to a csv file
-    # todo why are we saving this? should it be included in our outputs???
-    # all_stats.to_csv(KslEnv.large_working.joinpath('UNbacked', 'Fut', 'stats.csv'))
 
     # bind stats back to the orignial dataframe on site_name
     stats_detail = pd.merge(stats_detail, stats, on='site_name', how='left')
@@ -259,7 +251,7 @@ def hist_sd(outdir, wd, md):
 
     # next we produce some nice tables for the report, one for each depth frequency
     for depth in ['0.1', '0.5', '1']:
-        temp = stats_final.groupby('mean_depth_bin').agg(
+        temp = stats_final.groupby('mean_depth_bin', observed=False).agg(
             {f'Annual Frequency (<{depth}m)': ['mean', 'std', 'min', 'max', ],
              f'Probability (<{depth}m)': ['mean', 'std']})
 
@@ -315,7 +307,6 @@ def hist_sd(outdir, wd, md):
             fig.suptitle(f'Analysis of Depth to Water')
             ax_dtw_cum.set_xlim(-1, 150)
         else:
-            ax_dtw_cum.set_xlim(-1, dtw_threshold)
             fig.suptitle(f'Analysis of Depth to Water\nWhere the mean depth to water is less than {dtw_threshold}m')
         fig.tight_layout()
         fig.savefig(outdir.joinpath('_static', f'hist_sd_depth_to_water_lt_{dtw_threshold}.png'))
@@ -355,25 +346,6 @@ def exceedance_prob(outdir, wd, md, depth_cat=1):
     # drop wells greated than 10m depth
     data = data[data['depth_cat'] == depth_cat]
 
-    # for sake of argument we will assume that
-    # todo patrick is this codes still needed????? if not let's get rid of it
-    # # get boolean of sites where depth_to_water_cor is less than 0.5
-    # data['site<0.5m'] = data.groupby('site_name')['depth_to_water_cor'].transform(has_depth_less_than_half_meter)
-    # data['site<0.5m'] = data['site<0.5m'].astype(int)
-    # data = data[data['site<0.5m'] == 1]
-    # data['mean_dtw']= data.groupby('site_name')['depth_to_water_cor'].transform('mean')
-    # data['date'] = pd.to_datetime(data['date'])
-    # unique_sites = data.drop_duplicates(subset='site_name')
-
-    # attempted fto find number of day exceeding 0.1 m but the issue is the data is too sparse to be meaningful
-    ##Set the depth threshold
-    # depth_threshold = 0.1
-    #
-    # # Group by year and count days where depth is less than the threshold
-    # exceedance_days = data[data['depth_to_water_cor'] < depth_threshold].groupby(
-    #     [data['site_name'], data['date'].dt.year]
-    # ).size().reset_index(name='days_below_threshold')
-
     # using cdf of depth to water to find exceedance probability
 
     sorted_depth = np.sort(data['depth_to_water_cor'])
@@ -389,3 +361,211 @@ def exceedance_prob(outdir, wd, md, depth_cat=1):
     ax.set_ylabel('CDF')
     fig.savefig(outdir.joinpath('_static', f'cdf_depth_to_water_depth_cat_{depth_cat}.png'))
     plt.close(fig)
+
+
+def density_calc_sites(md):
+    """
+    create data_density
+    :param md:
+    :param recalc:
+    :return:
+    """
+    dg = DensityGrid()
+    mx, my = dg.get_xy()
+    nans = dg.get_nan_layer()
+    use_mx = mx[~nans]
+    use_my = my[~nans]
+    data_x = md['nztm_x'].values
+    data_y = md['nztm_y'].values
+    print(f'Calculating distance to nearest {len(data_x)} sites for {len(use_mx)} grid points')
+    one_grid_size = 5 * data_x.nbytes
+    avalible_memory = psutil.virtual_memory().available * 0.75  # leave 25% free
+    n_grid_points = int(avalible_memory / one_grid_size)
+    assert n_grid_points > 0, 'not enough memory to calculate distance to nearest sites'
+    nchunks = int(np.ceil(len(use_mx) / n_grid_points))
+    outdata = {n: np.zeros_like(use_mx, dtype=float) for n in dg.npoints}
+    for i in range(nchunks):
+        print(f'Calculating chunk {i + 1} of {nchunks}')
+        start_idx = i * n_grid_points
+        if i == nchunks - 1:
+            end_idx = len(use_mx)
+        else:
+            end_idx = (i + 1) * n_grid_points
+        temp = _distance_to_data(use_mx[start_idx:end_idx], use_my[start_idx:end_idx],
+                                 data_x, data_y, dg.npoints)
+        for npoints, out in zip(dg.npoints, temp):
+            outdata[npoints][start_idx:end_idx] = out
+    for npoints in dg.npoints:
+        all_out = np.zeros_like(mx, dtype=np.float32)
+        all_out[~nans] = outdata[npoints].astype(np.float32)
+        all_out[nans] = np.nan
+        np.save(dg.data_path.parent.joinpath(f'distance_m_to_nearest_{npoints}_data.npy'), all_out)
+
+
+def plot_density():
+    dg = DensityGrid()
+    figdir = Path(__file__).parents[2].joinpath('docs_build', '_static')
+    from osgeo import gdal
+    # plot
+    for npoints in dg.npoints:
+        data = np.load(dg.data_path.parent.joinpath(f'distance_m_to_nearest_{npoints}_data.npy'))
+
+        dg.export_density_to_tif(data, dg.data_path.parent.joinpath(f'distance_m_to_nearest_{npoints}_data.tif'))
+
+        for island in ['both', 'n', 's']:
+            fig, ax = dg.plot_density(data / 1000, island, vmin=0.1, vmax=None, log=True,
+                                      cbarlab=f'Distance to nearest {npoints} sites (km)')
+            plt.show()
+            fig.savefig(figdir.joinpath(f'data_coverage_{npoints}{island}.png'))
+
+
+def _distance_to_data(xs, ys, data_x, data_y, npoints):
+    """
+    return the dist to the nearest n points of data
+    :param xs: grid xs
+    :param ys: grid ys
+    :param data_x: data x
+    :param data_y
+    :param npoints: number of points to consider
+    :return:
+    """
+    distance = ((xs[:, np.newaxis] - data_x[np.newaxis, :]) ** 2
+                + (ys[:, np.newaxis] - data_y[np.newaxis, :]) ** 2) ** 0.5
+    distance = np.sort(distance, axis=1)
+    return [distance[:, n - 1] for n in npoints]
+
+
+def _npoints_in_dist_(xs, ys, data_x, data_y, distances):
+    distance = ((xs[:, np.newaxis] - data_x[np.newaxis, :]) ** 2
+                + (ys[:, np.newaxis] - data_y[np.newaxis, :]) ** 2) ** 0.5
+    return [(distance < d).sum(axis=1) for d in distances]
+
+
+def npoints_in_dist_calc_sites(md):
+    """
+    create data_density
+    :param md:
+    :param recalc:
+    :return:
+    """
+    dg = DensityGrid()
+    mx, my = dg.get_xy()
+    nans = dg.get_nan_layer()
+    use_mx = mx[~nans]
+    use_my = my[~nans]
+    data_x = md['nztm_x'].values
+    data_y = md['nztm_y'].values
+    print(f'Calculating distance to nearest {len(data_x)} sites for {len(use_mx)} grid points')
+    one_grid_size = 5 * data_x.nbytes
+    avalible_memory = psutil.virtual_memory().available * 0.75  # leave 25% free
+    n_grid_points = int(avalible_memory / one_grid_size)
+    assert n_grid_points > 0, 'not enough memory to calculate distance to nearest sites'
+    nchunks = int(np.ceil(len(use_mx) / n_grid_points))
+
+    outdata = {d: np.zeros_like(use_mx, dtype=float) for d in dg.distlims}
+
+    for i in range(nchunks):
+        print(f'Calculating chunk {i + 1} of {nchunks}')
+        start_idx = i * n_grid_points
+        if i == nchunks - 1:
+            end_idx = len(use_mx)
+        else:
+            end_idx = (i + 1) * n_grid_points
+        temp = _npoints_in_dist_(use_mx[start_idx:end_idx], use_my[start_idx:end_idx],
+                                 data_x, data_y, dg.distlims)
+        for d, out in zip(dg.distlims, temp):
+            outdata[d][start_idx:end_idx] = out
+
+    for distlim in dg.distlims:
+        all_out = np.zeros_like(mx, dtype=np.float32)
+        all_out[~nans] = outdata[d].astype(np.float32)
+        all_out[nans] = np.nan
+        np.save(dg.data_path.parent.joinpath(f'npoins_nearest_{distlim}.npy'), all_out)
+
+
+def plot_points_in_dist():
+    dg = DensityGrid()
+    figdir = Path(__file__).parents[2].joinpath('docs_build', '_static')
+    from osgeo import gdal
+    # plot
+    for distlim in dg.distlims:
+        data = np.load(dg.data_path.parent.joinpath(f'npoins_nearest_{distlim}.npy'))
+
+        dg.export_density_to_tif(data, dg.data_path.parent.joinpath(f'npoins_nearest_{distlim}_m.tif'))
+
+        for island in ['both', 'n', 's']:
+            fig, ax = dg.plot_density(data, island, vmin=None, vmax=None, cmap='magma', log=True,
+                                      cbarlab=f'The number of sites within {distlim / 1000} km')
+            fig.savefig(figdir.joinpath(f'npoins_nearest_{distlim}_m{island}.png'))
+
+
+def _make_input_grid():
+    """
+    make the input grid for the distance calculation, should not need to be re-run.
+    :return:
+    """
+    from komanawa.kslcore import KslEnv
+    from komanawa.modeltools import RectangularModelTools
+
+    temp_smt = RectangularModelTools.modeltools_from_shapefile(
+        shapefile=KslEnv.large_working.joinpath('UNbacked',
+                                                'OLW_predictor_datasets',
+                                                'NZ_hydrogeologicalsystems_June2019',
+                                                'NZ_hydrogeologicalsystem_polygon.shp'),
+        delr=1000, delc=1000, layer_type=1, layers=1,
+
+        model_version_name='mf6',
+        epsg_num=2193)
+
+    def _calc_noflow():
+        """
+        This function calculates the no-flow areas in the model domain. It checks if a pre-calculated no-flow array exists and loads it if it does.
+        If the array does not exist or if recalculation is requested, it calculates the no-flow areas based on a shapefile and saves the result to a .npz file.
+
+        Parameters:
+        recalc (bool): A flag indicating whether to recalculate the no-flow areas even if a pre-calculated array exists. Default is False.
+
+        Returns:
+        no_flow (numpy.ndarray): A 3D numpy array representing the no-flow areas in the model domain. Each cell in the array is a boolean value indicating whether the corresponding cell in the model domain is a no-flow area.
+        """
+
+        no_flow_path = KslEnv.large_working.joinpath(
+            'UNbacked/OLW_predictor_datasets/NZ_hydrogeologicalsystems_June2019/NZ_hydrogeologicalsystem_polygon.shp')
+        # Convert the shapefile to a model array. The 'HS_id' field is used to determine the no-flow areas.
+        no_flow = smt.io.shape_file_to_model_array(no_flow_path, 'HS_id', alltouched=True,
+                                                   overlapping_action='ignore')
+        # Convert the model array to a binary array where 1 represents a no-flow area and 0 represents a flow area.
+        no_flow = np.where(no_flow >= 1, 1, 0)
+        # Convert the binary array to a boolean array.
+        no_flow = no_flow.astype(bool)
+        # Convert the 2D array to a 3D array.
+        no_flow = no_flow[np.newaxis]
+        # Save the boolean array to a .npz file.
+        return no_flow
+
+    smt = RectangularModelTools(llx=temp_smt.llx, lly=temp_smt.lly,
+                                rows=temp_smt.rows,
+                                cols=temp_smt.cols,
+                                model_version_name='mf5',
+                                delr=1000, delc=1000,
+                                layer_type=1,
+                                layers=1,
+                                epsg_num=2193,
+                                no_flow_calc=_calc_noflow,
+                                )
+    print(smt.get_xlim_ylim())
+    print(smt.model_shape)
+    mx, my = smt.get_model_x_y()
+    ibound = smt.get_no_flow(0).astype(bool)
+    savepath = Path(__file__).parents[2].joinpath('src/komanawa/nz_depth_to_water/data', 'model_grid.npz')
+    np.savez_compressed(savepath, mx=mx, my=my, ibound=ibound)
+
+
+if __name__ == '__main__':
+    from komanawa.nz_depth_to_water.get_data import get_nz_depth_to_water
+
+    water_level_data, metadata = get_nz_depth_to_water()
+    #npoints_in_dist_calc_sites(metadata)
+    #density_calc_sites(metadata)
+    plot_points_in_dist()
+    plot_density()

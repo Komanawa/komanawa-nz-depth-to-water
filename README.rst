@@ -1,4 +1,4 @@
 Kо̄manawa-nz-depth-to-water
 ################################
 
-.. todo add link to the page next step
+Documentation at https://komanawa-solutions-ltd.github.io/komanawa-nz-depth-to-water/

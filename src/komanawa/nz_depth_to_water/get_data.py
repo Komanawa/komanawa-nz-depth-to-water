@@ -2,10 +2,12 @@
 created matt_dumont 
 on: 7/05/24
 """
+import shutil
 from pathlib import Path
 from copy import deepcopy
 import numpy as np
 import pandas as pd
+from komanawa.nz_depth_to_water.density_grid import DensityGrid
 
 md_convert_cols = dict(bottom_bottomscreen=3,
                        dist_mp_to_ground_level=3,
@@ -134,3 +136,50 @@ def export_dtw_to_csv(outdir):
     water_level_data.to_csv(outdir.joinpath('water_level_data.csv'))
     metadata.to_csv(outdir.joinpath('metadata.csv'))
     print(f'Exported data to {outdir}')
+
+
+def get_npoint_in_radius(distlim):
+    """
+    Get the number of points within [1|5|10|20] km of each point in the model grid.
+
+    :param distlim: int, the distance limit in meters.
+    :return: ndatapoints, mx, my (np.ndarray, np.ndarray, np.ndarray) gridded output
+    """
+
+    dg = DensityGrid()
+    assert distlim in dg.distlims, f'{distlim} not in {dg.distlims}'
+    nans = dg.get_nan_layer()
+    mx, my = dg.get_xy()
+    data = np.load(dg.data_path.parent.joinpath(f'npoins_nearest_{distlim}.npy'))
+    data[nans] = np.nan
+    return data, mx, my
+
+
+def get_distance_to_nearest(npoints):
+    """
+    Get the distance to the nearest [1|10] points for each point in the model grid.
+
+    :param npoints: int, the number of points to consider.
+    :return: distance(m), mx, my (np.ndarray, np.ndarray, np.ndarray) gridded output
+    """
+    dg = DensityGrid()
+    assert npoints in dg.npoints, f'{npoints} not in {dg.npoints}'
+    nans = dg.get_nan_layer()
+    mx, my = dg.get_xy()
+    data = np.load(dg.data_path.parent.joinpath(f'distance_m_to_nearest_{npoints}_data.npy'))
+    data[nans] = np.nan
+    return data, mx, my
+
+
+def copy_geotifs(outdir):
+    """
+    copy the geotifs of distance to nearest [1|10] points and number of points within [1|5|10|20] km to the outdir.
+    :param outdir: directory to copy the geotifs to.
+    :return:
+    """
+    outdir = Path(outdir)
+    outdir.mkdir(exist_ok=True)
+    datadir = Path(__file__).parent.joinpath('data')
+    tifs = datadir.glob('*.tif')
+    for tif in tifs:
+        shutil.copy(tif, outdir.joinpath(tif.name))

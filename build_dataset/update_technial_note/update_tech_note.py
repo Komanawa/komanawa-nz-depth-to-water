@@ -7,7 +7,8 @@ import datetime
 import matplotlib.pyplot as plt
 from build_dataset.update_technial_note.data_stats import get_data_stats, write_rst_table_with_tabulate, \
     get_running_totals
-from build_dataset.update_technial_note.statistical_measures_of_dwt_data import hist_sd, exceedance_prob
+from build_dataset.update_technial_note.statistical_measures_of_dwt_data import hist_sd, exceedance_prob, \
+    density_calc_sites, plot_density, npoints_in_dist_calc_sites, plot_points_in_dist
 
 docs_build_dir = Path(__file__).parents[2].joinpath('docs_build')
 assert docs_build_dir.exists(), f'{docs_build_dir} does not exist. should not get here'
@@ -25,7 +26,7 @@ def update_tech_note(wl_data, metadata, base_outdir=docs_build_dir):
     base_outdir.joinpath('tables').mkdir(exist_ok=True)
     base_outdir.joinpath('_static').mkdir(exist_ok=True)
     with open(base_outdir.joinpath('last_updated.rst'), 'w') as f:
-        f.write(f':Last updated: {datetime.date.today().isoformat()}')
+        f.write(f':Data Last updated: {datetime.date.today().isoformat()}')
 
     # depth to water statistics
     hist_sd(outdir=base_outdir, wd=wl_data, md=metadata)
@@ -48,15 +49,18 @@ def update_tech_note(wl_data, metadata, base_outdir=docs_build_dir):
         fig.savefig(base_outdir.joinpath('_static', f'{nm}.png'))
         plt.close(fig)
 
+    density_calc_sites(metadata)
+    plot_density()
+
+    npoints_in_dist_calc_sites(metadata)
+    plot_points_in_dist()
+
 
 if __name__ == '__main__':
     import pandas as pd
-    from komanawa.kslcore import KslEnv
+    from komanawa.nz_depth_to_water.get_data import get_nz_depth_to_water
 
-    project_dir = KslEnv.shared_drive('Z21009FUT_FutureCoasts')
-    unbacked_dir = KslEnv.unbacked.joinpath('Z21009FUT_FutureCoasts')
-    wd = pd.read_hdf(project_dir.joinpath('Data/gwl_data/final_water_data.hdf'), 'wl_store_key')
-    md = pd.read_hdf(project_dir.joinpath('Data/gwl_data/final_metadata.hdf'), 'metadata')
-    update_tech_note(wd, md)
+    water_level_data, metadata = get_nz_depth_to_water()
+    update_tech_note(water_level_data, metadata)
 
     pass
