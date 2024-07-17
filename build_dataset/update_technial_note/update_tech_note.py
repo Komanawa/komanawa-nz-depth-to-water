@@ -26,7 +26,7 @@ def update_tech_note(wl_data, metadata, base_outdir=docs_build_dir):
     base_outdir.joinpath('tables').mkdir(exist_ok=True)
     base_outdir.joinpath('_static').mkdir(exist_ok=True)
     with open(base_outdir.joinpath('last_updated.rst'), 'w') as f:
-        f.write(f':Last updated: {datetime.date.today().isoformat()}')
+        f.write(f':Data Last updated: {datetime.date.today().isoformat()}')
 
     # depth to water statistics
     hist_sd(outdir=base_outdir, wd=wl_data, md=metadata)

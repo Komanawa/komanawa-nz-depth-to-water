@@ -14,6 +14,8 @@ a small repo that holds:
 :Changelog entry: Initial release of the dataset
 :Data access: Access the data via this package.
 
+.. include:: last_updated.rst
+
 .. toctree::
     :maxdepth: 2
     :hidden:
