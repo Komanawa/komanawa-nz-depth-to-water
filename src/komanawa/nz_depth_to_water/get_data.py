@@ -8,6 +8,12 @@ from copy import deepcopy
 import numpy as np
 import pandas as pd
 from komanawa.nz_depth_to_water.density_grid import DensityGrid
+import warnings
+
+if int(np.__version__.split('.')[0]) > 1:
+    warnings.warn('this code is written for numpy version 1.26.4, numpy version 2.+, may prevent reading the data,'
+                  'please roll back to numpy 1.26.4 if you encounter: \n'
+                  '     "ValueError: numpy.dtype size changed, may indicate binary incompatibility. Expected 96 from C header, got 88 from PyObject"')
 
 md_convert_cols = dict(bottom_bottomscreen=3,
                        dist_mp_to_ground_level=3,
