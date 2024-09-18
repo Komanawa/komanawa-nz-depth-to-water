@@ -9,16 +9,16 @@ Patrick Durney :sup:`1*`, Evelyn Charlesworth :sup:`1`, and Matt Dumont :sup:`1`
 Abstract
 ==========
 
-Groundwater level data is a fundamental dataset for water resource and shallow water table hazard investigation, but the data are often held in a fragmented and diverse array of databases across New Zealand. Here we describe a National New Zealand dataset of depth to water and groundwater elevation data. This dataset has been made publicly available via a python package and is available at https://github.com/Komanawa-Solutions-Ltd/komanawa-nz-depth-to-water.  We have provided a pathway for future updates and for users to identify and flag issues with the dataset. We hope this dataset can save future researchers time and effort in collecting and processing groundwater level data and can be used for a range of applied science and research activities.
+Groundwater level data is a fundamental dataset for water resource and shallow water table hazard investigation, but the data are often held in a fragmented and diverse array of databases across New Zealand. Here we describe a national New Zealand dataset of depth to water and groundwater elevation data. This dataset has been made publicly available via a python package and is available at https://github.com/Komanawa-Solutions-Ltd/komanawa-nz-depth-to-water.  We have provided a pathway for future updates and for users to identify and flag issues with the dataset. We hope this dataset can save future researchers time and effort in collecting and processing groundwater level data and can be used for a range of applied science and research activities.
 
 
 
 Introduction and Background
 =============================
 
-Groundwater level data are a key input for a broad range of water resource investigation, management and research activities (e.g. testing global models XXXX). However, access to national groundwater level data in New Zealand is challenging, because they are held in the various Regional Council and Unitary Authority databases and in the New Zealand Geotechnical Database under a wide array of data architectures. The quality of the data and associated metadata varies significantly; in some instances, the data are subject to rigorous quality assurance processes and include accurate measurement point elevations and spatial coordinates. In other instances, the data comprise single readings of unknown quality with no information on the measurement point elevation or even the depth of the well.
+Groundwater level data are a key input for a broad range of water resource investigation, management and research activities (e.g. testing global models, Reinecke et al., 2020, state of environment reporting, WMO, 2022). However, access to national groundwater level data in New Zealand is challenging, because they are held in the various Regional Council and Unitary Authority databases and in the New Zealand Geotechnical Database under a wide array of data architectures. The quality of the data and associated metadata varies significantly; in some instances, the data are subject to rigorous quality assurance processes and include accurate measurement point elevations and spatial coordinates. In other instances, the data comprise single readings of unknown quality with no information on the measurement point elevation or even the depth of the well.
 
-Future Coasts Aotearoa is a National Institute of Water and Atmospheric research (NIWA) led Ministry of Business, Innovation and Employment (MBIE) Endeavour research programme that combines expertise in Indigenous culture, economics, social, and physical sciences to tackle the issue of sea-level rise in coastal lowland communities by enhancing the evidence base for sea-level rise risks. Key groundwater science outputs include: developing impact and adaptation thresholds for shallow groundwater hazards, producing a national coastal groundwater hazard exposure assessment, and national and local models of seawater intrusion and water table shoaling.
+Future Coasts Aotearoa is a National Institute of Water and Atmospheric research led Ministry of Business, Innovation and Employment Endeavour research programme that combines expertise in Indigenous culture, economics, social, and physical sciences to tackle the issue of sea-level rise in coastal lowland communities by enhancing the evidence base for sea-level rise risks. Key groundwater science outputs include: developing impact and adaptation thresholds for shallow groundwater hazards, producing a national coastal groundwater hazard exposure assessment, and national and local models of seawater intrusion and water table shoaling (Niwa, 2022.
 
 This technical note outlines the data collected and the methods used to produce and analyse a national depth to water dataset for New Zealand for the Future Coasts research programme. The dataset will be valuable for a range of applied science and research activities.
 
@@ -28,12 +28,12 @@ Methodology
 Data gathering scope
 ----------------------
 
-Groundwater level data can be grouped into discrete measurements and regular / continuous monitoring. The former include spot values recorded during/immediately after well drilling, measurements taken during geotechnical investigations (e.g. Cone Penetration Tests, geotechnical bores and trial pits) and piezometric surveys undertaken by Regional Councils. The latter includes manual and instrument-based regular data collection programmes undertaken by Regional Councils, Unitary Authorities and some Territorial Authorities. Groundwater level readings are also collected in accordance with consent conditions for certain activities. However, these data are typically stored in reports and spreadsheets as large file sets within records management systems operated by Regional Council and Unitary Authority consenting and compliance teams. Consequently, they are not accessible without significant investment of resources. Our data collection was therefore constrained to discrete readings and regular monitoring data within Regional Council and Unitary Authority groundwater level databases and the New Zealand Geotechnical Database.
+Groundwater level data can be grouped into discrete measurements and regular / continuous monitoring. The former include discrete values recorded during/immediately after well drilling, measurements taken during geotechnical investigations (e.g. Cone Penetration Tests, geotechnical bores and trial pits) and piezometric surveys undertaken by Regional Councils. The latter includes manual and instrument-based (recorder) regular data collection programmes undertaken by Regional Councils, Unitary Authorities and some Territorial Authorities. Additional groundwater readings are taken to meet consent conditions for certain activities. However, this data is often stored in reports and spreadsheets as large file sets. These are kept in records management systems run by Regional Council and Unitary Authority consenting and compliance teams. As a result, accessing this data requires significant resources. Our data collection was therefore constrained to discrete readings and regular monitoring data within Regional Council and Unitary Authority groundwater level databases and the New Zealand Geotechnical Database.
 
 Data Request
 ---------------
 
-Data requests were sent out to 16 New Zealand councils in March 2023; this included all 11 regional councils and five unitary authorities. A further data request was sent out to all of the District and City Councils. While we received responses from multiple sources, only Tauranga City Council (TCC) provided new data beyond what we already had. Most respondents recommended we contact the Regional Council in their area for further information. The data request sought all groundwater level data; this included sites additional to any State of the Environment and National Groundwater Monitoring Programme monitoring sites, as well as any  spot readings. The aim was to collect as much national data as possible, including sites with a single reading. We were open to receiving both groundwater depth and/or groundwater elevation data on the proviso that it was specified to reduce data processing error. We also requested standard metadata for each site, with a minimum metadata requirement of:
+Data requests were sent out to 16 New Zealand councils in March 2023; this included all 11 regional councils and five unitary authorities. A further data request was sent out to all of the Territorial Authorities. While we received responses from multiple sources, only Tauranga City Council (TCC) provided new data beyond what we already had. Most respondents recommended we contact the Regional Council in their area for further information. The data request sought all historical groundwater level data; this included sites additional to any State of the Environment and National Groundwater Monitoring Programme monitoring sites, as well as any  discrete readings. The aim was to collect as much national data as possible, including sites with a single reading. We were open to receiving both groundwater depth and/or groundwater level / elevation (GWL) data on the proviso that it was specified to reduce data processing error. We also requested standard metadata for each site, with a minimum metadata requirement of:
 
 - Unique site identifier (e.g. site number)
 - Grid reference in NZTM
@@ -48,7 +48,7 @@ Our preferred metadata requirements included:
 The data were received in Excel and csv formats, with various degrees of completeness and processing. Data management and storage varied from council to council, hence processing to standardise the data was required.
 
 
-Alongside the direct requests to regional councils and unitary authorities, data was also pulled from Tethys (https://github.com/tethys-ts), which allows Hilltop based data to be accessed and downloaded. For councils that had relevant and up-to-date data in Hilltop, it meant we did not have to rely on a response to the direct request, and saved time in the data collection and processing.
+Alongside the direct requests to regional councils and unitary authorities, data was also pulled from Tethys (Kittridge, 2023), which allows Hilltop based data to be accessed and downloaded. For councils that had relevant and up-to-date data in Hilltop (Hills Labs, 2024), it meant we did not have to rely on a response to the direct request, and saved time in the data collection and processing.
 
 A brief summary of the data collected from each council is provided below.
 
@@ -76,28 +76,29 @@ The systematic approach to the data processing was as follows:
 - Metadata Synthesis and Alignment
     - Metadata processing paralleled the data cleaning steps, with additional emphasis on ensuring alignment between site names in the metadata and the GWL data.
     - The metadata schema encapsulated a comprehensive array of fields, ranging from well names and depths to spatial coordinates and screening details.
-    - Groundwater elevations were meticulously derived from ground elevation plus collar height (where available) minus depth to water, except for instances where councils provided elevations in NZVD2016.
+    - Groundwater elevations were derived from ground elevation plus collar height (where available) minus depth to water, except for instances where councils provided elevations in NZVD2016.
 - Data Aggregation and Quality Assurance
     - The processed data from various sources were coalesced into a singular dataset. This aggregation involved strategic merging and deduplication, governed by predefined rules to ensure data integrity.
     - Quality control measures, including data and metadata checks, were instituted to uphold accuracy and reliability.
 - Storing and Accessing Processed Data
-    - The culminated GWL data and metadata were systematically stored in an HDF5 store, facilitating ease of access and analysis.
+    - The processed GWL data and metadata were systematically stored in an HDF5 store, facilitating ease of access and analysis.
     - Provisions were made to recalculate and update the stored data as necessary, ensuring the database can remain current and reflective of the most recent submissions.
 - Assumptions and Usage Considerations
     - A fundamental assumption is that depth-to-groundwater measurements below the ground surface are positive, with negative readings indicative of artesian conditions. This necessitated sign adjustments and validation against council records.
     - In cases where well depth information was unavailable, wells were presumed shallow rather than being excluded from the dataset; however the well depth is still flagged as a NaN value.
     - Specific regional peculiarities, such as the assumed + 100 m offset for coastal groundwater elevations provided by the Otago Regional Council, were duly considered and adjusted.
-    - For wells where the maximum depth to water exceeded the reported well depth, an assumption was made that the well depth equaled the maximum depth to water plus an additional 3 metres.
+    - For wells where the maximum depth to water exceeded the reported well depth, an assumption was made that the well depth equalled the maximum depth to water plus an additional 3 metres.
 
 Statistical Analysis of Water Table Variation
 -------------------------------------------------
-As previously noted, this National Depth to Water Dataset was complied to support the Future Coasts Aotearoa research programme, where it is used following additional processing to produce maps of steady-state depth to water (DTW) probability at a national scale. The ultimate goal being the identification of areas at risk of groundwater inundation under relative sea level rise. As an example of some the utility of this dataset we present some simple statistical analysis below to uncover any prominent traits and generally describe the data. The steps were:
+As previously noted, this National Depth to Water Dataset was complied to support the Future Coasts Aotearoa research programme, where it is used following additional processing to produce maps of steady-state depth to water (DTW) probability at a national scale. The ultimate goal being the identification of areas at risk of groundwater inundation under relative sea level rise.
+As an example of some the utility of this dataset we present some simple statistical analysis below to uncover any prominent traits and generally describe the data. The steps were:
 
--  Categorization by Depth:
+-  Categorisation by Depth:
     - The dataset was divided into three depth categories:
-        - Category 1: Sites with DTW less than 10 meters.
-        - Category 2: Sites with DTW between 10 and 30 meters.
-        - Category 3: Sites with DTW greater than 30 meters.
+        - Category 1: Sites with depths less than 10 meters.
+        - Category 2: Sites with depths between 10 and 30 meters.
+        - Category 3: Sites with depths greater than 30 meters.
 
 - Sub-setting by Number of Readings:
     - Only sites with more than 30 readings were included. This threshold was chosen as a rule of thumb to ensure a reliable calculation of the standard deviation.
@@ -110,10 +111,10 @@ As previously noted, this National Depth to Water Dataset was complied to suppor
         - Maximum: The highest recorded water level.
 
 - Grouping by Mean DTW:
-    - The categories were prescribed with breakpoints of: 0.1, 0.5, 1, 1.5, 2, 3, 5, 10, 15, 20, 30, 50, 75, 100 meters
+    - The categories were analysed prescribed with breakpoints of: 0.1, 0.5, 1, 1.5, 2, 3, 5, 10, 15, 20, 30, 50, 75, 100 meters (while these breakpoints are for illustrative purposes only, the shallower categories correspond with infrastructure and building foundations assessed in the Future Coasts Aotearoa research programme).
     - The data was further grouped by the mean DTW to analyse combined statistics across different groups. This grouping allows for a comparison of water level characteristics across sites with similar mean DTW values.
 
-This structured approach to data analysis supports a comprehensive understanding of the DTW across various sites. By categorising, sub-setting, and computing key statistics, we can identify patterns and traits that are crucial for assessing groundwater inundation risks at a national scale.
+This structured approach to data analysis supports an overview of the DTW across various sites. By categorising, sub-setting, and computing key statistics, we can identify patterns and traits that are important for assessing groundwater inundation risks at a national scale.
 
 
 Results and discussion
@@ -144,7 +145,7 @@ Investigating the dataset by source reveals distinct patterns in data collection
 Notably, Environment Canterbury (ECan) stands out with the highest number of observations.
 This contrasts the New Zealand Geotechnical Database (NZGD) which has many fewer observations per site (frequently <= 2 readings/site).
 Otago Regional Council (ORC) provided data for fewer monitoring sites, but with a high average reading count per site.
-These variations highlight the diversity of monitoring efforts and data densities across different sources.
+These differences showcase the variability in both monitoring intensity and data abundance across different data providers.
 Collectively, these statistics underscore the heterogeneity of groundwater monitoring across regions, influenced by the varying goals (e.g. geotechnical investigations), methodologies, and resources.
 Further summary statistics of the data by the source are provided below.
 
@@ -176,7 +177,7 @@ It is important to note that while consistent processing approaches were applied
 Spatial Distribution
 --------------------------
 
-To better describe the spatial extent of the dataset we have plotted the number of monitoring points within 5 km of each monitoring point and the distance to the nearest groundwater monitoring site. The figures below show the results of these analyses below. In addition, these figures and geotiffs of the data coverage are available in the supplementary material and the Github repository.
+To better describe the spatial extent of the dataset we have plotted the number of monitoring sites within 5 km of each monitoring site and the distance to the nearest groundwater monitoring site. The figures below show the results of these analyses below. In addition, these figures and geotiffs of the data coverage are available in the supplementary material and the Github repository.
 
 
 .. figure:: ../_static/data_coverage_1both.png
@@ -187,15 +188,25 @@ To better describe the spatial extent of the dataset we have plotted the number 
 
 
 .. figure:: ../_static/npoins_nearest_5000_mboth.png
-   :alt: Number of monitoring points within 5 km
+   :alt: Number of monitoring sites within 5 km
    :align: center
 
-   Number of monitoring points within 5 km
+   Number of monitoring sites within 5 km
 
 
 .. raw:: latex
 
     \clearpage
+
+Potential Uses of the Dataset
+-------------------------------
+
+Beyond the original scope we see the dataset as having a wide range of potential uses, including but not limited to:
+    - Consent applications and engineering design: Provides historical context across regions. Supports consistent decision-making for regulators and developers.
+    - Model validation and research: Enables cross-regional studies and comparison. Improves national predictive models.
+    - Climate change and hazard assessments: Allows analysis of long-term trends nationwide. Aids in identifying groundwater-related risks.
+    - Resource management and policy development: Informs national water allocation policies. Supports evaluation of management strategies.
+    - Data integration and analysis: Enables standardised data visualisation tools. Supports integration with other environmental datasets.
 
 
 Statistical Description of Depth to Water Variance
@@ -212,21 +223,22 @@ Conclusions
 =============
 
 Access to fundamental groundwater data is essential for understanding the dynamics of groundwater systems and their interactions with the environment.
-New Zealand's current groundwater monitoring network is diverse and fragmented, with each provider having unique monitoring objectives, methodologies, and data storage and management systems.
-Some national approaches have been undertaken to standardise data collection and storage, such as the National Groundwater Monitoring Programme (NGMP) and the New Zealand Geotechnical Database (NZGD), but these are not comprehensive, do not cover the full breadth of groundwater monitoring data, and often have a specific focus (i.e. regional groundwater resource characterisation or shallow geotechnical investigations, respectively).
+New Zealand's current groundwater monitoring network is diverse and fragmented, with each provider having unique monitoring objectives, methodologies, and data storage and management systems (Parliamentary Commissioner for the Environment 2019).
+Some national approaches have been undertaken to standardise data collection and storage, such as the National Environmental Monitoring Standards (Baddock E, 2019), the National Groundwater Monitoring Programme (GNS, 2022) and the New Zealand Geotechnical Database, but these are not comprehensive, do not cover the full breadth of groundwater monitoring data, and often have a specific focus (i.e. regional groundwater resource characterisation or shallow geotechnical investigations, respectively).
 
 The current state of groundwater level data availability in New Zealand provides a significant barrier to and inefficiency in understanding and adapting to the impacts of climate change and sea-level rise on groundwater systems.
 
 A comprehensive set of discrete and regular groundwater level readings and metadata were collated from Regional Councils, Unitary Authorities and the New Zealand Geotechnical Database and processed into a consistent format. The output of this work is a national depth to water and groundwater elevation dataset for New Zealand; the groundwater level data and metadata are available as a complete dataset which can be used to better understand shallow groundwater hazards in New Zealand and for a range of other applied science and research activities such as well interference assessments, stormwater detention pond groundwater depth assessments and regional and national groundwater modelling.
 Although the database provides a comprehensive set of groundwater level data at the time of writing, the value of this database will decline over time as new data is collected.
 
-We are aware of efforts to create a national wells database, which would likely provide significant improvements in data quality and accessibility. However, it is unclear when this database will be available and what data it will contain. We would recommend that a pragmatic set of standards be adopted for all data held by councils and other organisations that collect groundwater data. These standards should include the following:
+We are aware of efforts to create a national wells database, which would likely provide significant improvements in metadata quality and accessibility. However, at the present time there is no intention to host actual water level data. We recommend that a pragmatic set of standards be adopted for all data held by councils and other organisations that collect groundwater data. These standards should include the following:
 
 #. All public data held by an organisation should be made available via a public API.
 #. All public datasets should include metadata.  Ideally this metadata would be in a standard machine readable format, but as an interim solution or for less frequently used data, a simple publicly visible document discussing the data structure and any peculiarities would be a good start.
-#. All public datasets should have a mechanism for users to report errors or issues with the data and these issues should be publicly visible. Even if organisations do not have the resources to fix all these issues, there is value in collating them. At the moment each researcher must discover these issues themselves, which is challenging and time consuming. Consider the value of forums like Stack Exchange or GitHub issues for this purpose in the software development world.
-#. All public datasets should have consistent +ve or -ve signs for depth to water above or below ground level. Ideally this would be a national standard, but minimally should be an organisational standard and documented.
-#. All public datasets should have a consistent way of specifying the elevation of the measuring point. This could be as simple as a GPS elevation, but minimally should be documented.
+#. All public datasets should have a mechanism for users to report errors or issues with the data and these issues should be publicly visible. Even if organisations do not have the resources to fix all these issues (e.g. wrong bore depth), there is value in collating them. At the moment each researcher must discover these issues themselves, which is challenging and time consuming. Consider the value of forums like Stack Exchange or GitHub issues for this purpose in the software development world.
+#. All public datasets should have consistent +ve or -ve signs for depth to water above or below measuring point. Ideally this would be a national standard, but minimally should be an organisational standard and documented.
+#. All public datasets should have a measured distance between the measuring point and the general surrounding ground surface.
+#. All water level data collected for compliance with consent conditions should be submitted in an electronic form, and systems should be developed to accurately and effectively upload these data into council databases.
 
 Additionally, we would like to commend the NZGD for their work in providing a national database of geotechnical data. The dataset was of enormous value to this project, particularly in data sparse regions; however our use case may have been beyond the expected purpose of the NZGD. Specifically, we often found significantly conflicting data points in close proximity. Based on our analysis, we suspect that these discrepancies likely stem from variations in the drilling locations, such as greenfield sites versus foundation pits. The NZGD could significantly improve their database for shallow groundwater hazard management by:
 
@@ -288,6 +300,19 @@ This work could not have been completed without the support of the Regional Coun
 - Karen Grant & Nektaria Papadopoulos from Tauranga City Council.
 
 This work was made possible by the Future Coasts Aotearoa programme, funded by the Ministry of Business, Innovation and Employment (MBIE) Endeavour Fund. We would like to acknowledge the support of the programme, NIWA, and the other researchers involved in the project.
+
+References
+=============
+Baddock E, 2019. Water Level Field Measurement Standard Version: 3.0.0. National Environmental Monitoring Standard. Date of Issue: July 2019
+GNS Science. (2022). National Groundwater Monitoring Programme (NGMP) [Data set]. GNS Science.
+Hills Laboratories. 2024. Hilltop Software [Computer software].
+Kittridge M. 2023. Tethys: A Python package for accessing geospatial time series data (Version 4.5.15) [Computer software]. https://github.com/tethys-ts/tethysts
+New Zealand Geotechnical Database. (n.d.). Retrieved [3-9-2024], from https://www.nzgd.org.nz/
+National Institute of Water and Atmospheric Research (2021). Future Coasts Aotearoa Project Outline. National Institute of Water and Atmospheric Research.
+Parliamentary Commissioner for the Environment. 2019. Focusing Aotearoa New Zealand’s
+environmental reporting system. November 2019. Wellington, New Zealand: Parliamentary
+Reinecke R., Wachholz, A., Mehl, S., Foglia, L., Niemann, C., & Döll, P. 2020. Importance of Spatial Resolution in Global Groundwater Modeling. Groundwater, 58(3), 363–376. https://doi.org/10.1111/gwat.12996
+World Meteorological Organization. 2023. State of Global Water Resources report 2022 (WMO-No. 1333). WMO.
 
 
 .. include:: supplmental_information.rst
