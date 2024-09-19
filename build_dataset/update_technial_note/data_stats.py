@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 import warnings
 
+from matplotlib.ticker import StrMethodFormatter
 
 def load_data():
     wd = pd.read_hdf(project_dir.joinpath('Data/gwl_data/final_water_data.hdf'), 'wl_store_key')
@@ -208,14 +209,15 @@ def get_running_totals(wd):
     outfigs = {}
     fig, ax = plt.subplots(figsize=(10, 6))
     # plot the cumulative number of records
-    ax.plot(cumulative_n_records['year'], cumulative_n_records['depth_to_water'] * 1e-6, label='Cumulative n records',
+    ax.plot(cumulative_n_records['year'], cumulative_n_records['depth_to_water'] * 1e-6, label='Cumulative N records',
             ls='--',
             color='b')
     ax2 = ax.twinx()
-    ax2.plot(cumulative_n_sites['year'], cumulative_n_sites['site_name'], label='Cumulative n sites', ls='-', color='r')
+    ax2.plot(cumulative_n_sites['year'], cumulative_n_sites['site_name'], label='Cumulative N sites', ls='-', color='r')
     ax.set_xlabel('Year')
-    ax.set_ylabel('Cumulative n records (millions)')
-    ax2.set_ylabel('Cumulative n sites')
+    ax.set_ylabel('Cumulative N records (millions)')
+    ax2.set_ylabel('Cumulative N sites')
+    ax2.yaxis.set_major_formatter(StrMethodFormatter('{x:,.0f}'))
     handles, labels = ax.get_legend_handles_labels()
     handles2, labels2 = ax2.get_legend_handles_labels()
     ax.legend(handles + handles2, labels + labels2, loc='upper left')
@@ -239,8 +241,9 @@ def get_running_totals(wd):
     ax.set_xlabel('Year')
     ax.set_xlim(1940, years[-1] + 5)
     ax.set_ylabel('Number of records (millions)')
+    ax.yaxis.set_major_formatter(StrMethodFormatter('{x:,.0f}'))
     ax.set_title('Cumulative number of records per source')
-    ax.legend()
+    ax.legend(loc='upper left')
     fig.tight_layout()
     outfigs['cumulative_n_records_per_source'] = fig
 
@@ -254,8 +257,9 @@ def get_running_totals(wd):
         prev += source_data['unique_sites']
     ax.set_xlabel('Year')
     ax.set_ylabel('Number of sites')
+    ax.yaxis.set_major_formatter(StrMethodFormatter('{x:,.0f}'))
     ax.set_title('Cumulative number of sites per source')
-    ax.legend()
+    ax.legend(loc='upper left')
     ax.set_xlim(1940, years[-1] + 5)
     fig.tight_layout()
     outfigs['cumulative_n_sites_per_source'] = fig

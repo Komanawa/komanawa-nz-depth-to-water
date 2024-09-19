@@ -60,26 +60,36 @@ The data was processed using Python. The scripts used to process the data are av
 The systematic approach to the data processing was as follows:
 
 - Ingestion and Preliminary Cleaning
+
     - Individual scripts were developed for each council to cater to the unique formats of the datasets provided.
     - GWL data, alongside metadata, were ingested from two primary sources: direct council submissions and the Tethys platform, accessed via a Python API call.
     - Preliminary cleaning involved standardising data formats, renaming columns for consistency, and excising superfluous columns.
+
 - Data Standardisation and Transformation
+
     - The data was processed to ensure the presence of both depth-to-water and elevation measurements. In instances where elevation data was absent, LiDAR data (Sourced from the LINZ Data Service and licensed for reuse under the CC BY 4.0 licence) was utilised to ascertain site elevation.
     - Anomalies such as negative values or readings beyond expected ranges were examined and rectified. Erroneous not an number (NaN) values were also purged from the dataset.
     - All spatial data were transformed into the NZGD 2000 Transverse Mercator projection and NZVD2016 vertical datum.
     - The data was resampled to a consistent temporal resolution, ergo standardised to daily intervals.
     - The data was checked for any duplicates and these were removed.
+
 - Metadata Synthesis and Alignment
+
     - Metadata processing paralleled the data cleaning steps, with additional emphasis on ensuring alignment between site names in the metadata and the GWL data.
     - The metadata schema encapsulated a comprehensive array of fields, ranging from well names and depths to spatial coordinates and screening details.
     - Groundwater elevations were derived from ground elevation plus collar height (where available) minus depth to water, except for instances where councils provided elevations in NZVD2016.
+
 - Data Aggregation and Quality Assurance
+
     - The processed data from various sources were coalesced into a singular dataset. This aggregation involved strategic merging and deduplication, governed by predefined rules to ensure data integrity.
     - Quality control measures, including data and metadata checks, were instituted to uphold accuracy and reliability.
+
 - Storing and Accessing Processed Data
     - The processed GWL data and metadata were systematically stored in an HDF5 datastore, facilitating ease of access and analysis.
     - Provisions were made to recalculate and update the stored data as necessary, ensuring the database can remain current and reflective of the most recent submissions.
+
 - Assumptions and Usage Considerations
+
     - A fundamental assumption is that depth-to-groundwater measurements below the ground surface are positive, with negative readings indicative of artesian conditions. This necessitated sign adjustments and validation against council records.
     - In cases where well depth information was unavailable, wells were presumed shallow rather than being excluded from the dataset; however the well depth is still flagged as a NaN value.
     - Specific regional peculiarities, such as the assumed + 100 m offset for coastal groundwater elevations provided by the Otago Regional Council, were corrected to NZVD2016.
@@ -90,23 +100,25 @@ Statistical Analysis of Water Table Variation
 As previously noted, this National Depth to Water Dataset was compiled to support the Future Coasts Aotearoa research programme, where it is used following additional processing to produce maps of steady-state depth to water (DTW) probability at a national scale. The ultimate goal is the identification of areas at risk of groundwater inundation under relative sea-level rise. As noted, the dataset is also available for other uses, and we encourage researchers to use the dataset for a wide range of applications.
 As an example of some of the utility of this dataset, we present some simple statistical analyses below to uncover any prominent traits and generally describe the data. The steps were:
 
--  Categorisation by Depth:
-    - The dataset was divided into three depth categories:
-        - Category 1: Sites with depths less than 10 meters.
-        - Category 2: Sites with depths between 10 and 30 meters.
-        - Category 3: Sites with depths greater than 30 meters.
+-  Categorisation by Depth. The dataset was divided into three depth categories:
+
+    - Category 1: Sites with depths less than 10 meters.
+    - Category 2: Sites with depths between 10 and 30 meters.
+    - Category 3: Sites with depths greater than 30 meters.
 
 - Sub-setting by Number of Readings:
+
     - Only sites with more than 30 readings were included. This threshold was chosen as a rule of thumb to ensure a reliable calculation of the standard deviation.
 
-- Statistical Calculations:
-    - For each site in the subset, the following statistical measures were computed:
-        - Mean: The average depth to water.
-        - Standard Deviation: A measure of the variation in water levels.
-        - Minimum: The lowest recorded water level.
-        - Maximum: The highest recorded water level.
+- Statistical Calculations. For each site in the subset, the following statistical measures were computed:
+
+    - Mean: The average depth to water.
+    - Standard Deviation: A measure of the variation in water levels.
+    - Minimum: The lowest recorded water level.
+    - Maximum: The highest recorded water level.
 
 - Grouping by Mean DTW:
+
     - The categories were analysed prescribed with breakpoints of: 0.1, 0.5, 1, 1.5, 2, 3, 5, 10, 15, 20, 30, 50, 75, 100 meters (while these breakpoints are for illustrative purposes only, the shallower categories correspond with infrastructure and building foundations assessed in the Future Coasts Aotearoa research programme).
     - The data was further grouped by the mean DTW to analyse combined statistics across different groups. This grouping allows for a comparison of water level characteristics across sites with similar mean DTW values.
 
@@ -154,6 +166,7 @@ As with any dataset, there are uncertainties in the data. The primary sources of
 
     - Measurement method variability: Different councils and organisations use different methods to measure groundwater levels, which can lead to variability in the data.
     - Data quality inconsistencies: The quality of data and associated metadata varies significantly across different sources. This includes:
+
         - Potential data entry errors from original sources
         - Varying quality of metadata provided with the data
         - Differences in measurement data quality (e.g., data collected by drillers immediately upon well completion versus as part of a regular monitoring programme)
@@ -198,6 +211,7 @@ Potential Uses of the Dataset
 -------------------------------
 
 Beyond the original scope we see the dataset as having a wide range of potential uses, including but not limited to:
+
     - Consent applications and engineering design: Provides historical context across regions. Supports consistent decision-making for regulators and developers.
     - Model validation and research: Enables cross-regional studies and comparison. Improves national predictive models.
     - Climate change and hazard assessments: Allows analysis of long-term trends nationwide. Aids in identifying groundwater-related risks.
@@ -237,6 +251,7 @@ Additionally, we would like to commend the NZGD for their work in providing a na
 #. Included a field to specify whether measurements at a point are relative to the average surrounding land surface or taken in foundation excavations.
 #. Include and possibly mandate the provision of GPS elevation data for the depth to water measuring point and/or a measured distance between the measuring point and the general surrounding ground surface (e.g. depth of foundation excavation).
 #. As discussed above the NZGD would also benefit from:
+
     #. A public API for data access.
     #. A publicly visible mechanism for users to report issues, inconsistencies, and concerns with the data.
 
@@ -296,14 +311,22 @@ This work was made possible by the Future Coasts Aotearoa programme, funded by t
 References
 =============
 Baddock E, 2019. Water Level Field Measurement Standard Version: 3.0.0. National Environmental Monitoring Standard. Date of Issue: July 2019
+
 GNS Science. (2022). National Groundwater Monitoring Programme (NGMP) [Data set]. GNS Science.
+
 Hills Laboratories. 2024. Hilltop Software [Computer software].
+
 Kittridge M. 2023. Tethys: A Python package for accessing geospatial time series data (Version 4.5.15) [Computer software]. https://github.com/tethys-ts/tethysts
+
 New Zealand Geotechnical Database. (n.d.). Retrieved [3-9-2024], from https://www.nzgd.org.nz/
+
 National Institute of Water and Atmospheric Research (2021). Future Coasts Aotearoa Project Outline. National Institute of Water and Atmospheric Research.
+
 Parliamentary Commissioner for the Environment. 2019. Focusing Aotearoa New Zealand’s
 environmental reporting system. November 2019. Wellington, New Zealand: Parliamentary
+
 Reinecke R., Wachholz, A., Mehl, S., Foglia, L., Niemann, C., & Döll, P. 2020. Importance of Spatial Resolution in Global Groundwater Modeling. Groundwater, 58(3), 363–376. https://doi.org/10.1111/gwat.12996
+
 World Meteorological Organization. 2023. State of Global Water Resources report 2022 (WMO-No. 1333). WMO.
 
 

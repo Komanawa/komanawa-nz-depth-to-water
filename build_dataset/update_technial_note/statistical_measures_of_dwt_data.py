@@ -414,8 +414,7 @@ def plot_density():
 
         for island in ['both', 'n', 's']:
             fig, ax = dg.plot_density(data / 1000, island, vmin=0.1, vmax=None, log=True,
-                                      cbarlab=f'Distance to nearest {npoints} sites (km)')
-            plt.show()
+                                      cbarlab=f'Distance to nearest {npoints} site(s) (km)')
             fig.savefig(figdir.joinpath(f'data_coverage_{npoints}{island}.png'))
 
 

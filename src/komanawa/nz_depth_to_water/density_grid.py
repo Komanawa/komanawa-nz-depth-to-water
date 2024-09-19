@@ -5,7 +5,7 @@ on: 7/15/24
 from pathlib import Path
 import numpy as np
 import matplotlib.pyplot as plt
-
+import matplotlib.ticker as ticker
 
 class DensityGrid():
     shape = (1476, 1003)
@@ -112,8 +112,13 @@ class DensityGrid():
                                  cmap=cmap, vmin=vmin, vmax=vmax,
                                  alpha=0.5, edgecolors=edgecolors, linewidth=linewidth, antialiased=True
                                  )
+        def fmt(x, pos):
+            if x<1:
+                return f'{x:.2f}'
+            else:
+                return f'{x:,.0f}'
 
         fig.colorbar(temp, ax=ax, orientation='horizontal', fraction=0.05, pad=0.05,
-                     label=cbarlab)
+                     label=cbarlab, format=ticker.FuncFormatter(fmt))
         fig.tight_layout()
         return fig, ax
