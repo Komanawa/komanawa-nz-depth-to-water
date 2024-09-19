@@ -10,6 +10,8 @@ Patrick Durney :sup:`1*`, Evelyn Charlesworth :sup:`1`, and Matt Dumont :sup:`1`
 
 .. todo update the github docs and publish????
 
+.. todo ensure licensing is correct
+
 Abstract
 ==========
 
