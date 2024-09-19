@@ -6,8 +6,6 @@ Patrick Durney :sup:`1*`, Evelyn Charlesworth :sup:`1`, and Matt Dumont :sup:`1`
 :sup:`1` Komanawa Solutions Ltd, Christchurch, New Zealand
 :sup:`*` Corresponding author
 
-.. todo add correct acknowledgment for Future Coasts,
-
 .. todo update the github docs and publish????
 
 .. todo ensure licensing is correct
@@ -312,7 +310,7 @@ This work could not have been completed without the support of the Regional Coun
 - Armandine Bosserelle for providing us with groundwater level data for the Christchurch area.
 - Karen Grant & Nektaria Papadopoulos from Tauranga City Council.
 
-This work was made possible by the Future Coasts Aotearoa programme, funded by the Ministry of Business, Innovation and Employment (MBIE) Endeavour Fund. We would like to acknowledge the support of the programme, NIWA, and the other researchers involved in the project.
+This work was made possible by Future Coasts Aotearoa (FCA) Funding from the Ministry of Business Innovation and Employment (MBIE), managed by the National Institute of Water and Atmospheric Research (NIWA), contract C01X2107. We would like to acknowledge the support of the programme, NIWA, and the other researchers involved in the project.
 
 References
 =============
