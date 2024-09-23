@@ -1,6 +1,6 @@
 .. table Overview of the dataset generated from PycharmProjects/komanawa-nz-depth-to-water/build_dataset/update_technial_note/data_stats.py :
 
-.. rubric:: Overview of the dataset
+.. rubric:: Table 2 Overview of the dataset
 
 ==================================  ==========
 Metric                              Value

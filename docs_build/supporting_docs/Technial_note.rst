@@ -50,7 +50,7 @@ The data were received in Excel and csv formats, with various degrees of complet
 
 Alongside the direct requests to regional councils and unitary authorities, data was also pulled from Tethys (Kittridge, 2023), which allows Hilltop based data to be accessed and downloaded. For councils that had relevant and up-to-date data in Hilltop (Hills Labs, 2024), it meant we did not have to rely on a response to the direct request, and saved time in the data collection and processing.
 
-A brief summary of the data collected from each council is provided below.
+A brief summary of the data collected from each council is provided in Table 1.
 
 .. include:: ../tables/data_provided_summary.rst
 
@@ -139,15 +139,15 @@ The final dataset is available on request via a Python package at https://github
 
 Description of Dataset
 -----------------------------------
-The dataset comprises a comprehensive collection of groundwater monitoring sites, spanning a significant temporal range from as early as December 29, 1899, but is overwhelmingly composed of younger data. More than half of the sites and records are measured after the mid-late 2000s, as shown in the figure below.  The cumulative number of sites and records shown by data source is available in the supplementary material and `GitHub repository <https://github.com/Komanawa-Solutions-Ltd/komanawa-nz-depth-to-water>`_.
+The dataset comprises a comprehensive collection of groundwater monitoring sites, spanning a significant temporal range from as early as December 29, 1899, but is overwhelmingly composed of younger data. More than half of the sites and records are measured after the mid-late 2000s, as shown in figure 1.  The cumulative number of sites and records shown by data source is available in the supplementary material and `GitHub repository <https://github.com/Komanawa-Solutions-Ltd/komanawa-nz-depth-to-water>`_.
 
 .. figure:: ../_static/cumulative_n_records.png
    :alt: Cumulative number of records by source
    :align: center
 
-   The growth in the number of sites and records over time
+   Figure 1. The growth in the number of sites and records over time (note sites without a valid date not included in plot)
 
-A statistical summary of the dataset is provided below.
+A statistical summary of the dataset is provided in Table 2.
 
 .. include:: ../tables/full_dataset_summary.rst
 
@@ -159,7 +159,7 @@ This contrasts the New Zealand Geotechnical Database (NZGD) which has many fewer
 Otago Regional Council (ORC) provided data for fewer monitoring sites, but with a high average reading count per site.
 These differences showcase the variability in both monitoring intensity and data abundance across different data providers.
 Collectively, these statistics underscore the heterogeneity of groundwater monitoring across regions, influenced by the varying goals (e.g. geotechnical investigations), methodologies, and resources.
-Further summary statistics of the data by the source are provided below.
+Further summary statistics of the data by the source are provided in Table 3.
 
 
 .. include:: ../tables/by_source_summary.rst
@@ -190,21 +190,21 @@ It is important to note that while consistent processing approaches were applied
 Spatial Distribution
 --------------------------
 
-To better describe the spatial extent of the dataset we have plotted the number of monitoring sites within 5 km of each monitoring site and the distance to the nearest groundwater monitoring site. The figures below show the results of these analyses below. In addition, these figures and geotiffs of the data coverage are available in the supplementary material and the Github repository.
+To better describe the spatial extent of the dataset we have plotted the number of monitoring sites within 5 km of each monitoring site and the distance to the nearest groundwater monitoring site. Figures 2 and 3 show the results of these analyses. In addition, these figures and geotiffs of the data coverage are available in the supplementary material and the Github repository.
 
 
 .. figure:: ../_static/data_coverage_1both.png
    :alt: Distance to the nearest groundwater monitoring site
    :align: center
 
-   Distance to the nearest groundwater monitoring site
+   Figure 2. Distance to the nearest groundwater monitoring site
 
 
 .. figure:: ../_static/npoins_nearest_5000_mboth.png
    :alt: Number of monitoring sites within 5 km
    :align: center
 
-   Number of monitoring sites within 5 km
+   Figure 3. Number of monitoring sites within 5 km
 
 
 .. raw:: latex
@@ -229,7 +229,7 @@ Statistical Description of Depth to Water Variance
 Overview depth to water variance statistics for shallow wells are provided below in line with the goals of the Future Coasts Aotearoa research programme. More detailed statistics for the broader dataset are provided in the supplementary material and available on the `GitHub repository <https://github.com/Komanawa-Solutions-Ltd/komanawa-nz-depth-to-water>`_.
 
 In depth category 1 (shallow wells, < 10m), the depth to water exhibits little variation in the shallower bins, suggesting proximity to boundary condition and/or high (unconfined) storage coefficients.
-As depth increases, the variability in the depth to water also increases, as evidenced by larger ranges and higher standard deviations. For instance, in depth category 1, the standard deviation median increases from 0.077 in the <0.1 m bin to 0.48 in the 5 to 10 m bin. Notably, the skewness suggests a tendency towards shallower water levels in many records, despite the large possible ranges in depth. This is observed in the negative skewness values that become more pronounced with increasing depth, indicating that while the average water levels are deeper, there are frequent instances of shallower depths. The kurtosis values further highlight the presence of notable outliers and extreme values. As depth increases, the kurtosis medians remain high or increase, indicating distributions with frequent extreme values. This pattern is consistent across other depth categories, where deeper bins show increased kurtosis, suggesting that extreme values become more apparent with depth. Overall, the statistics indicate that as depth increases, not only does the variability in water levels increase, but the presence of outliers and extreme values also becomes more pronounced. Finally, the statistics suggest the data is skewed and leptokurtic, meaning the data is not normally distributed and the mean and standard deviation are not necessarily representative of the data.
+As depth increases, the variability in the depth to water also increases, as evidenced by larger ranges and higher standard deviations. For instance, in depth category 1, the standard deviation median increases from 0.077 in the <0.1 m bin to 0.48 in the 5 to 10 m bin. Notably, the skewness suggests a tendency towards shallower water levels in many records, despite the large possible ranges in depth. This is observed in the negative skewness values that become more pronounced with increasing depth, indicating that while the average water levels are deeper, there are frequent instances of shallower depths. The kurtosis values further highlight the presence of notable outliers and extreme values. As depth increases, the kurtosis medians remain high or increase, indicating distributions with frequent extreme values. This pattern is consistent across other depth categories, where deeper bins show increased kurtosis, suggesting that extreme values become more apparent with depth. Overall, the statistics indicate that as depth increases, not only does the variability in water levels increase, but the presence of outliers and extreme values also becomes more pronounced. Finally, the statistics suggest the data is skewed and leptokurtic, meaning the data is not normally distributed and the mean and standard deviation are not necessarily representative of the data (refer Table 4).
 
 .. include:: ../tables/stats_depth_cat_1.rst
 

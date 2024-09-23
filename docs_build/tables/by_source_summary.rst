@@ -1,6 +1,6 @@
 .. table Data summary by source generated from PycharmProjects/komanawa-nz-depth-to-water/build_dataset/update_technial_note/data_stats.py :
 
-.. rubric:: Data summary by source
+.. rubric:: Table 3 Data summary by source
 
 ========  ==========  ============  ==========  =========  ==================  =================
 Source      N bores   Start date    End date       N obs.    Mean n obs./site    N sites 1+ obs.

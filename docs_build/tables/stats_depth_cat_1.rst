@@ -1,6 +1,6 @@
 .. table Summary of variance and skewness for well depth < 10m or unknown depth and max dtw < 10m generated from PycharmProjects/komanawa-nz-depth-to-water/build_dataset/update_technial_note/data_stats.py :
 
-.. rubric:: Summary of variance and skewness for well depth < 10m or unknown depth and max dtw < 10m
+.. rubric:: Table 4 Summary of variance and skewness for well depth < 10m or unknown depth and max dtw < 10m
 
 ==============  ============  =============  =============  ==============  =================  ================  ========  =========
 Mean DTW Bin      Std median  Std range        Skew median  Skew range        Kurtosis median  Kurtosis range      N obs.    N sites
