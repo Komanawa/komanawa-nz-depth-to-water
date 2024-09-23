@@ -13,7 +13,7 @@ Patrick Durney :sup:`1*`, Evelyn Charlesworth :sup:`1`, and Matt Dumont :sup:`1`
 Abstract
 ==========
 
-Groundwater level data is a fundamental dataset for water resource and shallow water table hazard investigation, but the data are often held in a fragmented and diverse array of databases across New Zealand. Here we describe a national New Zealand dataset of depth to water and groundwater elevation data. This dataset has been made publicly available via a python package and is available at https://github.com/Komanawa-Solutions-Ltd/komanawa-nz-depth-to-water.  We have provided a pathway for future updates and for users to identify and flag issues with the dataset. We hope this dataset can save future researchers time and effort in collecting and processing groundwater level data and can be used for a range of applied science and research activities.
+Groundwater level data is a fundamental dataset for water resource and shallow water table hazard investigation, but the data are often held in a fragmented and diverse array of databases across New Zealand. Here we describe a national New Zealand dataset of depth to water and groundwater elevation data. This dataset is available on request from the corresponding author.  We have provided a pathway for future updates and for users to identify and flag issues with the dataset. We hope this dataset can save future researchers time and effort in collecting and processing groundwater level data and can be used for a range of applied science and research activities.
 
 Introduction and Background
 =============================
@@ -72,7 +72,7 @@ The systematic approach to the data processing was as follows:
 - Data Standardisation and Transformation
 
     - The data was processed to ensure the presence of both depth-to-water and elevation measurements. In instances where elevation data was absent, LiDAR data (Sourced from the LINZ Data Service and licensed for reuse under the CC BY 4.0 licence) was utilised to ascertain site elevation.
-    - Anomalies such as negative values or readings beyond expected ranges were examined and rectified. Erroneous not an number (NaN) values were also purged from the dataset.
+    - Anomalies such as negative values or readings beyond expected ranges were examined and rectified. Erroneous NaN values were also purged from the dataset.
     - All spatial data were transformed into the NZGD 2000 Transverse Mercator projection and NZVD2016 vertical datum.
     - The data was resampled to a consistent temporal resolution, ergo standardised to daily intervals.
     - The data was checked for any duplicates and these were removed.
@@ -123,7 +123,7 @@ As an example of some of the utility of this dataset, we present some simple sta
 
 - Grouping by Mean DTW:
 
-    - The categories were analysed prescribed with breakpoints of: 0.1, 0.5, 1, 1.5, 2, 3, 5, 10, 15, 20, 30, 50, 75, 100 meters (while these breakpoints are for illustrative purposes only, the shallower categories correspond with infrastructure and building foundations assessed in the Future Coasts Aotearoa research programme).
+    - The categories were analysed prescribed with breakpoints of: 0.1, 0.5, 1, 1.5, 2, 3, 5, 10, 15, 20, 30, 50, 75, 100 metres (while these breakpoints are for illustrative purposes only, the shallower categories correspond with infrastructure and building foundations assessed in the Future Coasts Aotearoa research programme).
     - The data was further grouped by the mean DTW to analyse combined statistics across different groups. This grouping allows for a comparison of water level characteristics across sites with similar mean DTW values.
 
 This structured approach to data analysis supports an overview of the DTW across various sites. By categorising, sub-setting, and computing key statistics, we can identify patterns and traits that are important for assessing groundwater inundation risks at a national scale.
@@ -135,7 +135,7 @@ Results and discussion
 Dataset access
 -----------------
 
-The final dataset is available via a Python package at https://github.com/Komanawa-Solutions-Ltd/komanawa-nz-depth-to-water. The package readme includes installation instructions, usage examples, metadata descriptions, and instructions for contributing and maintaining the dataset.
+The final dataset is available on request via a Python package at https://github.com/Komanawa-Solutions-Ltd/komanawa-nz-depth-to-water, upon completion of the the the Future Coasts Aoteroa research programme the dta will be publicly released. The package readme includes installation instructions, usage examples, metadata descriptions, and instructions for contributing and maintaining the dataset.
 
 Description of Dataset
 -----------------------------------
@@ -268,7 +268,7 @@ Finally we have some specific recommendations that could be undertaken to improv
 Contributing and issues/bugs
 ==============================
 
-We have made every attempt to ensure the quality of the data and code in this repository. However, inevitably, there will be issues with the data or code. If you find an issue, please raise an issue on the GitHub repository https://github.com/Komanawa-Solutions-Ltd/komanawa-nz-depth-to-water/issues. If you would like to contribute to the code or data, please fork the repository and submit a pull request.  While we would like to commit to maintaining this dataset in the future, we are a small team and may not have the resources to do so. If you would like to become a longer term contributor to this dataset, please get in touch.
+We have made every attempt to ensure the quality of the data and code in this repository. However, inevitably, there will be issues with the data or code. If you find an issue, please raise it directly with us. Or following public release by raising an issue on the GitHub repository https://github.com/Komanawa-Solutions-Ltd/komanawa-nz-depth-to-water/issues. If you would like to contribute to the code or data, please fork the repository and submit a pull request.  While we would like to commit to maintaining this dataset in the future, we are a small team and may not have the resources to do so. If you would like to become a longer term contributor to this dataset, please get in touch.
 
 Limitations
 =============
@@ -285,7 +285,7 @@ We are aware of limitations of this work which are listed below:
 
 Acknowledgements
 ==================
-
+We would like to thank the New Zealand Ministry of Business, Innovation and Employment for funding this research through the project "Future Coasts Aotearoa", managed by the National Institute of Water and Atmospheric Research (NIWA), contract C01X2107.
 This work could not have been completed without the support of the Regional Councils, Unitary Authorities, and other scientists who provided us with data and assistance. We would like to acknowledge the Regional Councils and Unitary Authorities, especially their environmental data teams, for providing us with the required data, and for responding to our data requests and subsequent questions. We would like to acknowledge the following people and organisations:
 
 - Freya Green from Auckland Council
