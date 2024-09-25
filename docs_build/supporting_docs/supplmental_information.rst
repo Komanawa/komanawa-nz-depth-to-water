@@ -12,13 +12,13 @@ The following figures show the cumulative number of records and sites over time 
 .. figure:: ../_static/cumulative_n_records_per_source.png
     :align: center
 
-    Figure S1 The growth in the number of records by source over time.
+    The growth in the number of records by source over time.
 
 
 .. figure:: ../_static/cumulative_n_sites_per_source.png
     :align: center
 
-    Figure S2 The growth in the number of sites by source over time.
+    The growth in the number of sites by source over time.
 
 
 
@@ -53,7 +53,7 @@ The following figures show histograms of the mean depth to water, the standard d
 .. figure:: ../_static/cdf_depth_to_water_depth_cat_1.png
     :align: center
 
-    Figure S3 Cumulative probability of depth to water for shallow wells
+    Cumulative probability of depth to water for shallow wells
 
 .. figure:: ../_static/hist_sd_depth_to_water_lt_inf.png
     :align: center
@@ -63,14 +63,14 @@ The following figures show histograms of the mean depth to water, the standard d
 .. figure:: ../_static/hist_sd_depth_to_water_lt_0.5.png
     :align: center
 
-    Figure S4 The mean depth to water, histogram of the standard deviation of depth to water and the cumulative probability of depth to water for all sites where the mean depth to water is less than 0.5 m.
+    The mean depth to water, histogram of the standard deviation of depth to water and the cumulative probability of depth to water for all sites where the mean depth to water is less than 0.5 m.
 
 .. figure:: ../_static/hist_sd_depth_to_water_lt_1.png
     :align: center
 
-    Figure S5 The mean depth to water, histogram of the standard deviation of depth to water and the cumulative probability of depth to water for all sites where the mean depth to water is less than 1 m.
+    The mean depth to water, histogram of the standard deviation of depth to water and the cumulative probability of depth to water for all sites where the mean depth to water is less than 1 m.
 
 .. figure:: ../_static/hist_sd_depth_to_water_lt_2.png
     :align: center
 
-    Figure S6 The mean depth to water, histogram of the standard deviation of depth to water and the cumulative probability of depth to water for all sites where the mean depth to water is less than 2 m.
+    The mean depth to water, histogram of the standard deviation of depth to water and the cumulative probability of depth to water for all sites where the mean depth to water is less than 2 m.

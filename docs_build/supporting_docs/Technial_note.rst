@@ -52,6 +52,7 @@ Alongside the direct requests to regional councils and unitary authorities, data
 
 A brief summary of the data collected from each council is provided in Table 1.
 
+
 .. include:: ../tables/data_provided_summary.rst
 
 
@@ -89,6 +90,7 @@ The systematic approach to the data processing was as follows:
     - Quality control measures, including data and metadata checks, were instituted to uphold accuracy and reliability.
 
 - Storing and Accessing Processed Data
+
     - The processed GWL data and metadata were systematically stored in an HDF5 datastore, facilitating ease of access and analysis.
     - Provisions were made to recalculate and update the stored data as necessary, ensuring the database can remain current and reflective of the most recent submissions.
 
@@ -145,7 +147,7 @@ The dataset comprises a comprehensive collection of groundwater monitoring sites
    :alt: Cumulative number of records by source
    :align: center
 
-   Figure 1. The growth in the number of sites and records over time (note sites without a valid date not included in plot)
+   The growth in the number of sites and records over time (note sites without a valid date not included in plot)
 
 A statistical summary of the dataset is provided in Table 2.
 
@@ -197,14 +199,14 @@ To better describe the spatial extent of the dataset we have plotted the number 
    :alt: Distance to the nearest groundwater monitoring site
    :align: center
 
-   Figure 2. Distance to the nearest groundwater monitoring site
+   Distance to the nearest groundwater monitoring site
 
 
 .. figure:: ../_static/npoins_nearest_5000_mboth.png
    :alt: Number of monitoring sites within 5 km
    :align: center
 
-   Figure 3. Number of monitoring sites within 5 km
+   Number of monitoring sites within 5 km
 
 
 .. raw:: latex
