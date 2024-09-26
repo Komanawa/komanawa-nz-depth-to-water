@@ -137,7 +137,7 @@ Results and discussion
 Dataset access
 -----------------
 
-The final dataset is available on request via a Python package at https://github.com/Komanawa-Solutions-Ltd/komanawa-nz-depth-to-water, upon completion of the the the Future Coasts Aoteroa research programme the dta will be publicly released. The package readme includes installation instructions, usage examples, metadata descriptions, and instructions for contributing and maintaining the dataset.
+The final dataset is available on request via a Python package at https://github.com/Komanawa-Solutions-Ltd/komanawa-nz-depth-to-water, upon completion of the the the Future Coasts Aoteroa research programme the data will be publicly released. The package readme includes installation instructions, usage examples, metadata descriptions, and instructions for contributing and maintaining the dataset.
 
 Description of Dataset
 -----------------------------------
