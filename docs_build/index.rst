@@ -72,4 +72,49 @@ Contributing and issues/bugs
 We have made every attempt to ensure the quality of the data and code in this repository. However, inevitably, there will be issues with the data or code. If you find an issue, please raise an issue on the GitHub repository. If you would like to contribute to the code or data, please fork the repository and submit a pull request.
 
 
-.. include:: tables/Dataset_description.rst
+.. include:: metadata.rst
+
+
+Source key
+====================
+
++------------+--------------------------------------+
+| **Source** | **Full name**                        |
++============+======================================+
+| auk        | Auckland Council                     |
++------------+--------------------------------------+
+| bop        | Bay of Plenty Regional Council       |
++------------+--------------------------------------+
+| gdc        | Gisborne District Council            |
++------------+--------------------------------------+
+| hbrc       | Hawkes Bay Regional Council          |
++------------+--------------------------------------+
+| hrc        | Horizons Regional Council            |
++------------+--------------------------------------+
+| mdc        | Marlborough District Council         |
++------------+--------------------------------------+
+| nrc        | Northland Regional Council           |
++------------+--------------------------------------+
+| ncc        | Nelson City Council                  |
++------------+--------------------------------------+
+| orc        | Otago Regional Council               |
++------------+--------------------------------------+
+| src        | Environment Southland                |
++------------+--------------------------------------+
+| trc        | Taranaki Regional Council            |
++------------+--------------------------------------+
+| tdc        | Tasman District Council              |
++------------+--------------------------------------+
+| tcc        | Tauranga City Council                |
++------------+--------------------------------------+
+| wc         | Waikato Regional Council             |
++------------+--------------------------------------+
+| gwrc       | Greater Wellington Regional Council  |
++------------+--------------------------------------+
+| wcrc       | West Coast Regional Council          |
++------------+--------------------------------------+
+| nzgd       | New Zealand Geotechnical database    |
++------------+--------------------------------------+
+| ecan       | Environment Canterbury               |
++------------+--------------------------------------+
+

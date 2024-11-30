@@ -23,12 +23,13 @@ license = { file = "LICENSE" }
 requires-python = ">=3.11"
 dependencies = [
     "pandas>=2.0.3",
-    "numpy==1.26.4"
+    "numpy==1.26.4",  # todo check with 2.0.0
+    "netCDF4>=1.7.1",
 ]
 
 classifiers = [
     "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License",
+    "License :: OSI Approved :: Modified MIT License",
     "Operating System :: OS Independent",
 ]
 

@@ -1,136 +1,218 @@
 """
 created matt_dumont 
-on: 7/05/24
+on: 11/30/24
 """
-import shutil
-from pathlib import Path
+import tempfile
 from copy import deepcopy
+
 import numpy as np
 import pandas as pd
+from pathlib import Path
+import shutil
 from komanawa.nz_depth_to_water.density_grid import DensityGrid
-
-md_convert_cols = dict(bottom_bottomscreen=3,
-                       dist_mp_to_ground_level=3,
-                       nztm_x=1,
-                       nztm_y=1,
-                       rl_elevation=3,
-                       top_topscreen=3,
-                       well_depth=3,
-                       reading_count=1,
-                       mean_dtw=3,
-                       median_dtw=3,
-                       std_dtw=3,
-                       max_dtw=3,
-                       min_dtw=3,
-                       mean_gwl=3,
-                       median_gwl=3,
-                       std_gwl=3,
-                       max_gwl=3,
-                       min_gwl=3,
-                       )
-wld_convert_cols = dict(depth_to_water_cor=3, depth_to_water=3, gw_elevation=3)
-int_mapper_cols = ('well_name', 'site_name', 'source', 'rl_source', 'ground_level_datum', 'rl_datum')
+import netCDF4 as nc
 
 
-def _convert_to_intmapper(wl_data, metadata, ):
-    mappers = {}
-    for col in int_mapper_cols:
-        temp = set()
-        if col in wl_data.columns:
-            temp.update(set(wl_data[col].unique()))
-        if col in metadata.columns:
-            temp.update(set(metadata[col].unique()))
-        assert len(temp) <= 4294967295, f'{col} has too many unique values'
-        invert_mapper = pd.Series({nm: i for i, nm in enumerate(temp)})
-        mapper = pd.Series({i: nm for i, nm in enumerate(temp)})
-        mappers[col] = mapper
-        if col in wl_data.columns:
-            wl_data[col] = invert_mapper.loc[wl_data[col]].astype(np.uint32).values
-        if col in metadata.columns:
-            metadata[col] = invert_mapper.loc[metadata[col]].astype(np.uint32).values
-    return wl_data, metadata, mappers
+def _get_nc_path():
+    datapath = Path(__file__).parent.joinpath('data', 'nz_depth_to_water.nc')
+    datapath = Path.home().joinpath('Downloads', 'test_nz_dtw.nc')  # todo DADB
+    assert datapath.exists(), f'{datapath} does not exist. should not get here'
+    return datapath
 
 
-def _convert_from_intmapper(wl_data, metadata, mappers):
-    for col, mapper in mappers.items():
-        if col in wl_data.columns:
-            wl_data[col] = mapper.loc[wl_data[col]].values
-        if col in metadata.columns:
-            metadata[col] = mapper.loc[metadata[col]].values
-    return wl_data, metadata
-
-
-def _convert_from_raw_to_int(data, precision):
+def get_nc_dataset(to_path=None, rewrite=False) -> Path:
     """
-    Convert the data to integers with the given precision.
-    :param data: pd.series, the data to convert.
-    :param precision: int, the number of decimal places to keep.
-    :return: pd.DataFrame, the converted data.
+    Get the netcdf dataset for the depth to water data for New Zealand.
+
+    :param to_path: str, optional, the path to save the dataset to. if None then saves to temp directory and returns the dataset path. This behavior prevents overwriting the original data.
+    :return: nc.Dataset
     """
-    out = deepcopy(data)
-    out = (out * 10 ** precision).round()
-    out[np.isnan(out)] = -9999999
-    out[np.isinf(out) & (out < 0)] = -9899999
-    out[np.isinf(out) & (out > 0)] = -9799999
-    out = out.astype(np.int32)
-    return out
+    path = _get_nc_path()
+    if to_path is None:
+        to_path = Path(tempfile.mkdtemp()).joinpath(path.name)
+    to_path = Path(to_path)
+
+    if to_path.exists() and not rewrite:
+        return to_path
+    else:
+        to_path.unlink(missing_ok=True)
+        shutil.copy(path, to_path)
+    return to_path
 
 
-def _convert_from_int_to_raw(data, precision):
+_meta_keys = ('site_name',
+              'rl_source', 'source', 'nztm_x', 'nztm_y', 'reading_count', 'mean_gwl', 'median_gwl', 'std_gwl',
+              'max_gwl',
+              'min_gwl',
+              'well_depth', 'bottom_bottomscreen', 'dist_mp_to_ground_level', 'rl_elevation', 'top_topscreen',
+              'mean_dtw',
+              'median_dtw', 'std_dtw', 'max_dtw', 'min_dtw', 'start_date', 'end_date')
+_wl_keys = (
+    'wl_site_name', 'wl_date', 'wl_gw_elevation', 'wl_depth_to_water', 'wl_depth_to_water_cor', 'wl_water_elev_flag',
+    'wl_dtw_flag',
+
+)
+
+
+def _make_metadata_table_from_nc(savepath):
+    outstr = []
+    t0 = 'Water Level Data column meanings/metadata'
+    t2 = 'Metadata column meanings/metadata'
+    for t, keys in zip((t0, t2), (_wl_keys, _meta_keys)):
+        outstr.append(t)
+        outstr.append('=' * len(t))
+        outstr.append('')
+        outstr.append('')
+        with nc.Dataset(_get_nc_path(), 'r') as ds:
+            for k in keys:
+                outstr.append(f'* {k}')
+                for attr in ds[k].ncattrs():
+                    if attr == 'flag_values':
+                        outstr.append(f'    * {attr}:')
+                        flag_meanings = ds[k].flag_meanings.split(' ')
+                        flag_values = ds[k].flag_values
+                        assert len(flag_meanings) == len(
+                            flag_values), f'{k} flag values and meanings are not the same length'
+                        for i, v in enumerate(ds[k].flag_values):
+                            outstr.append(f'        * {v}: {flag_meanings[i]}')
+
+                    elif attr == 'flag_meanings':
+                        pass
+                    else:
+                        outstr.append(f'    * {attr}: {ds[k].getncattr(attr)}')
+                outstr.append('')
+        outstr.append('')
+        outstr.append('')
+
+    outstr = '\n'.join(outstr)
+    with open(savepath, 'w') as f:
+        f.write(outstr)
+
+
+def get_metdata_keys() -> list:
     """
-    Convert the data from integers to floats.
-    :param data: pd.series, the data to convert.
-    :param precision: int, the number of decimal places to keep.
-    :return: pd.DataFrame, the converted data.
+    Get the metadata keys for the depth to water data for New Zealand.
+
+    :return: list, the metadata keys.
     """
-    out = deepcopy(data)
-    out = out.astype(np.float32)
-    out[out == -9999999] = np.nan
-    out[out == -9899999] = -np.inf
-    out[out == -9799999] = np.inf
-    out = out / 10 ** precision
-    return out
+    return list(_meta_keys)
 
 
-def get_nz_depth_to_water():
+def get_water_level_keys() -> list:
     """
-    load the depth to water data and metadata and return them as pandas DataFrames.
+    Get the water level keys for the depth to water data for New Zealand.
 
-    :return: water_level_data, metadata
+    :return: list, the water level keys.
     """
-
-    datadir = Path(__file__).parent.joinpath('data')
-    assert datadir.exists(), f'{datadir} does not exist. should not get here'
-    wl_paths = datadir.glob('depth_to_water_*.hdf')
-    water_level_data = []
-    for wl_path in wl_paths:
-        water_level_data.append(pd.read_hdf(wl_path, key='depth_to_water'))
-    water_level_data = pd.concat(water_level_data).reset_index(drop=True)
-    metadata = pd.read_hdf(datadir.joinpath('metadata.hdf'), key='metadata')
-    mappers = {}
-    for col in int_mapper_cols:
-        mapper_path = datadir.joinpath(f'int_mapper_{col}.hdf')
-        mappers[col] = pd.read_hdf(mapper_path, key=col)
-
-    # undo the integer mapping
-    water_level_data, metadata = _convert_from_intmapper(water_level_data, metadata, mappers=mappers)
-
-    # undo the integer conversion
-    for col, precision in wld_convert_cols.items():
-        water_level_data[col] = _convert_from_int_to_raw(water_level_data[col], precision)
-    for col, precision in md_convert_cols.items():
-        metadata[col] = _convert_from_int_to_raw(metadata[col], precision)
-    return water_level_data, metadata
+    return list(_wl_keys)
 
 
-def export_dtw_to_csv(outdir):
+def get_metadata_string(key) -> str:
+    """
+    Get the metadata string for a key.
+
+    :param key: str, the key to get the metadata string for. or None (dataset metadata)
+    :return: str, the metadata string.
+    """
+    with nc.Dataset(get_nc_dataset(), 'r') as ds:
+        if key is not None:
+            assert key in ds.variables, f'{key} not in {ds.variables.keys()}'
+            return ds[key].__str__()
+        else:
+            return ds.__str__()
+
+
+def nz_depth_to_water_dump() -> str:
+    """
+    Get the metadata string for the depth to water data for New Zealand. equivalent to ncDump
+
+    :return: str, the metadata string.
+    """
+    out_str = []
+    with nc.Dataset(get_nc_dataset(), 'r') as ds:
+        out_str.append(ds.__str__())
+        for d in ds.dimensions.keys():
+            out_str.append(ds.dimensions[d].__str__())
+        for key in ds.variables.keys():
+            out_str.append(ds[key].__str__())
+    return '\n\n'.join(out_str)
+
+acceptable_sources = (
+    'auk', 'bop', 'gdc', 'hbrc', 'hrc', 'mdc', 'nrc', 'ncc', 'orc', 'src', 'trc', 'tdc', 'wrc', 'gwrc', 'wcrc',
+    'nzgd', 'tcc', 'ecan')
+
+def get_nz_depth_to_water(source=None, convert_wl_dtw_flag=False, wl_water_elev_flag=False) -> (
+        pd.DataFrame, pd.DataFrame):
+    """
+    Get the depth to water data for New Zealand.
+
+    acceptable_sources = (None, 'auk', 'bop', 'gdc', 'hbrc', 'hrc', 'mdc', 'nrc', 'ncc', 'orc', 'src', 'trc', 'tdc', 'wc', 'gwrc', 'wcrc', 'nzgd', 'ecan')
+
+    :param source: None (get all data), str (get data from a specific source)
+    :return: metadata: pd.DataFrame, water_level_data: pd.DataFrame
+    """
+    with (nc.Dataset(_get_nc_path(), 'r') as ds):
+        if source is not None:
+            assert source in acceptable_sources, f'{source} not in {acceptable_sources}'
+            source_mapper = {v: k for k, v in zip(ds['source'].flag_values, ds['source'].flag_meanings.split(' '))}
+            meta_index = np.where(ds.variables['source'][:] == source_mapper[source])[0]
+            assert len(meta_index) == len(set(meta_index)), 'duplicate meta index'
+            reading_index = np.where(np.isin(ds['wl_site_name'][:], meta_index))[0]
+            assert len(reading_index) == len(set(reading_index)), 'duplicate reading index'
+        else:
+            meta_index = np.arange(ds.dimensions['site'].size)
+            reading_index = np.arange(ds.dimensions['reading'].size)
+
+        outmetadata = pd.DataFrame(index=meta_index, columns=_meta_keys)
+        out_water_level_data = pd.DataFrame(index=reading_index, columns=_wl_keys)
+        for keyset, outdf, use_index in zip((_meta_keys, _wl_keys), (outmetadata, out_water_level_data),
+                                            (meta_index, reading_index)):
+            pass
+
+            for k in keyset:
+                print(k)
+                if k == 'wl_site_name':
+                    all_sites = np.array(ds['site_name'][:])
+                    outdf[k] = all_sites[np.array(ds['wl_site_name'][use_index]).astype(int)]
+                elif hasattr(ds[k], 'flag_values'):
+                    skip_possible_convert = (
+                            (k == 'wl_dtw_flag' and not convert_wl_dtw_flag)
+                            or (k == 'wl_water_elev_flag' and not wl_water_elev_flag))
+                    if skip_possible_convert:
+                        td = np.array(ds[k][use_index])
+                    else:
+                        mapper = {k: v for k, v in zip(ds[k].flag_values, ds[k].flag_meanings.split(' '))}
+                        td = [mapper[v] for v in ds[k][use_index]]
+                    outdf[k] = td
+
+                elif 'days since' in ds[k].units:
+                    temp = np.array(ds[k][use_index]).astype(float)
+                    temp[np.isclose(temp, ds[k].missing_value)] = np.nan
+                    idx = np.isfinite(temp)
+                    out = np.full(temp.shape, pd.NaT)
+                    out[idx] = pd.to_datetime(ds[k].origin) + pd.to_timedelta(deepcopy(temp[idx]), unit='D')
+                    outdf[k] = out
+                else:
+                    ds[k].set_auto_scale(False)
+                    outdf[k] = np.array(ds[k][use_index])
+                    if k in ['nztm_x', 'nztm_y', 'reading_count']:
+                        outdf[k] = outdf[k].astype(int)
+                    elif k not in ['site_name']:
+                        outdf.loc[np.isclose(outdf[k], ds[k].missing_value), k] = np.nan
+                        outdf[k] *= ds[k].scale_factor + ds[k].add_offset
+    return outmetadata, out_water_level_data,
+
+
+def export_dtw_to_csv(outdir, source=None):
     """
     Export the depth to water data to csv files.
 
+    :param outdir: str, the directory to save the csv files to.
+    :param source: None (get all data), str (get data from a specific source) see get_nz_depth_to_water for acceptable sources.
     :return:
     """
     print(f'Preparing to export data to csvs in {outdir}')
-    water_level_data, metadata = get_nz_depth_to_water()
+    metadata, water_level_data = get_nz_depth_to_water(source)
     outdir = Path(outdir)
     outdir.mkdir(exist_ok=True)
     water_level_data.to_csv(outdir.joinpath('water_level_data.csv'))
@@ -138,9 +220,9 @@ def export_dtw_to_csv(outdir):
     print(f'Exported data to {outdir}')
 
 
-def get_npoint_in_radius(distlim):
+def get_npoint_in_radius(distlim) -> (np.ndarray, np.ndarray, np.ndarray):
     """
-    Get the number of points within [1|5|10|20] km of each point in the model grid.
+    Get the number of points within [1000 | 5000 | 10,000 | 20,000] m of each point in the model grid.
 
     :param distlim: int, the distance limit in meters.
     :return: ndatapoints, mx, my (np.ndarray, np.ndarray, np.ndarray) gridded output
@@ -155,7 +237,7 @@ def get_npoint_in_radius(distlim):
     return data, mx, my
 
 
-def get_distance_to_nearest(npoints):
+def get_distance_to_nearest(npoints) -> (np.ndarray, np.ndarray, np.ndarray):
     """
     Get the distance to the nearest [1|10] points for each point in the model grid.
 
@@ -183,3 +265,4 @@ def copy_geotifs(outdir):
     tifs = datadir.glob('*.tif')
     for tif in tifs:
         shutil.copy(tif, outdir.joinpath(tif.name))
+    print(f'Copied geotifs to {outdir}')
