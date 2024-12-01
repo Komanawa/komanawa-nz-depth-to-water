@@ -380,7 +380,6 @@ def make_nc_metadata_vars(ds, metadata):
         out = dict(long_name=f'{key.split("_")[0]} depth to ground water level', units='m',
                    description='calculated from this dataset for ease of use',
                    convention='positive values (+) are below the ground surface, negative values (-) are above the ground surface (artesian)',
-                   # todo +- convention for dtw, check with PD
                    scale_factor=10 ** -max_precision,
                    add_offset=0,
                    missing_value=np.iinfo(np.int16).min,
