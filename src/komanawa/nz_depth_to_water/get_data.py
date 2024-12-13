@@ -15,7 +15,7 @@ import netCDF4 as nc
 
 def _get_nc_path():
     datapath = Path(__file__).parent.joinpath('data', 'nz_depth_to_water.nc')
-    datapath = Path.home().joinpath('Downloads', 'test_nz_dtw.nc')  # todo DADB
+    datapath = Path(__file__).parent.joinpath('data/nz_dtw_draft.nc')  # todo DADB
     assert datapath.exists(), f'{datapath} does not exist. should not get here'
     return datapath
 

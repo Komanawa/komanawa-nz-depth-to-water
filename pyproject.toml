@@ -9,7 +9,7 @@ include-package-data = true
 where = ["src/"]
 
 [tool.setuptools.package-data]
-"*" = ["*.hdf"]
+"*" = ["*.nc"]
 
 [project]
 name = "komanawa-nz-depth-to-water"

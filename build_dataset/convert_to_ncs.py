@@ -61,7 +61,18 @@ def convert_from_hdf_to_nc(savepath):
     water_level_data = water_level_data.drop_duplicates(['site_name', 'date'])
     print('wl_data rm dups', water_level_data.shape)
 
+    # remove nelson stuff
+    bad_sites = list(metadata.index[metadata.source=='ncc'])
+    bad_sites.remove('Nelson_at_Trafalgar_Park_ncc')
+
+    metadata = metadata.drop(bad_sites)
+    water_level_data = water_level_data[~water_level_data.site_name.isin(bad_sites)]
+
+    assert not np.isin(bad_sites, metadata.index).any(), 'bad sites still in metadata'
+    assert not np.isin(bad_sites, water_level_data.site_name).any(), 'bad sites still in water_level_data'
+
     check_dataset(water_level_data, metadata)
+
 
     with nc.Dataset(savepath, 'w') as ds:
         make_nc_file(ds, water_level_data, metadata)
@@ -437,7 +448,7 @@ def make_nc_metadata_vars(ds, metadata):
 
 if (__name__ == '__main__'):
     # todo move into repo!!!
-    convert_from_hdf_to_nc(Path.home().joinpath('Downloads', 'test_nz_dtw.nc'))
+    convert_from_hdf_to_nc(Path(__file__).parents[1].joinpath('src/komanawa/nz_depth_to_water/data/nz_dtw_draft.nc'))
     from komanawa.nz_depth_to_water.get_data import _make_metadata_table_from_nc
 
     _make_metadata_table_from_nc(proj_root.parents[1].joinpath('docs_build/metadata.rst'))

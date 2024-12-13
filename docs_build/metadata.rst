@@ -63,17 +63,6 @@ Water Level Data column meanings/metadata
         * 6: other
     * units: None
 
-* wl_water_elev_flag
-    * long_name: water elevation quality flag
-    * flag_values:
-        * 0: no_data
-        * 1: logger
-        * 2: manual
-        * 3: static_oneoff
-        * 4: aquifer_test
-        * 5: other
-    * units: None
-
 
 
 Metadata column meanings/metadata
@@ -116,11 +105,11 @@ Metadata column meanings/metadata
         * 25: canterbury/canterbury_2020-2023
         * 26: canterbury/banks-peninsula_2023
         * 27: otago/coastal-catchments_2021
-        * 28: nelson/top-of-the-south-flood_2022
-        * 29: wellington/hutt-city_2021
-        * 30: canterbury/selwyn_2023
-        * 31: canterbury/canterbury_2018-2019
-        * 32: wellington/upper-hutt-city_2021
+        * 28: wellington/hutt-city_2021
+        * 29: canterbury/selwyn_2023
+        * 30: canterbury/canterbury_2018-2019
+        * 31: wellington/upper-hutt-city_2021
+        * 32: nelson/top-of-the-south-flood_2022
         * 33: wellington/wellington-city_2019-2020
         * 34: tasman/tasman-bay_2022
         * 35: tasman/abel-tasman-and-golden-bay_2023
@@ -165,14 +154,14 @@ Metadata column meanings/metadata
         * 6: auk
         * 7: nzgd
         * 8: nrc
-        * 9: ncc
-        * 10: bop
-        * 11: wcrc
-        * 12: ecan
-        * 13: orc
-        * 14: gdc
-        * 15: trc
-        * 16: tdc
+        * 9: bop
+        * 10: wcrc
+        * 11: ecan
+        * 12: orc
+        * 13: gdc
+        * 14: trc
+        * 15: tdc
+        * 16: ncc
         * 17: hbrc
         * 18: tcc
     * missing_value: 0
