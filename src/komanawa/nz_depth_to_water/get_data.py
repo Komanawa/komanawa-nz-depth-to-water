@@ -162,7 +162,6 @@ def get_nz_depth_to_water(source=None, convert_wl_dtw_flag=False, wl_water_elev_
         else:
             meta_index = np.arange(ds.dimensions['site'].size)
             reading_index = np.arange(ds.dimensions['reading'].size)
-
         outmetadata = pd.DataFrame(index=meta_index, columns=_meta_keys)
         out_water_level_data = pd.DataFrame(index=reading_index, columns=_wl_keys)
         for keyset, outdf, use_index in zip((_meta_keys, _wl_keys), (outmetadata, out_water_level_data),
@@ -170,7 +169,6 @@ def get_nz_depth_to_water(source=None, convert_wl_dtw_flag=False, wl_water_elev_
             pass
 
             for k in keyset:
-                print(k)
                 if k == 'wl_site_name':
                     all_sites = np.array(ds['site_name'][:])
                     outdf[k] = all_sites[np.array(ds['wl_site_name'][use_index]).astype(int)]
@@ -200,6 +198,7 @@ def get_nz_depth_to_water(source=None, convert_wl_dtw_flag=False, wl_water_elev_
                     elif k not in ['site_name']:
                         outdf.loc[np.isclose(outdf[k], ds[k].missing_value), k] = np.nan
                         outdf[k] *= ds[k].scale_factor + ds[k].add_offset
+    outmetadata = outmetadata.set_index('site_name',drop=True)
     return outmetadata, out_water_level_data,
 
 
