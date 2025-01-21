@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Kо̄manawa NZ Depth to Water &#8212; komanawa-nz-depth-to-water v0.1.3 documentation</title>
+    <title>Water Level Data column meanings/metadata &#8212; komanawa-nz-depth-to-water v0.1.3 documentation</title>
   
   
   
@@ -39,10 +39,9 @@
     <script src="_static/documentation_options.js?v=cdbf2762"></script>
     <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'index';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'metadata';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="komanawa.nz_depth_to_water" href="autoapi/komanawa/nz_depth_to_water/index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -109,7 +108,7 @@
 
   
 
-<a class="navbar-brand logo" href="#">
+<a class="navbar-brand logo" href="index.html">
   
   
   
@@ -343,7 +342,33 @@
           <div class="bd-content">
             <div class="bd-article-container">
               
-              <div class="bd-header-article d-print-none"></div>
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">Water Level...</li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
               
               
               
@@ -351,94 +376,8 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="kmanawa-nz-depth-to-water">
-<h1>Kо̄manawa NZ Depth to Water<a class="headerlink" href="#kmanawa-nz-depth-to-water" title="Link to this heading">#</a></h1>
-<p>a small repo that holds:</p>
-<ul class="simple">
-<li><p>The code used to produce a New Zealand wide depth to water dataset</p></li>
-<li><p>Versioning of and access to the dataset</p></li>
-<li><p>Full documentation of the dataset</p></li>
-</ul>
-<dl class="field-list simple">
-<dt class="field-odd">Author<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Patrick Durney, Matt Dumont, Evelyn Charlesworth</p>
-</dd>
-<dt class="field-even">copyright<span class="colon">:</span></dt>
-<dd class="field-even"><p>2024, Kо̄manawa Solutions Ltd.</p>
-</dd>
-<dt class="field-odd">Version<span class="colon">:</span></dt>
-<dd class="field-odd"><p>v0.1.3</p>
-</dd>
-<dt class="field-even">Date<span class="colon">:</span></dt>
-<dd class="field-even"><p>Jan 22, 2025</p>
-</dd>
-<dt class="field-odd">Changelog entry<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Initial release of the dataset</p>
-</dd>
-<dt class="field-even">Data access<span class="colon">:</span></dt>
-<dd class="field-even"><p>Access the data via this package.</p>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Data Last updated<span class="colon">:</span></dt>
-<dd class="field-odd"><p>2024-09-19</p>
-</dd>
-</dl>
-<div class="toctree-wrapper compound">
-</div>
-<section id="limitations">
-<h2>Limitations<a class="headerlink" href="#limitations" title="Link to this heading">#</a></h2>
-<p>While we have made every attempt to ensure the quality of the data and code in this repository, we do not provide any explicit or implicit guarantee of the datasets produced or methods provided here. In addition, by proving the base data, the data providers have also not provided any explicit or implicit guarantee of these data. Data errors will inevitably exist in the dataset, and we encourage users to report these errors to us so that we can correct them.</p>
-<p>We are aware of limitations of this work which are listed below:</p>
-<ul class="simple">
-<li><p>We have made a series of assumptions during the data processing; these are discussed above.</p></li>
-<li><p>The data is only as good as the data provided by the councils; we did not have the resources nor all the information to fully quality-assure the data.</p></li>
-<li><p>For many sites, the elevation of the measuring point is unknown. We have used LiDAR data to estimate the elevation of the ground, but this will likely reduce the accuracy of the groundwater elevation depending on the resolution of the LiDAR data.</p></li>
-<li><p>We have assumed that the depth to water from ground level is correct, and therefore any errors in the depth to water data will be reflected in the groundwater elevation values.</p></li>
-<li><p>There may be unknown regional data handling/reporting peculiarities that we were not aware of that could affect the data.</p></li>
-<li><p>The dataset is not exhaustive, and there may be more data available that has not been included in this dataset.</p></li>
-</ul>
-<p>Additionally the dataset is a static snapshot of the available data as of September 2023. Datasets typically are updated and improved over time, and this dataset may not reflect the best available data at the time of use. We encourage users to check the original data sources for the most up-to-date information. Should differences be found between this dataset and data accessed more recently from the original sources, this dataset should be assumed to be incorrect. We encourage users to report these differences via the issues page on the GitHub repository. We make no guarantee to address these issues; however open issues will serve a purpose by informing other users of potential issues with the dataset.</p>
-<p>Before using the data please ensure you fully understand these limitation, the limitations of the original data sources, and check for any potential issues raised by other users in the issues page of the GitHub repository.</p>
-</section>
-<section id="data-access-via-python">
-<h2>Data Access via Python<a class="headerlink" href="#data-access-via-python" title="Link to this heading">#</a></h2>
-<section id="installation">
-<h3>Installation<a class="headerlink" href="#installation" title="Link to this heading">#</a></h3>
-<p><strong>Option 1 - pip</strong></p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>git+https://github.com/Komanawa-Solutions-Ltd/komanawa-nz-depth-to-water.git
-</pre></div>
-</div>
-<p><strong>Option 2 - clone the repository</strong></p>
-<p>clone the repository and install the package as you see fit.</p>
-<p><strong>Option 3 - Fork the repository</strong></p>
-<p>Fork the repository and modify and use the code as you see fit.  If you have any improvements, please submit a pull request.</p>
-</section>
-<section id="code-example">
-<h3>Code Example<a class="headerlink" href="#code-example" title="Link to this heading">#</a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">komanawa.nz_depth_to_water</span> <span class="kn">import</span> <span class="n">get_nz_depth_to_water</span>
-<span class="n">water_level_data</span><span class="p">,</span> <span class="n">metadata</span> <span class="o">=</span> <span class="n">get_nz_depth_to_water</span><span class="p">()</span>
-</pre></div>
-</div>
-</section>
-<section id="export-the-data-to-a-csv-files">
-<h3>Export the data to a csv files<a class="headerlink" href="#export-the-data-to-a-csv-files" title="Link to this heading">#</a></h3>
-<p>To export the data to a csv file, you can use the following code (assuming you have installed the package):</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>komanawa.nz_depth_to_water.export_to_csv
-</pre></div>
-</div>
-<p>Alternatively, you can specify a folder to export the data:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>komanawa.nz_depth_to_water.export_to_csv<span class="w"> </span>/path/to/folder
-</pre></div>
-</div>
-</section>
-</section>
-<section id="contributing-and-issues-bugs">
-<h2>Contributing and issues/bugs<a class="headerlink" href="#contributing-and-issues-bugs" title="Link to this heading">#</a></h2>
-<p>We have made every attempt to ensure the quality of the data and code in this repository. However, inevitably, there will be issues with the data or code. If you find an issue, please raise an issue on the GitHub repository. If you would like to contribute to the code or data, please fork the repository and submit a pull request.</p>
-</section>
-<section id="water-level-data-column-meanings-metadata">
-<h2>Water Level Data column meanings/metadata<a class="headerlink" href="#water-level-data-column-meanings-metadata" title="Link to this heading">#</a></h2>
+  <section id="water-level-data-column-meanings-metadata">
+<h1>Water Level Data column meanings/metadata<a class="headerlink" href="#water-level-data-column-meanings-metadata" title="Link to this heading">#</a></h1>
 <ul class="simple">
 <li><dl class="simple">
 <dt>wl_site_name</dt><dd><ul>
@@ -542,7 +481,7 @@
 </ul>
 </section>
 <section id="metadata-column-meanings-metadata">
-<h2>Metadata column meanings/metadata<a class="headerlink" href="#metadata-column-meanings-metadata" title="Link to this heading">#</a></h2>
+<h1>Metadata column meanings/metadata<a class="headerlink" href="#metadata-column-meanings-metadata" title="Link to this heading">#</a></h1>
 <ul class="simple">
 <li><dl class="simple">
 <dt>site_name</dt><dd><ul>
@@ -907,74 +846,6 @@
 </li>
 </ul>
 </section>
-<section id="source-key">
-<h2>Source key<a class="headerlink" href="#source-key" title="Link to this heading">#</a></h2>
-<div class="pst-scrollable-table-container"><table class="table">
-<thead>
-<tr class="row-odd"><th class="head"><p><strong>Source</strong></p></th>
-<th class="head"><p><strong>Full name</strong></p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>auk</p></td>
-<td><p>Auckland Council</p></td>
-</tr>
-<tr class="row-odd"><td><p>bop</p></td>
-<td><p>Bay of Plenty Regional Council</p></td>
-</tr>
-<tr class="row-even"><td><p>gdc</p></td>
-<td><p>Gisborne District Council</p></td>
-</tr>
-<tr class="row-odd"><td><p>hbrc</p></td>
-<td><p>Hawkes Bay Regional Council</p></td>
-</tr>
-<tr class="row-even"><td><p>hrc</p></td>
-<td><p>Horizons Regional Council</p></td>
-</tr>
-<tr class="row-odd"><td><p>mdc</p></td>
-<td><p>Marlborough District Council</p></td>
-</tr>
-<tr class="row-even"><td><p>nrc</p></td>
-<td><p>Northland Regional Council</p></td>
-</tr>
-<tr class="row-odd"><td><p>ncc</p></td>
-<td><p>Nelson City Council</p></td>
-</tr>
-<tr class="row-even"><td><p>orc</p></td>
-<td><p>Otago Regional Council</p></td>
-</tr>
-<tr class="row-odd"><td><p>src</p></td>
-<td><p>Environment Southland</p></td>
-</tr>
-<tr class="row-even"><td><p>trc</p></td>
-<td><p>Taranaki Regional Council</p></td>
-</tr>
-<tr class="row-odd"><td><p>tdc</p></td>
-<td><p>Tasman District Council</p></td>
-</tr>
-<tr class="row-even"><td><p>tcc</p></td>
-<td><p>Tauranga City Council</p></td>
-</tr>
-<tr class="row-odd"><td><p>wc</p></td>
-<td><p>Waikato Regional Council</p></td>
-</tr>
-<tr class="row-even"><td><p>gwrc</p></td>
-<td><p>Greater Wellington Regional Council</p></td>
-</tr>
-<tr class="row-odd"><td><p>wcrc</p></td>
-<td><p>West Coast Regional Council</p></td>
-</tr>
-<tr class="row-even"><td><p>nzgd</p></td>
-<td><p>New Zealand Geotechnical database</p></td>
-</tr>
-<tr class="row-odd"><td><p>ecan</p></td>
-<td><p>Environment Canterbury</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-</section>
-</section>
 
 
                 </article>
@@ -986,15 +857,6 @@
                 <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
-    <a class="right-next"
-       href="autoapi/komanawa/nz_depth_to_water/index.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">komanawa.nz_depth_to_water</p>
-      </div>
-      <i class="fa-solid fa-angle-right"></i>
-    </a>
 </div>
                 </footer>
               
@@ -1013,18 +875,10 @@
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#limitations">Limitations</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-access-via-python">Data Access via Python</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#code-example">Code Example</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#export-the-data-to-a-csv-files">Export the data to a csv files</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Water Level Data column meanings/metadata</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#metadata-column-meanings-metadata">Metadata column meanings/metadata</a></li>
 </ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributing-and-issues-bugs">Contributing and issues/bugs</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#water-level-data-column-meanings-metadata">Water Level Data column meanings/metadata</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#metadata-column-meanings-metadata">Metadata column meanings/metadata</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#source-key">Source key</a></li>
-</ul>
+
   </nav></div>
 
 </div></div>

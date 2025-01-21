@@ -255,6 +255,7 @@ def get_distance_to_nearest(npoints) -> (np.ndarray, np.ndarray, np.ndarray):
 def copy_geotifs(outdir):
     """
     copy the geotifs of distance to nearest [1|10] points and number of points within [1|5|10|20] km to the outdir.
+
     :param outdir: directory to copy the geotifs to.
     :return:
     """

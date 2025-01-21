@@ -27,10 +27,12 @@ Functions
 Module Contents
 ---------------
 
-.. py:function:: export_dtw_to_csv(outdir)
+.. py:function:: export_dtw_to_csv(outdir, source=None)
 
    Export the depth to water data to csv files.
 
+   :param outdir: str, the directory to save the csv files to.
+   :param source: None (get all data), str (get data from a specific source) see get_nz_depth_to_water for acceptable sources.
    :return:
 
 

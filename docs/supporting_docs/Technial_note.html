@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Developing a National Depth to Water Dataset for New Zealand &#8212; komanawa-nz-depth-to-water v0.1.1 documentation</title>
+    <title>Developing a National Groundwater Level Dataset for New Zealand &#8212; komanawa-nz-depth-to-water v0.1.3 documentation</title>
   
   
   
@@ -36,7 +36,7 @@
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341" />
   <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=3ee479438cf8b5e0d341"></script>
 
-    <script src="../_static/documentation_options.js?v=5e3f2911"></script>
+    <script src="../_static/documentation_options.js?v=cdbf2762"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'supporting_docs/Technial_note';</script>
@@ -122,7 +122,7 @@
     <script>document.write(`<img src="" class="logo__image only-dark" alt=""/>`);</script>
   
   
-    <p class="title logo__title">Nz-Depth-To-Water v0.1.1 Overview</p>
+    <p class="title logo__title">Nz-Depth-To-Water v0.1.3 Overview</p>
   
 </a></div>
     
@@ -375,30 +375,30 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="developing-a-national-depth-to-water-dataset-for-new-zealand">
-<h1>Developing a National Depth to Water Dataset for New Zealand<a class="headerlink" href="#developing-a-national-depth-to-water-dataset-for-new-zealand" title="Link to this heading">#</a></h1>
+  <section id="developing-a-national-groundwater-level-dataset-for-new-zealand">
+<h1>Developing a National Groundwater Level Dataset for New Zealand<a class="headerlink" href="#developing-a-national-groundwater-level-dataset-for-new-zealand" title="Link to this heading">#</a></h1>
 <p>Patrick Durney <sup>1*</sup>, Evelyn Charlesworth <sup>1</sup>, and Matt Dumont <sup>1</sup></p>
 <p><sup>1</sup> Komanawa Solutions Ltd, Christchurch, New Zealand
 <sup>*</sup> Corresponding author</p>
 <section id="abstract">
 <h2>Abstract<a class="headerlink" href="#abstract" title="Link to this heading">#</a></h2>
-<p>Groundwater level data is a fundamental dataset for water resource and shallow water table hazard investigation, but the data are often held in a fragmented and diverse array of databases across New Zealand. Here we describe a National New Zealand dataset of depth to water and groundwater elevation data. This dataset has been made publicly available via a python package and is available at <a class="github reference external" href="https://github.com/Komanawa-Solutions-Ltd/komanawa-nz-depth-to-water">Komanawa-Solutions-Ltd/komanawa-nz-depth-to-water</a>.  We have provided a pathway for future updates and for users to identify and flag issues with the dataset. We hope this dataset can save future researchers time and effort in collecting and processing groundwater level data and can be used for a range of applied science and research activities.</p>
+<p>Groundwater level data is a fundamental dataset for water resource and shallow water table hazard investigation, but the data are often held in a fragmented and diverse array of databases across New Zealand. Here we describe a national New Zealand dataset of depth to water and groundwater elevation data. This dataset is available on request from the corresponding author.  We have provided a pathway for future updates and for users to identify and flag issues with the dataset. We hope this dataset can save future researchers time and effort in collecting and processing groundwater level data and can be used for a range of applied science and research activities.</p>
 </section>
 <section id="introduction-and-background">
 <h2>Introduction and Background<a class="headerlink" href="#introduction-and-background" title="Link to this heading">#</a></h2>
-<p>Groundwater level data are a key input for a broad range of water resource investigation, management and research activities. However, access to national groundwater level data in New Zealand is challenging, because they are held in the various Regional Council and Unitary Authority databases and in the New Zealand Geotechnical Database under a wide array of data architectures. The quality of the data and associated metadata varies significantly; in some instances, the data are subject to rigorous quality assurance processes and include accurate measurement point elevations and spatial coordinates. In other instances, the data comprise single readings of unknown quality with no information on the measurement point elevation or even the depth of the well.</p>
-<p>Future Coasts Aotearoa is a NIWA led Ministry of Business, Innovation and Employment (MBIE) Endeavour research programme that combines expertise in Indigenous culture, economics, social, and physical sciences to tackle the issue of sea-level rise in coastal lowland communities by enhancing the evidence base for sea-level rise risks. Key groundwater science outputs include: developing impact and adaptation thresholds for shallow groundwater hazards, producing a national coastal groundwater hazard exposure assessment and national and local models of seawater intrusion and water table shoaling.</p>
-<p>This technical note outlines the data collected and the methods used to produce and analyse a national depth to water dataset for New Zealand for the Future Coasts research programme. The dataset will be valuable for a range of applied science and research activities.</p>
+<p>Groundwater level data are a key input for a broad range of water resource investigation, management and research activities (e.g., testing global models, Reinecke et al., 2020; state of environment reporting, WMO, 2022). However, access to national groundwater level data in New Zealand is challenging because they are held in various Regional Council and Unitary Authority databases and in the New Zealand Geotechnical Database under a wide array of data architectures. Despite the National Environmental Monitoring Standards (Baddock, 2019), the quality of the data and associated metadata varies significantly; in some instances, the data are subject to rigorous quality assurance processes and include accurate measurement point elevations and spatial coordinates. In other instances, the data comprise single readings of unknown quality with no information on the measurement point elevation or even the depth of the well. These issues with groundwater, and environmental data more generally, are well known (Parliamentary Commissioner for the Environment, 2019). While some standardised datasets are maintained (e.g., the National Groundwater Monitoring Programme; GNS, 2022), they do not cover the full breadth of groundwater monitoring data and often have a specific focus, i.e., national state of the environment reporting or shallow geotechnical investigations.</p>
+<p>This technical note outlines the data collected and the methods used to produce and analyse a national groundwater level/depth to water dataset for New Zealand for the Future Coasts Aotearoa research programme. Future Coasts Aotearoa is a National Institute of Water and Atmospheric Research-led Ministry of Business, Innovation and Employment Endeavour research programme (contract C01X2107). The programme combines expertise in Indigenous culture, economics, social, and physical sciences to tackle the issue of sea-level rise in coastal lowland communities by enhancing the evidence base for sea-level rise risks. Key groundwater science outputs include developing impact and adaptation thresholds for shallow groundwater hazards, producing a national coastal groundwater hazard exposure assessment, and creating national and local models of seawater intrusion and water table shoaling (NIWA, 2022). The dataset developed for this research covers all readily accessible public domain groundwater level data and will likely also be valuable for a range of other applied science and research activities.</p>
 </section>
 <section id="methodology">
 <h2>Methodology<a class="headerlink" href="#methodology" title="Link to this heading">#</a></h2>
 <section id="data-gathering-scope">
 <h3>Data gathering scope<a class="headerlink" href="#data-gathering-scope" title="Link to this heading">#</a></h3>
-<p>Groundwater level data can be grouped into discrete measurements and regular monitoring. The former include spot values recorded during/immediately after well drilling, measurements taken during geotechnical investigations (e.g. Cone Penetration Tests, geotechnical bores and trial pits) and piezometric surveys undertaken by Regional Councils. The latter includes manual and instrument-based regular data collection programmes undertaken by Regional Councils, Unitary Authorities and some Territorial Authorities. Groundwater level readings are also collected in accordance with consent conditions for certain activities. However, these data are typically stored in reports and spreadsheets within large file sets within records management systems operated by Regional Council and Unitary Authority consenting and compliance teams. Consequently, they are not accessible without significant investment of resources. Our data collection was therefore constrained to discrete readings and regular monitoring data within Regional Council and Unitary Authority groundwater level databases and the New Zealand Geotechnical Database.</p>
+<p>Groundwater level data can be grouped into discrete measurements and regular/continuous monitoring. The former includes discrete values recorded during or immediately after well drilling, measurements taken during geotechnical investigations (e.g., Cone Penetration Tests, geotechnical bores and trial pits) and piezometric surveys undertaken by Regional Councils. The latter includes manual and instrument-based (recorder) regular data collection programmes undertaken by Regional Councils, Unitary Authorities and some Territorial Authorities. Additional groundwater readings are taken to meet consent conditions for certain activities. However, these data are often stored in reports and spreadsheets as large file sets. These are kept in records management systems run by Regional Council and Unitary Authority consenting and compliance teams. As a result, accessing these data requires significant resources. Our data collection was therefore constrained to discrete readings and regular monitoring data within Regional Council and Unitary Authority groundwater level databases and the New Zealand Geotechnical Database.</p>
 </section>
 <section id="data-request">
 <h3>Data Request<a class="headerlink" href="#data-request" title="Link to this heading">#</a></h3>
-<p>Data requests were sent out to 16 New Zealand councils in March 2023; this included all 11 regional councils and five unitary authorities. A further data request was sent out to all of the District and City Councils. However, this did not uncover any new data beyond that provided by Tauranga City Council, and most recommended we contact the Regional Council in their area instead. The data request sought all groundwater level data; this included sites additional to any NGMP monitoring sites, as well as any discontinuous or sporadic readings. The aim was to collect as much national data as possible, including sites with a single reading. We were open to receiving both groundwater depth and/or groundwater elevation data on the proviso that it was specified to reduce data processing error. We also requested standard metadata for each site, with a minimum metadata requirement of:</p>
+<p>Data requests were sent out to 16 New Zealand councils in March 2023; this included all 11 regional councils and five unitary authorities. A further data request was sent out to all of the Territorial Authorities. While we received responses from multiple sources, only Tauranga City Council (TCC) provided new data beyond what we already had. Most respondents recommended we contact the Regional Council in their area for further information.
+The data request sought all historical groundwater level data; this included sites additional to any State of the Environment and National Groundwater Monitoring Programme monitoring sites, as well as any discrete readings. The aim was to collect as much national data as possible, including sites with a single reading. We were open to receiving both groundwater depth and/or groundwater level/elevation (GWL) data, on the proviso that it was specified to reduce data processing error. We also requested standard metadata for each site, with a minimum metadata requirement of:</p>
 <ul class="simple">
 <li><p>Unique site identifier (e.g. site number)</p></li>
 <li><p>Grid reference in NZTM</p></li>
@@ -406,13 +406,14 @@
 </ul>
 <p>Our preferred metadata requirements included:</p>
 <ul class="simple">
-<li><p>Screen top &amp; bottom depth</p></li>
+<li><p>Screen top &amp; bottom depth (or casing depth where applicable)</p></li>
 <li><p>Surveyed elevation of the ground surface at the measuring point</p></li>
 <li><p>The distance between the measuring point and the general ground surface.</p></li>
 </ul>
 <p>The data were received in Excel and csv formats, with various degrees of completeness and processing. Data management and storage varied from council to council, hence processing to standardise the data was required.</p>
-<p>Alongside the direct requests to regional councils and unitary authorities, data was also pulled from Tethys (<a class="github reference external" href="https://github.com/tethys-ts">tethys-ts</a>), which allows Hilltop based data to be accessed and downloaded. For councils that had relevant and up-to-date data in Hilltop, it meant we did not have to rely on a response to the direct request, and saved time in the data collection and processing.</p>
-<p>A brief summary of the data collected from each council is provided below.</p>
+<p>Alongside the direct requests to regional councils and unitary authorities, data was also pulled from Tethys (Kittridge, 2023), which allows Hilltop based data to be accessed and downloaded. For councils that had relevant and up-to-date data in Hilltop (Hills Labs, 2024), it meant we did not have to rely on a response to the direct request, and saved time in the data collection and processing.</p>
+<p>A brief summary of the data collected from each council is provided in Table 1.</p>
+<p class="rubric">Table 1 Data collected by source</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Council</p></th>
@@ -420,59 +421,59 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Auckland Council</p></td>
-<td><p>Continuous monitoring data downloaded from online data portal. Extra data sent through in spreadsheets, including historical/closed sites. Metadata sent through in a separate spreadsheet.</p></td>
+<tr class="row-even"><td><p>Auckland Council (ARC)</p></td>
+<td><p>Continuous monitoring data downloaded from online data portal. Discrete data sent through in spreadsheets, including historical/closed sites. Metadata sent through in a separate spreadsheet.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Bay of Plenty Regional Council</p></td>
-<td><p>Continuous monitoring data and static groundwater levels sent through in separate spreadsheets. Metadata sent through in two different spreadsheets</p></td>
+<tr class="row-odd"><td><p>Bay of Plenty Regional Council (BOPRC)</p></td>
+<td><p>Continuous monitoring data and discrete groundwater levels sent through in separate spreadsheets. Metadata sent through in two different spreadsheets</p></td>
 </tr>
-<tr class="row-even"><td><p>Environment Canterbury</p></td>
-<td><p>Continuous and spot readings sent through in spreadsheets based on monitoring data. Metadata sent through in a separate spreadsheet, with supporting supplementary information.</p></td>
+<tr class="row-even"><td><p>Environment Canterbury (ECAN)</p></td>
+<td><p>Continuous and discrete groundwater levels sent through in spreadsheets. Metadata sent through in a separate spreadsheet, with supporting supplementary information.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Gisborne District Council</p></td>
-<td><p>Available groundwater level data downloaded from Tethys. Separate data sent through from council, including discrete data and other data classified by the council as poor quality, with disclaimers surrounding the data.</p></td>
+<tr class="row-odd"><td><p>Gisborne District Council (GDC)</p></td>
+<td><p>Available groundwater level data downloaded from Tethys. Separate data sent through from council, including discrete groundwater levels and other data classified by the council as poor quality.</p></td>
 </tr>
-<tr class="row-even"><td><p>Hawkes Bay Regional Council</p></td>
-<td><p>Available groundwater level data downloaded from Tethys. Manual dip data, any sites missing from Tethys and extra metadata sent through from the council.</p></td>
+<tr class="row-even"><td><p>Hawkes Bay Regional Council (HBRC)</p></td>
+<td><p>Available groundwater level data downloaded from Tethys. Discrete groundwater levels, any sites missing from Tethys and extra metadata sent through from the council.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Horizons Regional Council</p></td>
-<td><p>Available groundwater level data downloaded from Tethys. Manual dip data and spot readings sent through by council, as well as metadata for the sites sent through. Any wells missing from Tethys were also provided.</p></td>
+<tr class="row-odd"><td><p>Horizons Regional Council (HRC)</p></td>
+<td><p>Available groundwater level data downloaded from Tethys. Discrete groundwater levels sent through by council, as well as metadata for the sites sent through. Any sites missing from Tethys were also provided.</p></td>
 </tr>
-<tr class="row-even"><td><p>Marlborough District Council</p></td>
-<td><p>Available groundwater level data downloaded from Tethys. Only data sent through from the council was in the form of a shapefile which contained static water level from drilling and some well metadata.</p></td>
+<tr class="row-even"><td><p>Marlborough District Council (MDC)</p></td>
+<td><p>Available groundwater level data downloaded from Tethys. Only data sent through from the council was in the form of a shapefile which contained discrete water level from drilling and some site metadata.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Nelson City Council</p></td>
-<td><p>Any spot readings were sent through by the council with  metadata included.</p></td>
+<tr class="row-odd"><td><p>Nelson City Council (NCC)</p></td>
+<td><p>Any spot readings were sent through by the council with metadata included.</p></td>
 </tr>
-<tr class="row-even"><td><p>Northland Regional Council</p></td>
-<td><p>Available groundwater level data downloaded from Tethys. Any spot readings were sent through by the council with  metadata included.</p></td>
+<tr class="row-even"><td><p>Northland Regional Council (NRC)</p></td>
+<td><p>Available groundwater level data downloaded from Tethys. Any discrete readings were sent through by the council with  metadata included.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Otago Regional Council</p></td>
-<td><p>Continuous and spot readings sent through in spreadsheets, along with metadata in separate spreadsheets.</p></td>
+<tr class="row-odd"><td><p>Otago Regional Council (ORC)</p></td>
+<td><p>Continuous and discrete readings sent through in spreadsheets, along with metadata in separate spreadsheets.</p></td>
 </tr>
-<tr class="row-even"><td><p>Environment Southland</p></td>
-<td><p>Available groundwater level data downloaded from Tethys. Dip readings sent through by the council, as well as any extra metadata and comments on the sites.</p></td>
+<tr class="row-even"><td><p>Environment Southland (ES)</p></td>
+<td><p>Available groundwater level data downloaded from Tethys. Discrete readings sent through by the council, as well as any extra metadata and comments on the sites.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Taranaki Regional Council</p></td>
+<tr class="row-odd"><td><p>Taranaki Regional Council (TRC)</p></td>
 <td><p>Available groundwater level data downloaded from Tethys. Any missing sites sent through by the council, including both continuous and discrete data. Metadata also sent through.</p></td>
 </tr>
-<tr class="row-even"><td><p>Tasman District Council</p></td>
-<td><p>Available groundwater level data downloaded from Tethys. Any spot readings were sent through by the council with  metadata included.</p></td>
+<tr class="row-even"><td><p>Tasman District Council (TDC)</p></td>
+<td><p>Available groundwater level data downloaded from Tethys. Any discrete readings were sent through by the council with metadata included.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Tauranga City Council</p></td>
+<tr class="row-odd"><td><p>Tauranga City Council (TCC)</p></td>
 <td><p>Continuous readings sent through in spreadsheets, along with metadata in separate spreadsheets.</p></td>
 </tr>
-<tr class="row-even"><td><p>Waikato Regional Council</p></td>
-<td><p>All continuous groundwater level data sent through by the council, with a separate csv file for each well. Static readings for each well sent through, as well as metadata.</p></td>
+<tr class="row-even"><td><p>Waikato Regional Council (WRC)</p></td>
+<td><p>All continuous groundwater level data sent through by the council, with a separate csv file for each site. Discrete readings for each site sent through, as well as metadata.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Wellington Regional Council</p></td>
-<td><p>Available groundwater level data downloaded from Tethys. Static readings with metadata sent through by the council as a spreadsheet and shapefile</p></td>
+<tr class="row-odd"><td><p>Wellington Regional Council (GWRC)</p></td>
+<td><p>Available groundwater level data downloaded from Tethys. Discrete readings with metadata sent through by the council as a spreadsheet and shapefile</p></td>
 </tr>
-<tr class="row-even"><td><p>West Coast Regional Council</p></td>
-<td><p>Continuous and static groundwater level data sent through by the council, as well as metadata.</p></td>
+<tr class="row-even"><td><p>West Coast Regional Council (WCRC)</p></td>
+<td><p>Continuous and discrete groundwater level data sent through by the council, as well as metadata.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Other: NZ Geotechnical database</p></td>
-<td><p>Continuous and static groundwater levels data sent through by NZGD, as well as associated metadata. These data were requested directly from Tonkin &amp; Taylor which maintains the NZGD.</p></td>
+<tr class="row-odd"><td><p>Other: NZ Geotechnical database (NZGD)</p></td>
+<td><p>Continuous and discrete groundwater levels data sent through by NZGD, as well as associated metadata. These data were requested directly from Tonkin &amp; Taylor which maintains the NZGD.</p></td>
 </tr>
 </tbody>
 </table>
@@ -482,135 +483,124 @@
 <h3>Data Processing<a class="headerlink" href="#data-processing" title="Link to this heading">#</a></h3>
 <p>The data was processed using Python. The scripts used to process the data are available on GitHub; these are open source, and we encourage others to use and adapt them for their own purposes, as well as flag any issues or areas of improvement.</p>
 <p>The systematic approach to the data processing was as follows:</p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>Ingestion and Preliminary Cleaning</dt><dd><ul>
+<ul>
+<li><p>Ingestion and Preliminary Cleaning</p>
+<blockquote>
+<div><ul class="simple">
 <li><p>Individual scripts were developed for each council to cater to the unique formats of the datasets provided.</p></li>
 <li><p>GWL data, alongside metadata, were ingested from two primary sources: direct council submissions and the Tethys platform, accessed via a Python API call.</p></li>
 <li><p>Preliminary cleaning involved standardising data formats, renaming columns for consistency, and excising superfluous columns.</p></li>
 </ul>
-</dd>
-</dl>
+</div></blockquote>
 </li>
-<li><dl class="simple">
-<dt>Data Standardisation and Transformation</dt><dd><ul>
-<li><p>The data was processed to ensure the presence of both depth-to-water and elevation measurements. In instances where elevation data was absent, LiDAR data was utilised to ascertain site elevation.</p></li>
-<li><p>Anomalies such as negative values or readings beyond expected ranges were meticulously examined and rectified. Erroneous NaN values were also purged from the dataset.</p></li>
+<li><p>Data Standardisation and Transformation</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>The data was processed to ensure the presence of both depth-to-water and elevation measurements. In instances where elevation data was absent, LiDAR data (Sourced from the LINZ Data Service and licensed for reuse under the CC BY 4.0 licence) was utilised to ascertain site elevation.</p></li>
+<li><p>Anomalies such as negative values or readings beyond expected ranges were examined and rectified. Erroneous NaN values were also purged from the dataset.</p></li>
 <li><p>All spatial data were transformed into the NZGD 2000 Transverse Mercator projection and NZVD2016 vertical datum.</p></li>
 <li><p>The data was resampled to a consistent temporal resolution, ergo standardised to daily intervals.</p></li>
 <li><p>The data was checked for any duplicates and these were removed.</p></li>
 </ul>
-</dd>
-</dl>
+</div></blockquote>
 </li>
-<li><dl class="simple">
-<dt>Metadata Synthesis and Alignment</dt><dd><ul>
+<li><p>Metadata Synthesis and Alignment</p>
+<blockquote>
+<div><ul class="simple">
 <li><p>Metadata processing paralleled the data cleaning steps, with additional emphasis on ensuring alignment between site names in the metadata and the GWL data.</p></li>
 <li><p>The metadata schema encapsulated a comprehensive array of fields, ranging from well names and depths to spatial coordinates and screening details.</p></li>
-<li><p>Groundwater elevations were meticulously derived from ground elevation plus collar height (where available) minus depth to water, except for instances where councils provided elevations in NZVD2016.</p></li>
+<li><p>Groundwater elevations were derived from ground elevation plus collar height (where available) minus depth to water, except for instances where councils provided elevations in NZVD2016.</p></li>
 </ul>
-</dd>
-</dl>
+</div></blockquote>
 </li>
-<li><dl class="simple">
-<dt>Data Aggregation and Quality Assurance</dt><dd><ul>
+<li><p>Data Aggregation and Quality Assurance</p>
+<blockquote>
+<div><ul class="simple">
 <li><p>The processed data from various sources were coalesced into a singular dataset. This aggregation involved strategic merging and deduplication, governed by predefined rules to ensure data integrity.</p></li>
 <li><p>Quality control measures, including data and metadata checks, were instituted to uphold accuracy and reliability.</p></li>
 </ul>
-</dd>
-</dl>
+</div></blockquote>
 </li>
-<li><dl class="simple">
-<dt>Storing and Accessing Processed Data</dt><dd><ul>
-<li><p>The culminated GWL data and metadata were systematically stored in an HDF5 store, facilitating ease of access and analysis.</p></li>
+<li><p>Storing and Accessing Processed Data</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>The processed GWL data and metadata were systematically stored in an HDF5 datastore, facilitating ease of access and analysis.</p></li>
 <li><p>Provisions were made to recalculate and update the stored data as necessary, ensuring the database can remain current and reflective of the most recent submissions.</p></li>
 </ul>
-</dd>
-</dl>
+</div></blockquote>
 </li>
-<li><dl class="simple">
-<dt>Assumptions and Usage Considerations</dt><dd><ul>
+<li><p>Assumptions and Usage Considerations</p>
+<blockquote>
+<div><ul class="simple">
 <li><p>A fundamental assumption is that depth-to-groundwater measurements below the ground surface are positive, with negative readings indicative of artesian conditions. This necessitated sign adjustments and validation against council records.</p></li>
 <li><p>In cases where well depth information was unavailable, wells were presumed shallow rather than being excluded from the dataset; however the well depth is still flagged as a NaN value.</p></li>
-<li><p>Specific regional peculiarities, such as the assumed + 100 m offset for coastal groundwater elevations provided by the Otago Regional Council, were duly considered and adjusted.</p></li>
-<li><p>For wells where the maximum depth to water exceeded the reported well depth, an assumption was made that the well depth equaled the maximum depth to water plus an additional 3 metres.</p></li>
+<li><p>Specific regional peculiarities, such as the assumed + 100 m offset for coastal groundwater elevations provided by the Otago Regional Council, were corrected to NZVD2016.</p></li>
+<li><p>For wells where the maximum depth to water exceeded the reported well depth, an assumption was made that the well depth equalled the maximum depth to water plus an additional 3 metres.</p></li>
 </ul>
-</dd>
-</dl>
+</div></blockquote>
 </li>
 </ul>
 </section>
 <section id="statistical-analysis-of-water-table-variation">
 <h3>Statistical Analysis of Water Table Variation<a class="headerlink" href="#statistical-analysis-of-water-table-variation" title="Link to this heading">#</a></h3>
-<p>The National Depth to Water Dataset was complied to produce maps of steady-state depth to water (DTW) at a national scale, aiding in the identification of areas at risk of groundwater inundation for the Future Coasts Aotearoa research programme. Simple statistical analyses were performed to uncover any prominent traits and generally describe the data. The steps were:</p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>Categorization by Depth:</dt><dd><ul>
-<li><dl class="simple">
-<dt>The dataset was divided into three depth categories:</dt><dd><ul>
-<li><p>Category 1: Sites with DTW less than 10 meters.</p></li>
-<li><p>Category 2: Sites with DTW between 10 and 30 meters.</p></li>
-<li><p>Category 3: Sites with DTW greater than 30 meters.</p></li>
+<p>As previously noted, this National Depth to Water Dataset was compiled to support the Future Coasts Aotearoa research programme, where it is used following additional processing to produce maps of steady-state depth to water (DTW) probability at a national scale. The ultimate goal is the identification of areas at risk of groundwater inundation under relative sea-level rise. As noted, the dataset is also available for other uses, and we encourage researchers to use the dataset for a wide range of applications.
+As an example of some of the utility of this dataset, we present some simple statistical analyses below to uncover any prominent traits and generally describe the data. The steps were:</p>
+<ul>
+<li><p>Categorisation by Depth. The dataset was divided into three depth categories:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Category 1: Sites with depths less than 10 meters.</p></li>
+<li><p>Category 2: Sites with depths between 10 and 30 meters.</p></li>
+<li><p>Category 3: Sites with depths greater than 30 meters.</p></li>
 </ul>
-</dd>
-</dl>
+</div></blockquote>
 </li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>Sub-setting by Number of Readings:</dt><dd><ul>
+<li><p>Sub-setting by Number of Readings:</p>
+<blockquote>
+<div><ul class="simple">
 <li><p>Only sites with more than 30 readings were included. This threshold was chosen as a rule of thumb to ensure a reliable calculation of the standard deviation.</p></li>
 </ul>
-</dd>
-</dl>
+</div></blockquote>
 </li>
-<li><dl class="simple">
-<dt>Statistical Calculations:</dt><dd><ul>
-<li><dl class="simple">
-<dt>For each site in the subset, the following statistical measures were computed:</dt><dd><ul>
+<li><p>Statistical Calculations. For each site in the subset, the following statistical measures were computed:</p>
+<blockquote>
+<div><ul class="simple">
 <li><p>Mean: The average depth to water.</p></li>
 <li><p>Standard Deviation: A measure of the variation in water levels.</p></li>
 <li><p>Minimum: The lowest recorded water level.</p></li>
 <li><p>Maximum: The highest recorded water level.</p></li>
 </ul>
-</dd>
-</dl>
+</div></blockquote>
 </li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>Grouping by Mean DTW:</dt><dd><ul>
-<li><p>The categories were prescribed with breakpoints of: 0.1, 0.5, 1, 1.5, 2, 3, 5, 10, 15, 20, 30, 50, 75, 100 meters</p></li>
+<li><p>Grouping by Mean DTW:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>The categories were analysed prescribed with breakpoints of: 0.1, 0.5, 1, 1.5, 2, 3, 5, 10, 15, 20, 30, 50, 75, 100 metres (while these breakpoints are for illustrative purposes only, the shallower categories correspond with infrastructure and building foundations assessed in the Future Coasts Aotearoa research programme).</p></li>
 <li><p>The data was further grouped by the mean DTW to analyse combined statistics across different groups. This grouping allows for a comparison of water level characteristics across sites with similar mean DTW values.</p></li>
 </ul>
-</dd>
-</dl>
+</div></blockquote>
 </li>
 </ul>
-<p>This structured approach to data analysis supports a comprehensive understanding of the DTW across various sites. By categorising, sub-setting, and computing key statistics, we can identify patterns and traits that are crucial for assessing groundwater inundation risks at a national scale.</p>
+<p>This structured approach to data analysis supports an overview of the DTW across various sites. By categorising, sub-setting, and computing key statistics, we can identify patterns and traits that are important for assessing groundwater inundation risks at a national scale.</p>
 </section>
 </section>
 <section id="results-and-discussion">
 <h2>Results and discussion<a class="headerlink" href="#results-and-discussion" title="Link to this heading">#</a></h2>
 <section id="dataset-access">
 <h3>Dataset access<a class="headerlink" href="#dataset-access" title="Link to this heading">#</a></h3>
-<p>The final dataset is available via a Python package at <a class="github reference external" href="https://github.com/Komanawa-Solutions-Ltd/komanawa-nz-depth-to-water">Komanawa-Solutions-Ltd/komanawa-nz-depth-to-water</a>. The package readme includes installation instructions, usage examples, metadata descriptions, and instructions for contributing and maintaining the dataset.</p>
+<p>The final dataset is available on request via a Python package at <a class="github reference external" href="https://github.com/Komanawa-Solutions-Ltd/komanawa-nz-depth-to-water">Komanawa-Solutions-Ltd/komanawa-nz-depth-to-water</a>, upon completion of the the the Future Coasts Aoteroa research programme the data will be publicly released. The package readme includes installation instructions, usage examples, metadata descriptions, and instructions for contributing and maintaining the dataset.</p>
 </section>
 <section id="description-of-dataset">
 <h3>Description of Dataset<a class="headerlink" href="#description-of-dataset" title="Link to this heading">#</a></h3>
-<p>The dataset comprises a comprehensive collection of groundwater monitoring sites, spanning a significant temporal range from as early as December 29, 1899, but is overwhelmingly composed of younger data. More than half of the sites and records are measured after the mid-late 2000s, as shown in the figure below.  The cumulative number of sites and records shown by data source is available in the supplementary material and <a class="reference external" href="https://github.com/Komanawa-Solutions-Ltd/komanawa-nz-depth-to-water">GitHub repository</a>.</p>
+<p>The dataset comprises a comprehensive collection of groundwater monitoring sites, spanning a significant temporal range from as early as December 29, 1899, but is overwhelmingly composed of younger data. More than half of the sites and records are measured after the mid-late 2000s, as shown in figure 1.  The cumulative number of sites and records shown by data source is available in the supplementary material and <a class="reference external" href="https://github.com/Komanawa-Solutions-Ltd/komanawa-nz-depth-to-water">GitHub repository</a>.</p>
 <figure class="align-center" id="id2">
 <img alt="Cumulative number of records by source" src="../_images/cumulative_n_records.png" />
 <figcaption>
-<p><span class="caption-text">The growth in the number of sites and records over time</span><a class="headerlink" href="#id2" title="Link to this image">#</a></p>
+<p><span class="caption-text">The growth in the number of sites and records over time (note sites without a valid date not included in plot)</span><a class="headerlink" href="#id2" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<p>A statistical summary of the dataset is provided below.</p>
-<p class="rubric">Overview of the dataset</p>
+<p>A statistical summary of the dataset is provided in Table 2.</p>
+<p class="rubric">Table 2 Overview of the dataset</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Metric</p></th>
@@ -618,10 +608,10 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>N sites</p></td>
+<tr class="row-even"><td><p>Number of sites</p></td>
 <td><p>113,526</p></td>
 </tr>
-<tr class="row-odd"><td><p>N obs.</p></td>
+<tr class="row-odd"><td><p>Number of obs.</p></td>
 <td><p>5,691,851</p></td>
 </tr>
 <tr class="row-even"><td><p>Start date</p></td>
@@ -633,10 +623,10 @@
 <tr class="row-even"><td><p>Mean n obs./site</p></td>
 <td><p>51.29</p></td>
 </tr>
-<tr class="row-odd"><td><p>N sites with only one obs.</p></td>
+<tr class="row-odd"><td><p>Number of sites with only one obs.</p></td>
 <td><p>94,110</p></td>
 </tr>
-<tr class="row-even"><td><p>N sites &lt; 10 obs.</p></td>
+<tr class="row-even"><td><p>Number of sites &lt; 10 obs.</p></td>
 <td><p>102,282</p></td>
 </tr>
 </tbody>
@@ -646,10 +636,10 @@
 Notably, Environment Canterbury (ECan) stands out with the highest number of observations.
 This contrasts the New Zealand Geotechnical Database (NZGD) which has many fewer observations per site (frequently &lt;= 2 readings/site).
 Otago Regional Council (ORC) provided data for fewer monitoring sites, but with a high average reading count per site.
-These variations highlight the diversity of monitoring efforts and data densities across different sources.
+These differences showcase the variability in both monitoring intensity and data abundance across different data providers.
 Collectively, these statistics underscore the heterogeneity of groundwater monitoring across regions, influenced by the varying goals (e.g. geotechnical investigations), methodologies, and resources.
-Further summary statistics of the data by the source are provided below.</p>
-<p class="rubric">Data summary by source</p>
+Further summary statistics of the data by the source are provided in Table 3.</p>
+<p class="rubric">Table 3 Data summary by source</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Source</p></th>
@@ -662,7 +652,7 @@ Further summary statistics of the data by the source are provided below.</p>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>AUK</p></td>
+<tr class="row-even"><td><p>ARC</p></td>
 <td><p>265</p></td>
 <td><p>1970-03-16</p></td>
 <td><p>2023-05-01</p></td>
@@ -810,9 +800,32 @@ Further summary statistics of the data by the source are provided below.</p>
 </table>
 </div>
 </section>
+<section id="uncertainties-in-the-dataset">
+<h3>Uncertainties in the dataset<a class="headerlink" href="#uncertainties-in-the-dataset" title="Link to this heading">#</a></h3>
+<p>As with any dataset, there are uncertainties in the data. The primary sources of uncertainty in this dataset are:</p>
+<blockquote>
+<div><ul>
+<li><p>Measurement method variability: Different councils and organisations use different methods to measure groundwater levels, which can lead to variability in the data.</p></li>
+<li><p>Data quality inconsistencies: The quality of data and associated metadata varies significantly across different sources. This includes:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Potential data entry errors from original sources</p></li>
+<li><p>Varying quality of metadata provided with the data</p></li>
+<li><p>Differences in measurement data quality (e.g., data collected by drillers immediately upon well completion versus as part of a regular monitoring programme)</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>LiDAR data resolution: The resolution of the LiDAR data used to estimate ground elevation can vary, potentially affecting the accuracy of the estimated groundwater elevation. While LiDAR provides a consistent baseline, its inherent uncertainties contribute to the overall uncertainty in depth to water calculations.</p></li>
+<li><p>Temporal resolution variability: The frequency of measurements may differ across data sources, affecting the dataset’s ability to capture short-term fluctuations or seasonal patterns consistently across regions.</p></li>
+<li><p>Data gaps: Some data may be missing, leading to gaps in the dataset. No interpolation was used to fill these gaps, preserving the original data integrity but potentially limiting coverage in some areas.</p></li>
+<li><p>Measurement point accuracy: The accuracy of well locations and measurement point elevations can vary, contributing to uncertainties in the final depth to water calculations.</p></li>
+</ul>
+</div></blockquote>
+<p>It is important to note that while consistent processing approaches were applied to moderate the dataset as much as possible, the original data quality from council sources could not be altered or corrected. The use of LiDAR data as a baseline for elevation helps to provide consistency, but users should be aware of these inherent uncertainties when applying the data to specific use cases.</p>
+</section>
 <section id="spatial-distribution">
 <h3>Spatial Distribution<a class="headerlink" href="#spatial-distribution" title="Link to this heading">#</a></h3>
-<p>To better describe the spatial extent of the dataset we have plotted the number of monitoring points within 5 km of each monitoring point and the distance to the nearest groundwater monitoring site. The figures below show the results of these analyses below. In addition, these figures and geotiffs of the data coverage are available in the supplementary material and the Github repository.</p>
+<p>To better describe the spatial extent of the dataset we have plotted the number of monitoring sites within 5 km of each monitoring site and the distance to the nearest groundwater monitoring site. Figures 2 and 3 show the results of these analyses. In addition, these figures and geotiffs of the data coverage are available in the supplementary material and the Github repository.</p>
 <figure class="align-center" id="id3">
 <img alt="Distance to the nearest groundwater monitoring site" src="../_images/data_coverage_1both.png" />
 <figcaption>
@@ -820,144 +833,60 @@ Further summary statistics of the data by the source are provided below.</p>
 </figcaption>
 </figure>
 <figure class="align-center" id="id4">
-<img alt="Number of monitoring points within 5 km" src="../_images/npoins_nearest_5000_mboth.png" />
+<img alt="Number of monitoring sites within 5 km" src="../_images/npoins_nearest_5000_mboth.png" />
 <figcaption>
-<p><span class="caption-text">Number of monitoring points within 5 km</span><a class="headerlink" href="#id4" title="Link to this image">#</a></p>
+<p><span class="caption-text">Number of monitoring sites within 5 km</span><a class="headerlink" href="#id4" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 </section>
+<section id="potential-uses-of-the-dataset">
+<h3>Potential Uses of the Dataset<a class="headerlink" href="#potential-uses-of-the-dataset" title="Link to this heading">#</a></h3>
+<p>Beyond the original scope we see the dataset as having a wide range of potential uses, including but not limited to:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Consent applications and engineering design: Provides historical context across regions. Supports consistent decision-making for regulators and developers.</p></li>
+<li><p>Model validation and research: Enables cross-regional studies and comparison. Improves national predictive models.</p></li>
+<li><p>Climate change and hazard assessments: Allows analysis of long-term trends nationwide. Aids in identifying groundwater-related risks.</p></li>
+<li><p>Resource management and policy development: Informs national water allocation policies. Supports evaluation of management strategies.</p></li>
+<li><p>Data integration and analysis: Enables standardised data visualisation tools. Supports integration with other environmental datasets.</p></li>
+</ul>
+</div></blockquote>
+</section>
 <section id="statistical-description-of-depth-to-water-variance">
 <h3>Statistical Description of Depth to Water Variance<a class="headerlink" href="#statistical-description-of-depth-to-water-variance" title="Link to this heading">#</a></h3>
-<p>Overview depth to water variance statistics for shallow wells are provided below. More detailed statistics are provided in the supplementary material and available on the <a class="reference external" href="https://github.com/Komanawa-Solutions-Ltd/komanawa-nz-depth-to-water">GitHub repository</a>.</p>
+<p>Overview depth to water variance statistics for shallow wells are provided below in line with the goals of the Future Coasts Aotearoa research programme. More detailed statistics for the broader dataset are provided in the supplementary material and available on the <a class="reference external" href="https://github.com/Komanawa-Solutions-Ltd/komanawa-nz-depth-to-water">GitHub repository</a>.</p>
 <p>In depth category 1 (shallow wells, &lt; 10m), the depth to water exhibits little variation in the shallower bins, suggesting proximity to boundary condition and/or high (unconfined) storage coefficients.
-As depth increases, the variability in the depth to water also increases, as evidenced by larger ranges and higher standard deviations. For instance, in depth category 1, the standard deviation median increases from 0.077 in the &lt;0.1 m bin to 0.48 in the 6.36 m bin. Notably, the skewness suggests a tendency towards shallower water levels in many records, despite the large possible ranges in depth. This is observed in the negative skewness values that become more pronounced with increasing depth, indicating that while the average water levels are deeper, there are frequent instances of shallower depths. The kurtosis values further highlight the presence of notable outliers and extreme values. As depth increases, the kurtosis medians remain high or increase, indicating distributions with frequent extreme values. This pattern is consistent across other depth categories, where deeper bins show increased kurtosis, suggesting that extreme values become more apparent with depth. Overall, the statistics indicate that as depth increases, not only does the variability in water levels increase, but the presence of outliers and extreme values also becomes more pronounced. Finally, the statistics suggest the data is skewed and leptokurtic, meaning the data is not normally distributed and the mean and standard deviation are not necessarily representative of the data.</p>
-<p class="rubric">Summary of variance and skewness for well depth &lt; 10m or unknown depth and max dtw &lt; 10m</p>
-<div class="pst-scrollable-table-container"><table class="table">
-<thead>
-<tr class="row-odd"><th class="head"><p>Mean DTW Bin</p></th>
-<th class="head"><p>Std median</p></th>
-<th class="head"><p>Std range</p></th>
-<th class="head"><p>Skew median</p></th>
-<th class="head"><p>Skew range</p></th>
-<th class="head"><p>Kurtosis median</p></th>
-<th class="head"><p>Kurtosis range</p></th>
-<th class="head"><p>N obs.</p></th>
-<th class="head"><p>N sites</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>&lt;0.1m</p></td>
-<td><p>0.08</p></td>
-<td><p>0.0 - 0.494</p></td>
-<td><p>0.67</p></td>
-<td><p>-2.49 - 12.26</p></td>
-<td><p>2.92</p></td>
-<td><p>-0.556 - 178.626</p></td>
-<td><p>14,708</p></td>
-<td><p>36</p></td>
-</tr>
-<tr class="row-odd"><td><p>0.1m to 0.5m</p></td>
-<td><p>0.17</p></td>
-<td><p>0.02 - 0.654</p></td>
-<td><p>0.38</p></td>
-<td><p>-1.199 - 4.808</p></td>
-<td><p>0.23</p></td>
-<td><p>-1.367 - 36.245</p></td>
-<td><p>93,228</p></td>
-<td><p>103</p></td>
-</tr>
-<tr class="row-even"><td><p>0.5m to 1m</p></td>
-<td><p>0.20</p></td>
-<td><p>0.056 - 0.744</p></td>
-<td><p>0.02</p></td>
-<td><p>-1.871 - 5.3</p></td>
-<td><p>0.56</p></td>
-<td><p>-1.323 - 30.208</p></td>
-<td><p>294,730</p></td>
-<td><p>426</p></td>
-</tr>
-<tr class="row-odd"><td><p>1m to 1.5m</p></td>
-<td><p>0.23</p></td>
-<td><p>0.077 - 0.812</p></td>
-<td><p>-0.02</p></td>
-<td><p>-2.818 - 4.033</p></td>
-<td><p>0.50</p></td>
-<td><p>-1.372 - 24.998</p></td>
-<td><p>297,096</p></td>
-<td><p>511</p></td>
-</tr>
-<tr class="row-even"><td><p>1.5m to 2m</p></td>
-<td><p>0.26</p></td>
-<td><p>0.075 - 1.313</p></td>
-<td><p>-0.11</p></td>
-<td><p>-3.548 - 3.792</p></td>
-<td><p>0.80</p></td>
-<td><p>-1.27 - 25.755</p></td>
-<td><p>268,677</p></td>
-<td><p>402</p></td>
-</tr>
-<tr class="row-odd"><td><p>2m to 3m</p></td>
-<td><p>0.33</p></td>
-<td><p>0.08 - 1.479</p></td>
-<td><p>-0.18</p></td>
-<td><p>-3.972 - 3.794</p></td>
-<td><p>0.48</p></td>
-<td><p>-1.179 - 33.08</p></td>
-<td><p>376,760</p></td>
-<td><p>560</p></td>
-</tr>
-<tr class="row-even"><td><p>3m to 5m</p></td>
-<td><p>0.47</p></td>
-<td><p>0.115 - 2.237</p></td>
-<td><p>-0.15</p></td>
-<td><p>-4.096 - 3.168</p></td>
-<td><p>0.24</p></td>
-<td><p>-1.347 - 29.979</p></td>
-<td><p>368,603</p></td>
-<td><p>492</p></td>
-</tr>
-<tr class="row-odd"><td><p>5m to 10m</p></td>
-<td><p>0.47</p></td>
-<td><p>0.13 - 2.02</p></td>
-<td><p>-0.32</p></td>
-<td><p>-6.193 - 3.431</p></td>
-<td><p>0.13</p></td>
-<td><p>-1.292 - 85.168</p></td>
-<td><p>199,509</p></td>
-<td><p>287</p></td>
-</tr>
-</tbody>
-</table>
-</div>
+As depth increases, the variability in the depth to water also increases, as evidenced by larger ranges and higher standard deviations. For instance, in depth category 1, the standard deviation median increases from 0.077 in the &lt;0.1 m bin to 0.48 in the 5 to 10 m bin. Notably, the skewness suggests a tendency towards shallower water levels in many records, despite the large possible ranges in depth. This is observed in the negative skewness values that become more pronounced with increasing depth, indicating that while the average water levels are deeper, there are frequent instances of shallower depths. The kurtosis values further highlight the presence of notable outliers and extreme values. As depth increases, the kurtosis medians remain high or increase, indicating distributions with frequent extreme values. This pattern is consistent across other depth categories, where deeper bins show increased kurtosis, suggesting that extreme values become more apparent with depth. Overall, the statistics indicate that as depth increases, not only does the variability in water levels increase, but the presence of outliers and extreme values also becomes more pronounced. Finally, the statistics suggest the data is skewed and leptokurtic, meaning the data is not normally distributed and the mean and standard deviation are not necessarily representative of the data (refer Table 4).</p>
+<p class="rubric">Table 4 Summary of variance and skewness for well depth &lt; 10m or unknown depth and max dtw &lt; 10m</p>
 </section>
 </section>
 <section id="conclusions">
 <h2>Conclusions<a class="headerlink" href="#conclusions" title="Link to this heading">#</a></h2>
 <p>Access to fundamental groundwater data is essential for understanding the dynamics of groundwater systems and their interactions with the environment.
 New Zealand’s current groundwater monitoring network is diverse and fragmented, with each provider having unique monitoring objectives, methodologies, and data storage and management systems.
-Some national approaches have been undertaken to standardise data collection and storage, such as the National Groundwater Monitoring Programme (NGMP) and the New Zealand Geotechnical Database (NZGD), but these are not comprehensive, do not cover the full breadth of groundwater monitoring data, and often have a specific focus (i.e. regional groundwater resource characterisation or shallow geotechnical investigations, respectively).</p>
-<p>The current state of groundwater level data availability in New Zealand provides a significant barrier to and inefficiency in understanding and adapting to the impacts of climate change and sea-level rise on groundwater systems.</p>
-<p>A comprehensive set of discrete and regular groundwater level readings and metadata were collated from Regional Councils, Unitary Authorities and the New Zealand Geotechnical Database and processed into a consistent format. The output of this work is a national depth to water and groundwater elevation dataset for New Zealand; the groundwater level data and metadata are available as a complete dataset which can be used to better understand shallow groundwater hazards in New Zealand and for a range of other applied science and research activities such as well interference assessments, stormwater detention pond groundwater depth assessments and regional and national groundwater modelling.
-Although the database provides a comprehensive set of groundwater level data at the time of writing, the value of this database will decline over time as new data is collected.</p>
-<p>We are aware of efforts to create a national wells database, which would likely provide significant improvements in data quality and accessibility. However, it is unclear when this database will be available and what data it will contain. We would recommend that a pragmatic set of standards be adopted for all data held by councils and other organisations that collect groundwater data. These standards should include the following:</p>
+While some national approaches have been undertaken to standardise data collection and storage, these are not comprehensive and often have specific focuses. We are aware of efforts to create a national wells database, which would likely provide significant improvements in metadata quality and accessibility. However, at present, there is no intention to host actual water level data in this database. The current state of groundwater level data availability in New Zealand thus continues to provide a significant barrier to and inefficiency in understanding and adapting to the impacts of climate change and sea-level rise on groundwater systems.
+A comprehensive set of discrete and regular groundwater level readings and metadata was collated from Regional Councils, Unitary Authorities and the New Zealand Geotechnical Database and processed into a consistent format. The output of this work is a national depth to water and groundwater elevation dataset for New Zealand. The groundwater level data and metadata are available as a complete dataset which can be used to better understand shallow groundwater hazards in New Zealand and for a range of other applied science and research activities, such as well interference assessments, stormwater detention pond groundwater depth assessments and regional and national groundwater modelling.
+Although the database provides a comprehensive set of groundwater level data at the time of writing, the value of this database will decline over time as new data are collected.
+We recommend that a pragmatic set of standards be adopted for all data held by councils and other organisations that collect groundwater data. These standards should include the following:</p>
 <ol class="arabic simple">
 <li><p>All public data held by an organisation should be made available via a public API.</p></li>
 <li><p>All public datasets should include metadata.  Ideally this metadata would be in a standard machine readable format, but as an interim solution or for less frequently used data, a simple publicly visible document discussing the data structure and any peculiarities would be a good start.</p></li>
-<li><p>All public datasets should have a mechanism for users to report errors or issues with the data and these issues should be publicly visible. Even if organisations do not have the resources to fix all these issues, there is value in collating them. At the moment each researcher must discover these issues themselves, which is challenging and time consuming. Consider the value of forums like Stack Exchange or GitHub issues for this purpose in the software development world.</p></li>
-<li><p>All public datasets should have consistent +ve or -ve signs for depth to water above or below ground level. Ideally this would be a national standard, but minimally should be an organisational standard and documented.</p></li>
-<li><p>All public datasets should have a consistent way of specifying the elevation of the measuring point. This could be as simple as a GPS elevation, but minimally should be documented.</p></li>
+<li><p>All public datasets should have a mechanism for users to report errors or issues with the data and these issues should be publicly visible. Even if organisations do not have the resources to fix all these issues (e.g. wrong bore depth), there is value in collating them. At the moment each researcher must discover these issues themselves, which is challenging and time consuming. Consider the value of forums like Stack Exchange or GitHub issues for this purpose in the software development world.</p></li>
+<li><p>All public datasets should have consistent +ve or -ve signs for depth to water above or below measuring point. Ideally this would be a national standard, but minimally should be an organisational standard and documented.</p></li>
+<li><p>All public datasets should have a measured distance between the measuring point and the general surrounding ground surface.</p></li>
+<li><p>All water level data collected for compliance with consent conditions should be submitted in an electronic form, and systems should be developed to accurately and effectively upload these data into council databases.</p></li>
 </ol>
-<p>Additionally, we would like to commend the NZGD for their work in providing a national database of geotechnical data. The dataset was of enormous value to this project, particularly in data sparce regions; however our use case may have been beyond the expected purpose of the NZGD. Specifically, we often found significantly conflicting data points in close proximity. Based on our analysis, we suspect that these discrepancies likely stem from variations in the drilling locations, such as greenfield sites versus foundation pits. The NZGD could significantly improve their database for shallow groundwater hazard management by:</p>
-<ol class="arabic simple">
+<p>Additionally, we would like to commend the NZGD for their work in providing a national database of geotechnical data. The dataset was of enormous value to this project, particularly in data sparse regions; however our use case may have been beyond the expected purpose of the NZGD. Specifically, we often found significantly conflicting data points in close proximity. Based on our analysis, we suspect that these discrepancies likely stem from variations in the drilling locations, such as greenfield sites versus foundation pits. The NZGD could significantly improve their database for shallow groundwater hazard management by:</p>
+<ol class="arabic">
 <li><p>Included a field to specify whether measurements at a point are relative to the average surrounding land surface or taken in foundation excavations.</p></li>
 <li><p>Include and possibly mandate the provision of GPS elevation data for the depth to water measuring point and/or a measured distance between the measuring point and the general surrounding ground surface (e.g. depth of foundation excavation).</p></li>
-<li><dl class="simple">
-<dt>As discussed above the NZGD would also benefit from:</dt><dd><ol class="arabic simple">
+<li><p>As discussed above the NZGD would also benefit from:</p>
+<blockquote>
+<div><ol class="arabic simple">
 <li><p>A public API for data access.</p></li>
 <li><p>A publicly visible mechanism for users to report issues, inconsistencies, and concerns with the data.</p></li>
 </ol>
-</dd>
-</dl>
+</div></blockquote>
 </li>
 </ol>
 <p>Finally we have some specific recommendations that could be undertaken to improve the dataset we have produced:</p>
@@ -969,7 +898,7 @@ Although the database provides a comprehensive set of groundwater level data at 
 </section>
 <section id="contributing-and-issues-bugs">
 <h2>Contributing and issues/bugs<a class="headerlink" href="#contributing-and-issues-bugs" title="Link to this heading">#</a></h2>
-<p>We have made every attempt to ensure the quality of the data and code in this repository. However, inevitably, there will be issues with the data or code. If you find an issue, please raise an issue on the GitHub repository <a class="github reference external" href="https://github.com/Komanawa-Solutions-Ltd/komanawa-nz-depth-to-water/issues">Komanawa-Solutions-Ltd/komanawa-nz-depth-to-water#issues</a>. If you would like to contribute to the code or data, please fork the repository and submit a pull request.  While we would like to commit to maintaining this dataset in the future, we are a small team and may not have the resources to do so. If you would like to become a longer term contributor to this dataset, please get in touch.</p>
+<p>We have made every attempt to ensure the quality of the data and code in this repository. However, inevitably, there will be issues with the data or code. If you find an issue, please raise it directly with us. Or following public release by raising an issue on the GitHub repository <a class="github reference external" href="https://github.com/Komanawa-Solutions-Ltd/komanawa-nz-depth-to-water/issues">Komanawa-Solutions-Ltd/komanawa-nz-depth-to-water#issues</a>. If you would like to contribute to the code or data, please fork the repository and submit a pull request.  While we would like to commit to maintaining this dataset in the future, we are a small team and may not have the resources to do so. If you would like to become a longer term contributor to this dataset, please get in touch.</p>
 </section>
 <section id="limitations">
 <h2>Limitations<a class="headerlink" href="#limitations" title="Link to this heading">#</a></h2>
@@ -983,10 +912,13 @@ Although the database provides a comprehensive set of groundwater level data at 
 <li><p>There may be unknown regional data handling/reporting peculiarities that we were not aware of that could affect the data.</p></li>
 <li><p>The dataset is not exhaustive, and there may be more data available that has not been included in this dataset.</p></li>
 </ul>
+<p>Additionally the dataset is a static snapshot of the available data as of September 2023. Datasets typically are updated and improved over time, and this dataset may not reflect the best available data at the time of use. We encourage users to check the original data sources for the most up-to-date information. Should differences be found between this dataset and data accessed more recently from the original sources, this dataset should be assumed to be incorrect. We encourage users to report these differences via the issues page on the GitHub repository. We make no guarantee to address these issues; however open issues will serve a purpose by informing other users of potential issues with the dataset.</p>
+<p>Before using the data please ensure you fully understand these limitation, the limitations of the original data sources, and check for any potential issues raised by other users in the issues page of the GitHub repository.</p>
 </section>
 <section id="acknowledgements">
 <h2>Acknowledgements<a class="headerlink" href="#acknowledgements" title="Link to this heading">#</a></h2>
-<p>This work could not have been completed without the support of the Regional Councils, Unitary Authorities, and other scientists who provided us with data and assistance. We would like to acknowledge the Regional Councils and Unitary Authorities, especially their environmental data teams, for providing us with the required data, and for responding to our data requests and subsequent questions. We would like to acknowledge the following people and organisations:</p>
+<p>We would like to thank the New Zealand Ministry of Business, Innovation and Employment for funding this research through the project “Future Coasts Aotearoa”, managed by the National Institute of Water and Atmospheric Research (NIWA), contract C01X2107.
+This work could not have been completed without the support of the Regional Councils, Unitary Authorities, and other scientists who provided us with data and assistance. We would like to acknowledge the Regional Councils and Unitary Authorities, especially their environmental data teams, for providing us with the required data, and for responding to our data requests and subsequent questions. We would like to acknowledge the following people and organisations:</p>
 <ul class="simple">
 <li><p>Freya Green from Auckland Council</p></li>
 <li><p>Paul Scholes, Breda Savoldelli &amp; Rochelle Gardner from Bay of Plenty Regional Council</p></li>
@@ -1010,7 +942,20 @@ Although the database provides a comprehensive set of groundwater level data at 
 <li><p>Armandine Bosserelle for providing us with groundwater level data for the Christchurch area.</p></li>
 <li><p>Karen Grant &amp; Nektaria Papadopoulos from Tauranga City Council.</p></li>
 </ul>
-<p>This work was made possible by the Future Coasts Aotearoa programme, funded by the Ministry of Business, Innovation and Employment (MBIE) Endeavour Fund. We would like to acknowledge the support of the programme, NIWA, and the other researchers involved in the project.</p>
+<p>This work was made possible by Future Coasts Aotearoa (FCA) Funding from the Ministry of Business Innovation and Employment (MBIE), managed by the National Institute of Water and Atmospheric Research (NIWA), contract C01X2107. We would like to acknowledge the support of the programme, NIWA, and the other researchers involved in the project.</p>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<p>Baddock E, 2019. Water Level Field Measurement Standard Version: 3.0.0. National Environmental Monitoring Standard. Date of Issue: July 2019</p>
+<p>GNS Science. (2022). National Groundwater Monitoring Programme (NGMP) [Data set]. GNS Science.</p>
+<p>Hills Laboratories. 2024. Hilltop Software [Computer software].</p>
+<p>Kittridge M. 2023. Tethys: A Python package for accessing geospatial time series data (Version 4.5.15) [Computer software]. <a class="github reference external" href="https://github.com/tethys-ts/tethysts">tethys-ts/tethysts</a></p>
+<p>New Zealand Geotechnical Database. (n.d.). Retrieved [3-9-2024], from <a class="reference external" href="https://www.nzgd.org.nz/">https://www.nzgd.org.nz/</a></p>
+<p>National Institute of Water and Atmospheric Research (2021). Future Coasts Aotearoa Project Outline. National Institute of Water and Atmospheric Research.</p>
+<p>Parliamentary Commissioner for the Environment. 2019. Focusing Aotearoa New Zealand’s
+environmental reporting system. November 2019. Wellington, New Zealand: Parliamentary</p>
+<p>Reinecke R., Wachholz, A., Mehl, S., Foglia, L., Niemann, C., &amp; Döll, P. 2020. Importance of Spatial Resolution in Global Groundwater Modeling. Groundwater, 58(3), 363–376. <a class="reference external" href="https://doi.org/10.1111/gwat.12996">https://doi.org/10.1111/gwat.12996</a></p>
+<p>World Meteorological Organization. 2023. State of Global Water Resources report 2022 (WMO-No. 1333). WMO.</p>
 </section>
 <section id="supplementary-material">
 <h2>Supplementary Material<a class="headerlink" href="#supplementary-material" title="Link to this heading">#</a></h2>
@@ -1034,226 +979,129 @@ Although the database provides a comprehensive set of groundwater level data at 
 <section id="summary-of-variance-and-skewness-of-depth-to-water">
 <h3>Summary of variance and skewness of depth to water<a class="headerlink" href="#summary-of-variance-and-skewness-of-depth-to-water" title="Link to this heading">#</a></h3>
 <p>The following tables summarize the variance and skewness of the depth to water measurements (across time) for all sites in given depth categories.</p>
-<p class="rubric">Summary of variance and skewness for well depth &lt; 10m or unknown depth and max dtw &lt; 10m</p>
-<div class="pst-scrollable-table-container"><table class="table">
-<thead>
-<tr class="row-odd"><th class="head"><p>Mean DTW Bin</p></th>
-<th class="head"><p>Std median</p></th>
-<th class="head"><p>Std range</p></th>
-<th class="head"><p>Skew median</p></th>
-<th class="head"><p>Skew range</p></th>
-<th class="head"><p>Kurtosis median</p></th>
-<th class="head"><p>Kurtosis range</p></th>
-<th class="head"><p>N obs.</p></th>
-<th class="head"><p>N sites</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>&lt;0.1m</p></td>
-<td><p>0.08</p></td>
-<td><p>0.0 - 0.494</p></td>
-<td><p>0.67</p></td>
-<td><p>-2.49 - 12.26</p></td>
-<td><p>2.92</p></td>
-<td><p>-0.556 - 178.626</p></td>
-<td><p>14,708</p></td>
-<td><p>36</p></td>
-</tr>
-<tr class="row-odd"><td><p>0.1m to 0.5m</p></td>
-<td><p>0.17</p></td>
-<td><p>0.02 - 0.654</p></td>
-<td><p>0.38</p></td>
-<td><p>-1.199 - 4.808</p></td>
-<td><p>0.23</p></td>
-<td><p>-1.367 - 36.245</p></td>
-<td><p>93,228</p></td>
-<td><p>103</p></td>
-</tr>
-<tr class="row-even"><td><p>0.5m to 1m</p></td>
-<td><p>0.20</p></td>
-<td><p>0.056 - 0.744</p></td>
-<td><p>0.02</p></td>
-<td><p>-1.871 - 5.3</p></td>
-<td><p>0.56</p></td>
-<td><p>-1.323 - 30.208</p></td>
-<td><p>294,730</p></td>
-<td><p>426</p></td>
-</tr>
-<tr class="row-odd"><td><p>1m to 1.5m</p></td>
-<td><p>0.23</p></td>
-<td><p>0.077 - 0.812</p></td>
-<td><p>-0.02</p></td>
-<td><p>-2.818 - 4.033</p></td>
-<td><p>0.50</p></td>
-<td><p>-1.372 - 24.998</p></td>
-<td><p>297,096</p></td>
-<td><p>511</p></td>
-</tr>
-<tr class="row-even"><td><p>1.5m to 2m</p></td>
-<td><p>0.26</p></td>
-<td><p>0.075 - 1.313</p></td>
-<td><p>-0.11</p></td>
-<td><p>-3.548 - 3.792</p></td>
-<td><p>0.80</p></td>
-<td><p>-1.27 - 25.755</p></td>
-<td><p>268,677</p></td>
-<td><p>402</p></td>
-</tr>
-<tr class="row-odd"><td><p>2m to 3m</p></td>
-<td><p>0.33</p></td>
-<td><p>0.08 - 1.479</p></td>
-<td><p>-0.18</p></td>
-<td><p>-3.972 - 3.794</p></td>
-<td><p>0.48</p></td>
-<td><p>-1.179 - 33.08</p></td>
-<td><p>376,760</p></td>
-<td><p>560</p></td>
-</tr>
-<tr class="row-even"><td><p>3m to 5m</p></td>
-<td><p>0.47</p></td>
-<td><p>0.115 - 2.237</p></td>
-<td><p>-0.15</p></td>
-<td><p>-4.096 - 3.168</p></td>
-<td><p>0.24</p></td>
-<td><p>-1.347 - 29.979</p></td>
-<td><p>368,603</p></td>
-<td><p>492</p></td>
-</tr>
-<tr class="row-odd"><td><p>5m to 10m</p></td>
-<td><p>0.47</p></td>
-<td><p>0.13 - 2.02</p></td>
-<td><p>-0.32</p></td>
-<td><p>-6.193 - 3.431</p></td>
-<td><p>0.13</p></td>
-<td><p>-1.292 - 85.168</p></td>
-<td><p>199,509</p></td>
-<td><p>287</p></td>
-</tr>
-</tbody>
-</table>
-</div>
+<p class="rubric">Table 4 Summary of variance and skewness for well depth &lt; 10m or unknown depth and max dtw &lt; 10m</p>
 <p class="rubric">Summary of variance and skewness for 10m &lt;= well depth &lt; 30m or unknown depth and max 10m &lt;= dtw &lt; 30m</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Mean DTW Bin</p></th>
-<th class="head"><p>Std median</p></th>
-<th class="head"><p>Std range</p></th>
-<th class="head"><p>Skew median</p></th>
-<th class="head"><p>Skew range</p></th>
-<th class="head"><p>Kurtosis median</p></th>
-<th class="head"><p>Kurtosis range</p></th>
+<th class="head"><p>Std median (m)</p></th>
+<th class="head"><p>Std range (m)</p></th>
+<th class="head"><p>Skew median (m)</p></th>
+<th class="head"><p>Skew range (m)</p></th>
+<th class="head"><p>Kurt. median (m)</p></th>
+<th class="head"><p>Kurt. range</p></th>
 <th class="head"><p>N obs.</p></th>
 <th class="head"><p>N sites</p></th>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>&lt;0.1m</p></td>
+<tr class="row-even"><td><p>&lt;0.1 m</p></td>
 <td><p>0.09</p></td>
-<td><p>0.024 - 0.275</p></td>
+<td><p>0.02 - 0.28</p></td>
 <td><p>-0.13</p></td>
-<td><p>-1.024 - 0.837</p></td>
+<td><p>-1.02 - 0.84</p></td>
 <td><p>0.82</p></td>
-<td><p>-1.468 - 3.704</p></td>
+<td><p>-1.47 - 3.70</p></td>
 <td><p>2,253</p></td>
 <td><p>7</p></td>
 </tr>
-<tr class="row-odd"><td><p>0.1m to 0.5m</p></td>
+<tr class="row-odd"><td><p>0.1 m to 0.5 m</p></td>
 <td><p>0.24</p></td>
-<td><p>0.116 - 0.493</p></td>
+<td><p>0.17 - 0.49</p></td>
 <td><p>0.31</p></td>
-<td><p>-1.779 - 1.734</p></td>
+<td><p>-1.78 - 1.73</p></td>
 <td><p>-0.05</p></td>
-<td><p>-0.949 - 8.266</p></td>
+<td><p>-0.95 - 8.27</p></td>
 <td><p>1,133</p></td>
 <td><p>9</p></td>
 </tr>
-<tr class="row-even"><td><p>0.5m to 1m</p></td>
+<tr class="row-even"><td><p>0.5 m to 1 m</p></td>
 <td><p>0.27</p></td>
-<td><p>0.088 - 1.403</p></td>
+<td><p>0.09 - 1.40</p></td>
 <td><p>0.07</p></td>
-<td><p>-1.218 - 13.79</p></td>
+<td><p>-1.22 - 13.79</p></td>
 <td><p>0.29</p></td>
-<td><p>-1.533 - 394.803</p></td>
+<td><p>-1.53 - 394.80</p></td>
 <td><p>36,542</p></td>
 <td><p>35</p></td>
 </tr>
-<tr class="row-odd"><td><p>1m to 1.5m</p></td>
+<tr class="row-odd"><td><p>1 m to 1.5 m</p></td>
 <td><p>0.37</p></td>
-<td><p>0.072 - 1.174</p></td>
+<td><p>0.07 - 1.17</p></td>
 <td><p>0.32</p></td>
-<td><p>-1.957 - 4.237</p></td>
+<td><p>-1.96 - 4.24</p></td>
 <td><p>0.09</p></td>
-<td><p>-1.136 - 24.012</p></td>
+<td><p>-1.14 - 24.01</p></td>
 <td><p>46,232</p></td>
 <td><p>53</p></td>
 </tr>
-<tr class="row-even"><td><p>1.5m to 2m</p></td>
+<tr class="row-even"><td><p>1.5 m to 2 m</p></td>
 <td><p>0.37</p></td>
-<td><p>0.137 - 2.776</p></td>
+<td><p>0.14 - 2.78</p></td>
 <td><p>0.37</p></td>
-<td><p>-1.64 - 12.843</p></td>
+<td><p>-1.64 - 12.84</p></td>
 <td><p>1.56</p></td>
-<td><p>-1.242 - 445.507</p></td>
+<td><p>-1.24 - 445.51</p></td>
 <td><p>47,132</p></td>
 <td><p>51</p></td>
 </tr>
-<tr class="row-odd"><td><p>2m to 3m</p></td>
+<tr class="row-odd"><td><p>2 m to 3 m</p></td>
 <td><p>0.40</p></td>
-<td><p>0.084 - 2.6</p></td>
+<td><p>0.08 - 2.6</p></td>
 <td><p>0.07</p></td>
-<td><p>-2.892 - 4.221</p></td>
+<td><p>-2.89 - 4.22</p></td>
 <td><p>0.69</p></td>
-<td><p>-1.28 - 24.533</p></td>
+<td><p>-1.28 - 24.53</p></td>
 <td><p>112,205</p></td>
 <td><p>113</p></td>
 </tr>
-<tr class="row-even"><td><p>3m to 5m</p></td>
+<tr class="row-even"><td><p>3 m to 5 m</p></td>
 <td><p>0.77</p></td>
-<td><p>0.142 - 3.414</p></td>
+<td><p>0.14 - 3.41</p></td>
 <td><p>0.12</p></td>
-<td><p>-2.283 - 8.332</p></td>
+<td><p>-2.28 - 8.33</p></td>
 <td><p>0.25</p></td>
-<td><p>-1.358 - 71.736</p></td>
+<td><p>-1.36 - 71.77</p></td>
 <td><p>247,927</p></td>
 <td><p>207</p></td>
 </tr>
-<tr class="row-odd"><td><p>5m to 10m</p></td>
+<tr class="row-odd"><td><p>5 m to 10 m</p></td>
 <td><p>1.02</p></td>
-<td><p>0.17 - 4.504</p></td>
+<td><p>0.17 - 4.50</p></td>
 <td><p>-0.06</p></td>
-<td><p>-4.275 - 3.711</p></td>
+<td><p>-4.28 - 3.71</p></td>
 <td><p>0.22</p></td>
-<td><p>-1.472 - 60.086</p></td>
+<td><p>-1.47 - 60.09</p></td>
 <td><p>307,509</p></td>
 <td><p>411</p></td>
 </tr>
-<tr class="row-even"><td><p>10m to 15m</p></td>
+<tr class="row-even"><td><p>10 m to 15 m</p></td>
 <td><p>0.93</p></td>
-<td><p>0.184 - 4.592</p></td>
+<td><p>0.18 - 4.59</p></td>
 <td><p>-0.17</p></td>
-<td><p>-7.67 - 4.786</p></td>
+<td><p>-7.67 - 4.77</p></td>
 <td><p>0.08</p></td>
-<td><p>-1.474 - 175.597</p></td>
+<td><p>1.47 - 175.60</p></td>
 <td><p>246,065</p></td>
 <td><p>254</p></td>
 </tr>
-<tr class="row-odd"><td><p>15m to 20m</p></td>
+<tr class="row-odd"><td><p>15 m to 20 m</p></td>
 <td><p>1.12</p></td>
-<td><p>0.243 - 5.308</p></td>
+<td><p>0.24 - 5.31</p></td>
 <td><p>-0.45</p></td>
-<td><p>-6.069 - 3.002</p></td>
+<td><p>-6.07 - 3.00</p></td>
 <td><p>0.21</p></td>
-<td><p>-1.371 - 66.694</p></td>
+<td><p>-1.37 - 66.69</p></td>
 <td><p>176,344</p></td>
 <td><p>118</p></td>
 </tr>
-<tr class="row-even"><td><p>20m to 30m</p></td>
+<tr class="row-even"><td><p>20 m to 30 m</p></td>
 <td><p>0.81</p></td>
-<td><p>0.152 - 3.712</p></td>
+<td><p>0.15 - 3.71</p></td>
 <td><p>-0.21</p></td>
-<td><p>-10.773 - 1.92</p></td>
+<td><p>10.77 - 1.92</p></td>
 <td><p>0.88</p></td>
-<td><p>-1.235 - 229.039</p></td>
+<td><p>-1.24 - 229.04</p></td>
 <td><p>69,924</p></td>
 <td><p>61</p></td>
 </tr>
@@ -1264,164 +1112,164 @@ Although the database provides a comprehensive set of groundwater level data at 
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Mean DTW Bin</p></th>
-<th class="head"><p>Std median</p></th>
-<th class="head"><p>Std range</p></th>
-<th class="head"><p>Skew median</p></th>
-<th class="head"><p>Skew range</p></th>
-<th class="head"><p>Kurtosis median</p></th>
-<th class="head"><p>Kurtosis range</p></th>
+<th class="head"><p>Std median (m)</p></th>
+<th class="head"><p>Std range (m)</p></th>
+<th class="head"><p>Skew median (m)</p></th>
+<th class="head"><p>Skew range (m)</p></th>
+<th class="head"><p>Kurt. median (m)</p></th>
+<th class="head"><p>Kurt. range</p></th>
 <th class="head"><p>N obs.</p></th>
 <th class="head"><p>N sites</p></th>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>&lt;0.1m</p></td>
+<tr class="row-even"><td><p>&lt;0.1 m</p></td>
 <td><p>0.16</p></td>
-<td><p>0.075 - 0.475</p></td>
+<td><p>0.08 - 0.45</p></td>
 <td><p>0.09</p></td>
-<td><p>-5.791 - 3.383</p></td>
+<td><p>-5.79 - 3.38</p></td>
 <td><p>0.22</p></td>
-<td><p>-0.957 - 33.017</p></td>
+<td><p>-0.96 - 33.02</p></td>
 <td><p>532</p></td>
 <td><p>9</p></td>
 </tr>
-<tr class="row-odd"><td><p>0.1m to 0.5m</p></td>
+<tr class="row-odd"><td><p>0.1 m to 0.5 m</p></td>
 <td><p>0.28</p></td>
-<td><p>0.203 - 0.69</p></td>
+<td><p>0.20 - 0.69</p></td>
 <td><p>2.33</p></td>
-<td><p>0.163 - 52.198</p></td>
+<td><p>0.16 - 52.2</p></td>
 <td><p>4.80</p></td>
-<td><p>-1.024 - 3718.589</p></td>
+<td><p>-1.02 - 3718.59</p></td>
 <td><p>7,229</p></td>
 <td><p>8</p></td>
 </tr>
-<tr class="row-even"><td><p>0.5m to 1m</p></td>
+<tr class="row-even"><td><p>0.5 m to 1 m</p></td>
 <td><p>0.34</p></td>
-<td><p>0.062 - 1.223</p></td>
+<td><p>0.06 - 1.22</p></td>
 <td><p>0.02</p></td>
-<td><p>-1.108 - 3.047</p></td>
+<td><p>-1.11 - 3.05</p></td>
 <td><p>-0.18</p></td>
-<td><p>-0.998 - 11.58</p></td>
+<td><p>-1 - 11.58</p></td>
 <td><p>5,728</p></td>
 <td><p>10</p></td>
 </tr>
-<tr class="row-odd"><td><p>1m to 1.5m</p></td>
+<tr class="row-odd"><td><p>1 m to 1.5 m</p></td>
 <td><p>0.51</p></td>
-<td><p>0.128 - 2.95</p></td>
+<td><p>0.13 - 2.95</p></td>
 <td><p>0.59</p></td>
-<td><p>-1.904 - 15.666</p></td>
+<td><p>-1.90 - 15.67</p></td>
 <td><p>-0.04</p></td>
-<td><p>-1.227 - 291.255</p></td>
+<td><p>-1.23 - 291.23</p></td>
 <td><p>45,987</p></td>
 <td><p>40</p></td>
 </tr>
-<tr class="row-even"><td><p>1.5m to 2m</p></td>
+<tr class="row-even"><td><p>1.5 m to 2 m</p></td>
 <td><p>0.60</p></td>
-<td><p>0.088 - 1.456</p></td>
+<td><p>0.09 - 1.44</p></td>
 <td><p>0.65</p></td>
-<td><p>-0.738 - 3.274</p></td>
+<td><p>-0.74 - 3.27</p></td>
 <td><p>0.24</p></td>
-<td><p>-1.026 - 14.992</p></td>
+<td><p>-1.03 - 14.99</p></td>
 <td><p>88,291</p></td>
 <td><p>28</p></td>
 </tr>
-<tr class="row-odd"><td><p>2m to 3m</p></td>
+<tr class="row-odd"><td><p>2 m to 3 m</p></td>
 <td><p>0.67</p></td>
-<td><p>0.084 - 2.441</p></td>
+<td><p>0.08 - 2.44</p></td>
 <td><p>0.45</p></td>
-<td><p>-3.08 - 17.436</p></td>
+<td><p>-3.08 - 17.44</p></td>
 <td><p>0.64</p></td>
-<td><p>-1.485 - 620.586</p></td>
+<td><p>-1.49 - 620.59</p></td>
 <td><p>145,570</p></td>
 <td><p>72</p></td>
 </tr>
-<tr class="row-even"><td><p>3m to 5m</p></td>
+<tr class="row-even"><td><p>3 m to 5 m</p></td>
 <td><p>0.84</p></td>
-<td><p>0.144 - 4.449</p></td>
+<td><p>0.14 - 4.42</p></td>
 <td><p>0.61</p></td>
-<td><p>-2.743 - 8.635</p></td>
+<td><p>-2.74 - 8.64</p></td>
 <td><p>0.44</p></td>
-<td><p>-1.289 - 79.165</p></td>
+<td><p>-1.29 - 79.17</p></td>
 <td><p>141,289</p></td>
 <td><p>139</p></td>
 </tr>
-<tr class="row-odd"><td><p>5m to 10m</p></td>
+<tr class="row-odd"><td><p>5 m to 10 m</p></td>
 <td><p>1.15</p></td>
-<td><p>0.161 - 6.928</p></td>
+<td><p>0.16 - 6.9.</p></td>
 <td><p>0.59</p></td>
-<td><p>-3.871 - 8.25</p></td>
+<td><p>-3.87 - 8.25</p></td>
 <td><p>0.29</p></td>
-<td><p>-1.318 - 77.494</p></td>
+<td><p>-1.32 - 77.49</p></td>
 <td><p>191,908</p></td>
 <td><p>237</p></td>
 </tr>
-<tr class="row-even"><td><p>10m to 15m</p></td>
+<tr class="row-even"><td><p>10 m to 15 m</p></td>
 <td><p>1.78</p></td>
-<td><p>0.102 - 13.056</p></td>
+<td><p>0.10 - 13.03</p></td>
 <td><p>0.52</p></td>
-<td><p>-1.751 - 6.408</p></td>
+<td><p>-1.75 - 6.41</p></td>
 <td><p>0.21</p></td>
-<td><p>-1.707 - 43.137</p></td>
+<td><p>-1.71 - 43.14</p></td>
 <td><p>122,736</p></td>
 <td><p>172</p></td>
 </tr>
-<tr class="row-odd"><td><p>15m to 20m</p></td>
+<tr class="row-odd"><td><p>15 m to 20 m</p></td>
 <td><p>2.04</p></td>
-<td><p>0.094 - 14.372</p></td>
+<td><p>0.09 - 14.37</p></td>
 <td><p>0.26</p></td>
-<td><p>-4.368 - 10.787</p></td>
+<td><p>-4.37 - 10.79</p></td>
 <td><p>0.17</p></td>
-<td><p>-1.509 - 133.018</p></td>
+<td><p>-1.51 - 133.02</p></td>
 <td><p>116,993</p></td>
 <td><p>125</p></td>
 </tr>
-<tr class="row-even"><td><p>20m to 30m</p></td>
+<tr class="row-even"><td><p>20 m to 30 m</p></td>
 <td><p>1.90</p></td>
-<td><p>0.172 - 16.16</p></td>
+<td><p>0.17 - 16.16</p></td>
 <td><p>0.09</p></td>
-<td><p>-5.467 - 4.662</p></td>
+<td><p>-5.47 - 4.66</p></td>
 <td><p>0.16</p></td>
-<td><p>-1.552 - 130.09</p></td>
+<td><p>-1.55 - 130.09</p></td>
 <td><p>212,539</p></td>
 <td><p>237</p></td>
 </tr>
-<tr class="row-odd"><td><p>30m to 50m</p></td>
+<tr class="row-odd"><td><p>30 m to 50 m</p></td>
 <td><p>1.79</p></td>
-<td><p>0.144 - 11.792</p></td>
+<td><p>0.14 - 11.79</p></td>
 <td><p>-0.03</p></td>
-<td><p>-42.384 - 5.576</p></td>
+<td><p>-42.38 - 5.58</p></td>
 <td><p>0.27</p></td>
-<td><p>-1.798 - 2546.244</p></td>
+<td><p>-1.8 - 2546.24</p></td>
 <td><p>301,687</p></td>
 <td><p>302</p></td>
 </tr>
-<tr class="row-even"><td><p>50m to 75m</p></td>
+<tr class="row-even"><td><p>50 m to 75 m</p></td>
 <td><p>3.03</p></td>
-<td><p>0.136 - 11.163</p></td>
+<td><p>0.14 - 11.16</p></td>
 <td><p>0.03</p></td>
-<td><p>-47.791 - 5.213</p></td>
+<td><p>-47.79 - 5.21</p></td>
 <td><p>-0.02</p></td>
-<td><p>-1.595 - 2617.438</p></td>
+<td><p>-1.6 - 2617.44</p></td>
 <td><p>184,962</p></td>
 <td><p>170</p></td>
 </tr>
-<tr class="row-odd"><td><p>75m to 100m</p></td>
+<tr class="row-odd"><td><p>75 m to 100 m</p></td>
 <td><p>4.37</p></td>
-<td><p>0.142 - 10.427</p></td>
+<td><p>0.14 - 10.43</p></td>
 <td><p>-0.54</p></td>
-<td><p>-59.608 - 3.5</p></td>
+<td><p>-59.61 - 3.5</p></td>
 <td><p>1.25</p></td>
-<td><p>-1.628 - 3980.007</p></td>
+<td><p>-1.63 - 3980.01</p></td>
 <td><p>99,578</p></td>
 <td><p>105</p></td>
 </tr>
-<tr class="row-even"><td><p>&gt;100m</p></td>
+<tr class="row-even"><td><p>&gt;100 m</p></td>
 <td><p>1.29</p></td>
-<td><p>0.12 - 14.681</p></td>
+<td><p>0.12 - 14.68</p></td>
 <td><p>-0.20</p></td>
-<td><p>-52.647 - 1.727</p></td>
+<td><p>-52.65 - 1.73</p></td>
 <td><p>-0.06</p></td>
-<td><p>-1.607 - 2785.339</p></td>
+<td><p>-1.61 - 2785.34</p></td>
 <td><p>115,829</p></td>
 <td><p>104</p></td>
 </tr>
@@ -1927,7 +1775,9 @@ Although the database provides a comprehensive set of groundwater level data at 
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#results-and-discussion">Results and discussion</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dataset-access">Dataset access</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#description-of-dataset">Description of Dataset</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#uncertainties-in-the-dataset">Uncertainties in the dataset</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#spatial-distribution">Spatial Distribution</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#potential-uses-of-the-dataset">Potential Uses of the Dataset</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#statistical-description-of-depth-to-water-variance">Statistical Description of Depth to Water Variance</a></li>
 </ul>
 </li>
@@ -1935,6 +1785,7 @@ Although the database provides a comprehensive set of groundwater level data at 
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributing-and-issues-bugs">Contributing and issues/bugs</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#limitations">Limitations</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#acknowledgements">Acknowledgements</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#supplementary-material">Supplementary Material</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cumulative-records-and-sites-per-source">Cumulative records and sites per source</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#summary-of-variance-and-skewness-of-depth-to-water">Summary of variance and skewness of depth to water</a></li>

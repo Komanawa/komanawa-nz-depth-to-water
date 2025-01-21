@@ -272,18 +272,7 @@ Contributing and issues/bugs
 
 We have made every attempt to ensure the quality of the data and code in this repository. However, inevitably, there will be issues with the data or code. If you find an issue, please raise it directly with us. Or following public release by raising an issue on the GitHub repository https://github.com/Komanawa-Solutions-Ltd/komanawa-nz-depth-to-water/issues. If you would like to contribute to the code or data, please fork the repository and submit a pull request.  While we would like to commit to maintaining this dataset in the future, we are a small team and may not have the resources to do so. If you would like to become a longer term contributor to this dataset, please get in touch.
 
-Limitations
-=============
-While we have made every attempt to ensure the quality of the data and code in this repository, we do not provide any explicit or implicit guarantee of the datasets produced or methods provided here. In addition, by proving the base data, the data providers have also not provided any explicit or implicit guarantee of these data. Data errors will inevitably exist in the dataset, and we encourage users to report these errors to us so that we can correct them.
-
-We are aware of limitations of this work which are listed below:
-
-- We have made a series of assumptions during the data processing; these are discussed above.
-- The data is only as good as the data provided by the councils; we did not have the resources nor all the information to fully quality-assure the data.
-- For many sites, the elevation of the measuring point is unknown. We have used LiDAR data to estimate the elevation of the ground, but this will likely reduce the accuracy of the groundwater elevation depending on the resolution of the LiDAR data.
-- We have assumed that the depth to water from ground level is correct, and therefore any errors in the depth to water data will be reflected in the groundwater elevation values.
-- There may be unknown regional data handling/reporting peculiarities that we were not aware of that could affect the data.
-- The dataset is not exhaustive, and there may be more data available that has not been included in this dataset.
+.. include:: limitations.rst
 
 Acknowledgements
 ==================

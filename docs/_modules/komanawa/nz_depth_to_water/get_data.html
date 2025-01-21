@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>komanawa.nz_depth_to_water.get_data &#8212; komanawa-nz-depth-to-water v0.1.1 documentation</title>
+    <title>komanawa.nz_depth_to_water.get_data &#8212; komanawa-nz-depth-to-water v0.1.3 documentation</title>
   
   
   
@@ -35,7 +35,7 @@
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341" />
   <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=3ee479438cf8b5e0d341"></script>
 
-    <script src="../../../_static/documentation_options.js?v=5e3f2911"></script>
+    <script src="../../../_static/documentation_options.js?v=cdbf2762"></script>
     <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/komanawa/nz_depth_to_water/get_data';</script>
@@ -120,7 +120,7 @@
     <script>document.write(`<img src="" class="logo__image only-dark" alt=""/>`);</script>
   
   
-    <p class="title logo__title">Nz-Depth-To-Water v0.1.1 Overview</p>
+    <p class="title logo__title">Nz-Depth-To-Water v0.1.3 Overview</p>
   
 </a></div>
     
@@ -377,142 +377,238 @@
   <h1>Source code for komanawa.nz_depth_to_water.get_data</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">created matt_dumont </span>
-<span class="sd">on: 7/05/24</span>
+<span class="sd">on: 11/30/24</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">import</span> <span class="nn">shutil</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">tempfile</span>
 <span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
 <span class="kn">from</span> <span class="nn">komanawa.nz_depth_to_water.density_grid</span> <span class="kn">import</span> <span class="n">DensityGrid</span>
-
-<span class="n">md_convert_cols</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">bottom_bottomscreen</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
-                       <span class="n">dist_mp_to_ground_level</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
-                       <span class="n">nztm_x</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                       <span class="n">nztm_y</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                       <span class="n">rl_elevation</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
-                       <span class="n">top_topscreen</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
-                       <span class="n">well_depth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
-                       <span class="n">reading_count</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                       <span class="n">mean_dtw</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
-                       <span class="n">median_dtw</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
-                       <span class="n">std_dtw</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
-                       <span class="n">max_dtw</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
-                       <span class="n">min_dtw</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
-                       <span class="n">mean_gwl</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
-                       <span class="n">median_gwl</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
-                       <span class="n">std_gwl</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
-                       <span class="n">max_gwl</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
-                       <span class="n">min_gwl</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
-                       <span class="p">)</span>
-<span class="n">wld_convert_cols</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">depth_to_water_cor</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">depth_to_water</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">gw_elevation</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
-<span class="n">int_mapper_cols</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;well_name&#39;</span><span class="p">,</span> <span class="s1">&#39;site_name&#39;</span><span class="p">,</span> <span class="s1">&#39;source&#39;</span><span class="p">,</span> <span class="s1">&#39;rl_source&#39;</span><span class="p">,</span> <span class="s1">&#39;ground_level_datum&#39;</span><span class="p">,</span> <span class="s1">&#39;rl_datum&#39;</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">netCDF4</span> <span class="k">as</span> <span class="nn">nc</span>
 
 
-<span class="k">def</span> <span class="nf">_convert_to_intmapper</span><span class="p">(</span><span class="n">wl_data</span><span class="p">,</span> <span class="n">metadata</span><span class="p">,</span> <span class="p">):</span>
-    <span class="n">mappers</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">int_mapper_cols</span><span class="p">:</span>
-        <span class="n">temp</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">wl_data</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-            <span class="n">temp</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">wl_data</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()))</span>
-        <span class="k">if</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">metadata</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-            <span class="n">temp</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">metadata</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()))</span>
-        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">temp</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">4294967295</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">col</span><span class="si">}</span><span class="s1"> has too many unique values&#39;</span>
-        <span class="n">invert_mapper</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">({</span><span class="n">nm</span><span class="p">:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">nm</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">temp</span><span class="p">)})</span>
-        <span class="n">mapper</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">({</span><span class="n">i</span><span class="p">:</span> <span class="n">nm</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">nm</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">temp</span><span class="p">)})</span>
-        <span class="n">mappers</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">mapper</span>
-        <span class="k">if</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">wl_data</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-            <span class="n">wl_data</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">invert_mapper</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">wl_data</span><span class="p">[</span><span class="n">col</span><span class="p">]]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint32</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
-        <span class="k">if</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">metadata</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-            <span class="n">metadata</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">invert_mapper</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">metadata</span><span class="p">[</span><span class="n">col</span><span class="p">]]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint32</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
-    <span class="k">return</span> <span class="n">wl_data</span><span class="p">,</span> <span class="n">metadata</span><span class="p">,</span> <span class="n">mappers</span>
+<span class="k">def</span> <span class="nf">_get_nc_path</span><span class="p">():</span>
+    <span class="n">datapath</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;nz_depth_to_water.nc&#39;</span><span class="p">)</span>
+    <span class="n">datapath</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s1">&#39;data/nz_dtw_draft.nc&#39;</span><span class="p">)</span>  <span class="c1"># todo DADB</span>
+    <span class="k">assert</span> <span class="n">datapath</span><span class="o">.</span><span class="n">exists</span><span class="p">(),</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">datapath</span><span class="si">}</span><span class="s1"> does not exist. should not get here&#39;</span>
+    <span class="k">return</span> <span class="n">datapath</span>
 
 
-<span class="k">def</span> <span class="nf">_convert_from_intmapper</span><span class="p">(</span><span class="n">wl_data</span><span class="p">,</span> <span class="n">metadata</span><span class="p">,</span> <span class="n">mappers</span><span class="p">):</span>
-    <span class="k">for</span> <span class="n">col</span><span class="p">,</span> <span class="n">mapper</span> <span class="ow">in</span> <span class="n">mappers</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="k">if</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">wl_data</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-            <span class="n">wl_data</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">wl_data</span><span class="p">[</span><span class="n">col</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span>
-        <span class="k">if</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">metadata</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-            <span class="n">metadata</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">metadata</span><span class="p">[</span><span class="n">col</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span>
-    <span class="k">return</span> <span class="n">wl_data</span><span class="p">,</span> <span class="n">metadata</span>
-
-
-<span class="k">def</span> <span class="nf">_convert_from_raw_to_int</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">precision</span><span class="p">):</span>
+<div class="viewcode-block" id="get_nc_dataset">
+<a class="viewcode-back" href="../../../autoapi/komanawa/nz_depth_to_water/index.html#komanawa.nz_depth_to_water.export_to_csv.get_nc_dataset">[docs]</a>
+<span class="k">def</span> <span class="nf">get_nc_dataset</span><span class="p">(</span><span class="n">to_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rewrite</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Convert the data to integers with the given precision.</span>
-<span class="sd">    :param data: pd.series, the data to convert.</span>
-<span class="sd">    :param precision: int, the number of decimal places to keep.</span>
-<span class="sd">    :return: pd.DataFrame, the converted data.</span>
+<span class="sd">    Get the netcdf dataset for the depth to water data for New Zealand.</span>
+
+<span class="sd">    :param to_path: str, optional, the path to save the dataset to. if None then saves to temp directory and returns the dataset path. This behavior prevents overwriting the original data.</span>
+<span class="sd">    :return: nc.Dataset</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="p">(</span><span class="n">out</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">**</span> <span class="n">precision</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">()</span>
-    <span class="n">out</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">out</span><span class="p">)]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">9999999</span>
-    <span class="n">out</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isinf</span><span class="p">(</span><span class="n">out</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">out</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">9899999</span>
-    <span class="n">out</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isinf</span><span class="p">(</span><span class="n">out</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">out</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">9799999</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">out</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">_get_nc_path</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">to_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">to_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">tempfile</span><span class="o">.</span><span class="n">mkdtemp</span><span class="p">())</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">to_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">to_path</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">to_path</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">rewrite</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">to_path</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">to_path</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">missing_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">to_path</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">to_path</span></div>
 
 
-<span class="k">def</span> <span class="nf">_convert_from_int_to_raw</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">precision</span><span class="p">):</span>
+
+<span class="n">_meta_keys</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;site_name&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;rl_source&#39;</span><span class="p">,</span> <span class="s1">&#39;source&#39;</span><span class="p">,</span> <span class="s1">&#39;nztm_x&#39;</span><span class="p">,</span> <span class="s1">&#39;nztm_y&#39;</span><span class="p">,</span> <span class="s1">&#39;reading_count&#39;</span><span class="p">,</span> <span class="s1">&#39;mean_gwl&#39;</span><span class="p">,</span> <span class="s1">&#39;median_gwl&#39;</span><span class="p">,</span> <span class="s1">&#39;std_gwl&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;max_gwl&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;min_gwl&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;well_depth&#39;</span><span class="p">,</span> <span class="s1">&#39;bottom_bottomscreen&#39;</span><span class="p">,</span> <span class="s1">&#39;dist_mp_to_ground_level&#39;</span><span class="p">,</span> <span class="s1">&#39;rl_elevation&#39;</span><span class="p">,</span> <span class="s1">&#39;top_topscreen&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;mean_dtw&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;median_dtw&#39;</span><span class="p">,</span> <span class="s1">&#39;std_dtw&#39;</span><span class="p">,</span> <span class="s1">&#39;max_dtw&#39;</span><span class="p">,</span> <span class="s1">&#39;min_dtw&#39;</span><span class="p">,</span> <span class="s1">&#39;start_date&#39;</span><span class="p">,</span> <span class="s1">&#39;end_date&#39;</span><span class="p">)</span>
+<span class="n">_wl_keys</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s1">&#39;wl_site_name&#39;</span><span class="p">,</span> <span class="s1">&#39;wl_date&#39;</span><span class="p">,</span> <span class="s1">&#39;wl_gw_elevation&#39;</span><span class="p">,</span> <span class="s1">&#39;wl_depth_to_water&#39;</span><span class="p">,</span> <span class="s1">&#39;wl_depth_to_water_cor&#39;</span><span class="p">,</span> <span class="s1">&#39;wl_water_elev_flag&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;wl_dtw_flag&#39;</span><span class="p">,</span>
+
+<span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_make_metadata_table_from_nc</span><span class="p">(</span><span class="n">savepath</span><span class="p">):</span>
+    <span class="n">outstr</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">t0</span> <span class="o">=</span> <span class="s1">&#39;Water Level Data column meanings/metadata&#39;</span>
+    <span class="n">t2</span> <span class="o">=</span> <span class="s1">&#39;Metadata column meanings/metadata&#39;</span>
+    <span class="k">for</span> <span class="n">t</span><span class="p">,</span> <span class="n">keys</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">((</span><span class="n">t0</span><span class="p">,</span> <span class="n">t2</span><span class="p">),</span> <span class="p">(</span><span class="n">_wl_keys</span><span class="p">,</span> <span class="n">_meta_keys</span><span class="p">)):</span>
+        <span class="n">outstr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+        <span class="n">outstr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">t</span><span class="p">))</span>
+        <span class="n">outstr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">outstr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">nc</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">_get_nc_path</span><span class="p">(),</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ds</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
+                <span class="n">outstr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;* </span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">ds</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">ncattrs</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="n">attr</span> <span class="o">==</span> <span class="s1">&#39;flag_values&#39;</span><span class="p">:</span>
+                        <span class="n">outstr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;    * </span><span class="si">{</span><span class="n">attr</span><span class="si">}</span><span class="s1">:&#39;</span><span class="p">)</span>
+                        <span class="n">flag_meanings</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">flag_meanings</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+                        <span class="n">flag_values</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">flag_values</span>
+                        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">flag_meanings</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span>
+                            <span class="n">flag_values</span><span class="p">),</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1"> flag values and meanings are not the same length&#39;</span>
+                        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ds</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">flag_values</span><span class="p">):</span>
+                            <span class="n">outstr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;        * </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">flag_meanings</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+                    <span class="k">elif</span> <span class="n">attr</span> <span class="o">==</span> <span class="s1">&#39;flag_meanings&#39;</span><span class="p">:</span>
+                        <span class="k">pass</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">outstr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;    * </span><span class="si">{</span><span class="n">attr</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">ds</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">getncattr</span><span class="p">(</span><span class="n">attr</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">outstr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">outstr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">outstr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+    <span class="n">outstr</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">outstr</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">savepath</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">outstr</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="get_metdata_keys">
+<a class="viewcode-back" href="../../../autoapi/komanawa/nz_depth_to_water/index.html#komanawa.nz_depth_to_water.export_to_csv.get_metdata_keys">[docs]</a>
+<span class="k">def</span> <span class="nf">get_metdata_keys</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Convert the data from integers to floats.</span>
-<span class="sd">    :param data: pd.series, the data to convert.</span>
-<span class="sd">    :param precision: int, the number of decimal places to keep.</span>
-<span class="sd">    :return: pd.DataFrame, the converted data.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-    <span class="n">out</span><span class="p">[</span><span class="n">out</span> <span class="o">==</span> <span class="o">-</span><span class="mi">9999999</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-    <span class="n">out</span><span class="p">[</span><span class="n">out</span> <span class="o">==</span> <span class="o">-</span><span class="mi">9899999</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
-    <span class="n">out</span><span class="p">[</span><span class="n">out</span> <span class="o">==</span> <span class="o">-</span><span class="mi">9799999</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="n">out</span> <span class="o">/</span> <span class="mi">10</span> <span class="o">**</span> <span class="n">precision</span>
-    <span class="k">return</span> <span class="n">out</span>
+<span class="sd">    Get the metadata keys for the depth to water data for New Zealand.</span>
 
+<span class="sd">    :return: list, the metadata keys.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">_meta_keys</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_water_level_keys">
+<a class="viewcode-back" href="../../../autoapi/komanawa/nz_depth_to_water/index.html#komanawa.nz_depth_to_water.export_to_csv.get_water_level_keys">[docs]</a>
+<span class="k">def</span> <span class="nf">get_water_level_keys</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the water level keys for the depth to water data for New Zealand.</span>
+
+<span class="sd">    :return: list, the water level keys.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">_wl_keys</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_metadata_string">
+<a class="viewcode-back" href="../../../autoapi/komanawa/nz_depth_to_water/index.html#komanawa.nz_depth_to_water.export_to_csv.get_metadata_string">[docs]</a>
+<span class="k">def</span> <span class="nf">get_metadata_string</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the metadata string for a key.</span>
+
+<span class="sd">    :param key: str, the key to get the metadata string for. or None (dataset metadata)</span>
+<span class="sd">    :return: str, the metadata string.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="n">nc</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">get_nc_dataset</span><span class="p">(),</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ds</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">variables</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1"> not in </span><span class="si">{</span><span class="n">ds</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="k">return</span> <span class="n">ds</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ds</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="nz_depth_to_water_dump">
+<a class="viewcode-back" href="../../../autoapi/komanawa/nz_depth_to_water/index.html#komanawa.nz_depth_to_water.export_to_csv.nz_depth_to_water_dump">[docs]</a>
+<span class="k">def</span> <span class="nf">nz_depth_to_water_dump</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the metadata string for the depth to water data for New Zealand. equivalent to ncDump</span>
+
+<span class="sd">    :return: str, the metadata string.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">out_str</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">with</span> <span class="n">nc</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">get_nc_dataset</span><span class="p">(),</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ds</span><span class="p">:</span>
+        <span class="n">out_str</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="fm">__str__</span><span class="p">())</span>
+        <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">dimensions</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">out_str</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="n">d</span><span class="p">]</span><span class="o">.</span><span class="fm">__str__</span><span class="p">())</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">out_str</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ds</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="fm">__str__</span><span class="p">())</span>
+    <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_str</span><span class="p">)</span></div>
+
+
+<span class="n">acceptable_sources</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s1">&#39;auk&#39;</span><span class="p">,</span> <span class="s1">&#39;bop&#39;</span><span class="p">,</span> <span class="s1">&#39;gdc&#39;</span><span class="p">,</span> <span class="s1">&#39;hbrc&#39;</span><span class="p">,</span> <span class="s1">&#39;hrc&#39;</span><span class="p">,</span> <span class="s1">&#39;mdc&#39;</span><span class="p">,</span> <span class="s1">&#39;nrc&#39;</span><span class="p">,</span> <span class="s1">&#39;ncc&#39;</span><span class="p">,</span> <span class="s1">&#39;orc&#39;</span><span class="p">,</span> <span class="s1">&#39;src&#39;</span><span class="p">,</span> <span class="s1">&#39;trc&#39;</span><span class="p">,</span> <span class="s1">&#39;tdc&#39;</span><span class="p">,</span> <span class="s1">&#39;wrc&#39;</span><span class="p">,</span> <span class="s1">&#39;gwrc&#39;</span><span class="p">,</span> <span class="s1">&#39;wcrc&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;nzgd&#39;</span><span class="p">,</span> <span class="s1">&#39;tcc&#39;</span><span class="p">,</span> <span class="s1">&#39;ecan&#39;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="get_nz_depth_to_water">
 <a class="viewcode-back" href="../../../autoapi/komanawa/nz_depth_to_water/index.html#komanawa.nz_depth_to_water.export_to_csv.get_nz_depth_to_water">[docs]</a>
-<span class="k">def</span> <span class="nf">get_nz_depth_to_water</span><span class="p">():</span>
+<span class="k">def</span> <span class="nf">get_nz_depth_to_water</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">convert_wl_dtw_flag</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">wl_water_elev_flag</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span>
+        <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    load the depth to water data and metadata and return them as pandas DataFrames.</span>
+<span class="sd">    Get the depth to water data for New Zealand.</span>
 
-<span class="sd">    :return: water_level_data, metadata</span>
+<span class="sd">    acceptable_sources = (None, &#39;auk&#39;, &#39;bop&#39;, &#39;gdc&#39;, &#39;hbrc&#39;, &#39;hrc&#39;, &#39;mdc&#39;, &#39;nrc&#39;, &#39;ncc&#39;, &#39;orc&#39;, &#39;src&#39;, &#39;trc&#39;, &#39;tdc&#39;, &#39;wc&#39;, &#39;gwrc&#39;, &#39;wcrc&#39;, &#39;nzgd&#39;, &#39;ecan&#39;)</span>
+
+<span class="sd">    :param source: None (get all data), str (get data from a specific source)</span>
+<span class="sd">    :return: metadata: pd.DataFrame, water_level_data: pd.DataFrame</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="p">(</span><span class="n">nc</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">_get_nc_path</span><span class="p">(),</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ds</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">source</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">source</span> <span class="ow">in</span> <span class="n">acceptable_sources</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s1"> not in </span><span class="si">{</span><span class="n">acceptable_sources</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">source_mapper</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">ds</span><span class="p">[</span><span class="s1">&#39;source&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">flag_values</span><span class="p">,</span> <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;source&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">flag_meanings</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">))}</span>
+            <span class="n">meta_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;source&#39;</span><span class="p">][:]</span> <span class="o">==</span> <span class="n">source_mapper</span><span class="p">[</span><span class="n">source</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">meta_index</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">meta_index</span><span class="p">)),</span> <span class="s1">&#39;duplicate meta index&#39;</span>
+            <span class="n">reading_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">ds</span><span class="p">[</span><span class="s1">&#39;wl_site_name&#39;</span><span class="p">][:],</span> <span class="n">meta_index</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">reading_index</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">reading_index</span><span class="p">)),</span> <span class="s1">&#39;duplicate reading index&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">meta_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">&#39;site&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+            <span class="n">reading_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">&#39;reading&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+        <span class="n">outmetadata</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">meta_index</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">_meta_keys</span><span class="p">)</span>
+        <span class="n">out_water_level_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">reading_index</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">_wl_keys</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">keyset</span><span class="p">,</span> <span class="n">outdf</span><span class="p">,</span> <span class="n">use_index</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">((</span><span class="n">_meta_keys</span><span class="p">,</span> <span class="n">_wl_keys</span><span class="p">),</span> <span class="p">(</span><span class="n">outmetadata</span><span class="p">,</span> <span class="n">out_water_level_data</span><span class="p">),</span>
+                                            <span class="p">(</span><span class="n">meta_index</span><span class="p">,</span> <span class="n">reading_index</span><span class="p">)):</span>
+            <span class="k">pass</span>
 
-    <span class="n">datadir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="n">datadir</span><span class="o">.</span><span class="n">exists</span><span class="p">(),</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">datadir</span><span class="si">}</span><span class="s1"> does not exist. should not get here&#39;</span>
-    <span class="n">wl_paths</span> <span class="o">=</span> <span class="n">datadir</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;depth_to_water_*.hdf&#39;</span><span class="p">)</span>
-    <span class="n">water_level_data</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">wl_path</span> <span class="ow">in</span> <span class="n">wl_paths</span><span class="p">:</span>
-        <span class="n">water_level_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">read_hdf</span><span class="p">(</span><span class="n">wl_path</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;depth_to_water&#39;</span><span class="p">))</span>
-    <span class="n">water_level_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">water_level_data</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">metadata</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_hdf</span><span class="p">(</span><span class="n">datadir</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s1">&#39;metadata.hdf&#39;</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;metadata&#39;</span><span class="p">)</span>
-    <span class="n">mappers</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">int_mapper_cols</span><span class="p">:</span>
-        <span class="n">mapper_path</span> <span class="o">=</span> <span class="n">datadir</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;int_mapper_</span><span class="si">{</span><span class="n">col</span><span class="si">}</span><span class="s1">.hdf&#39;</span><span class="p">)</span>
-        <span class="n">mappers</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_hdf</span><span class="p">(</span><span class="n">mapper_path</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">col</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">keyset</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="s1">&#39;wl_site_name&#39;</span><span class="p">:</span>
+                    <span class="n">all_sites</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ds</span><span class="p">[</span><span class="s1">&#39;site_name&#39;</span><span class="p">][:])</span>
+                    <span class="n">outdf</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">all_sites</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ds</span><span class="p">[</span><span class="s1">&#39;wl_site_name&#39;</span><span class="p">][</span><span class="n">use_index</span><span class="p">])</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)]</span>
+                <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ds</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="s1">&#39;flag_values&#39;</span><span class="p">):</span>
+                    <span class="n">skip_possible_convert</span> <span class="o">=</span> <span class="p">(</span>
+                            <span class="p">(</span><span class="n">k</span> <span class="o">==</span> <span class="s1">&#39;wl_dtw_flag&#39;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">convert_wl_dtw_flag</span><span class="p">)</span>
+                            <span class="ow">or</span> <span class="p">(</span><span class="n">k</span> <span class="o">==</span> <span class="s1">&#39;wl_water_elev_flag&#39;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">wl_water_elev_flag</span><span class="p">))</span>
+                    <span class="k">if</span> <span class="n">skip_possible_convert</span><span class="p">:</span>
+                        <span class="n">td</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ds</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">use_index</span><span class="p">])</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">mapper</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">ds</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">flag_values</span><span class="p">,</span> <span class="n">ds</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">flag_meanings</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">))}</span>
+                        <span class="n">td</span> <span class="o">=</span> <span class="p">[</span><span class="n">mapper</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">ds</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">use_index</span><span class="p">]]</span>
+                    <span class="n">outdf</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">td</span>
 
-    <span class="c1"># undo the integer mapping</span>
-    <span class="n">water_level_data</span><span class="p">,</span> <span class="n">metadata</span> <span class="o">=</span> <span class="n">_convert_from_intmapper</span><span class="p">(</span><span class="n">water_level_data</span><span class="p">,</span> <span class="n">metadata</span><span class="p">,</span> <span class="n">mappers</span><span class="o">=</span><span class="n">mappers</span><span class="p">)</span>
-
-    <span class="c1"># undo the integer conversion</span>
-    <span class="k">for</span> <span class="n">col</span><span class="p">,</span> <span class="n">precision</span> <span class="ow">in</span> <span class="n">wld_convert_cols</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">water_level_data</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">_convert_from_int_to_raw</span><span class="p">(</span><span class="n">water_level_data</span><span class="p">[</span><span class="n">col</span><span class="p">],</span> <span class="n">precision</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">col</span><span class="p">,</span> <span class="n">precision</span> <span class="ow">in</span> <span class="n">md_convert_cols</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">metadata</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">_convert_from_int_to_raw</span><span class="p">(</span><span class="n">metadata</span><span class="p">[</span><span class="n">col</span><span class="p">],</span> <span class="n">precision</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">water_level_data</span><span class="p">,</span> <span class="n">metadata</span></div>
+                <span class="k">elif</span> <span class="s1">&#39;days since&#39;</span> <span class="ow">in</span> <span class="n">ds</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">units</span><span class="p">:</span>
+                    <span class="n">temp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ds</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">use_index</span><span class="p">])</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+                    <span class="n">temp</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">temp</span><span class="p">,</span> <span class="n">ds</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">missing_value</span><span class="p">)]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+                    <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">temp</span><span class="p">)</span>
+                    <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">temp</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">NaT</span><span class="p">)</span>
+                    <span class="n">out</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">ds</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">origin</span><span class="p">)</span> <span class="o">+</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_timedelta</span><span class="p">(</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">temp</span><span class="p">[</span><span class="n">idx</span><span class="p">]),</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;D&#39;</span><span class="p">)</span>
+                    <span class="n">outdf</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">out</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">ds</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">set_auto_scale</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+                    <span class="n">outdf</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ds</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">use_index</span><span class="p">])</span>
+                    <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;nztm_x&#39;</span><span class="p">,</span> <span class="s1">&#39;nztm_y&#39;</span><span class="p">,</span> <span class="s1">&#39;reading_count&#39;</span><span class="p">]:</span>
+                        <span class="n">outdf</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">outdf</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;site_name&#39;</span><span class="p">]:</span>
+                        <span class="n">outdf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">outdf</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">ds</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">missing_value</span><span class="p">),</span> <span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+                        <span class="n">outdf</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">*=</span> <span class="n">ds</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">scale_factor</span> <span class="o">+</span> <span class="n">ds</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">add_offset</span>
+    <span class="n">outmetadata</span> <span class="o">=</span> <span class="n">outmetadata</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;site_name&#39;</span><span class="p">,</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">outmetadata</span><span class="p">,</span> <span class="n">out_water_level_data</span><span class="p">,</span></div>
 
 
 
 <div class="viewcode-block" id="export_dtw_to_csv">
-<a class="viewcode-back" href="../../../autoapi/komanawa/nz_depth_to_water/get_data/index.html#komanawa.nz_depth_to_water.export_to_csv.export_dtw_to_csv">[docs]</a>
-<span class="k">def</span> <span class="nf">export_dtw_to_csv</span><span class="p">(</span><span class="n">outdir</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../autoapi/komanawa/nz_depth_to_water/index.html#komanawa.nz_depth_to_water.export_to_csv.export_dtw_to_csv">[docs]</a>
+<span class="k">def</span> <span class="nf">export_dtw_to_csv</span><span class="p">(</span><span class="n">outdir</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Export the depth to water data to csv files.</span>
 
+<span class="sd">    :param outdir: str, the directory to save the csv files to.</span>
+<span class="sd">    :param source: None (get all data), str (get data from a specific source) see get_nz_depth_to_water for acceptable sources.</span>
 <span class="sd">    :return:</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Preparing to export data to csvs in </span><span class="si">{</span><span class="n">outdir</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="n">water_level_data</span><span class="p">,</span> <span class="n">metadata</span> <span class="o">=</span> <span class="n">get_nz_depth_to_water</span><span class="p">()</span>
+    <span class="n">metadata</span><span class="p">,</span> <span class="n">water_level_data</span> <span class="o">=</span> <span class="n">get_nz_depth_to_water</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
     <span class="n">outdir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">outdir</span><span class="p">)</span>
     <span class="n">outdir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">water_level_data</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">outdir</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s1">&#39;water_level_data.csv&#39;</span><span class="p">))</span>
@@ -522,10 +618,10 @@
 
 
 <div class="viewcode-block" id="get_npoint_in_radius">
-<a class="viewcode-back" href="../../../autoapi/komanawa/nz_depth_to_water/get_data/index.html#komanawa.nz_depth_to_water.export_to_csv.get_npoint_in_radius">[docs]</a>
-<span class="k">def</span> <span class="nf">get_npoint_in_radius</span><span class="p">(</span><span class="n">distlim</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../autoapi/komanawa/nz_depth_to_water/index.html#komanawa.nz_depth_to_water.export_to_csv.get_npoint_in_radius">[docs]</a>
+<span class="k">def</span> <span class="nf">get_npoint_in_radius</span><span class="p">(</span><span class="n">distlim</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Get the number of points within [1|5|10|20] km of each point in the model grid.</span>
+<span class="sd">    Get the number of points within [1000 | 5000 | 10,000 | 20,000] m of each point in the model grid.</span>
 
 <span class="sd">    :param distlim: int, the distance limit in meters.</span>
 <span class="sd">    :return: ndatapoints, mx, my (np.ndarray, np.ndarray, np.ndarray) gridded output</span>
@@ -542,8 +638,8 @@
 
 
 <div class="viewcode-block" id="get_distance_to_nearest">
-<a class="viewcode-back" href="../../../autoapi/komanawa/nz_depth_to_water/get_data/index.html#komanawa.nz_depth_to_water.export_to_csv.get_distance_to_nearest">[docs]</a>
-<span class="k">def</span> <span class="nf">get_distance_to_nearest</span><span class="p">(</span><span class="n">npoints</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../autoapi/komanawa/nz_depth_to_water/index.html#komanawa.nz_depth_to_water.export_to_csv.get_distance_to_nearest">[docs]</a>
+<span class="k">def</span> <span class="nf">get_distance_to_nearest</span><span class="p">(</span><span class="n">npoints</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get the distance to the nearest [1|10] points for each point in the model grid.</span>
 
@@ -561,10 +657,11 @@
 
 
 <div class="viewcode-block" id="copy_geotifs">
-<a class="viewcode-back" href="../../../autoapi/komanawa/nz_depth_to_water/get_data/index.html#komanawa.nz_depth_to_water.export_to_csv.copy_geotifs">[docs]</a>
+<a class="viewcode-back" href="../../../autoapi/komanawa/nz_depth_to_water/index.html#komanawa.nz_depth_to_water.export_to_csv.copy_geotifs">[docs]</a>
 <span class="k">def</span> <span class="nf">copy_geotifs</span><span class="p">(</span><span class="n">outdir</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    copy the geotifs of distance to nearest [1|10] points and number of points within [1|5|10|20] km to the outdir.</span>
+
 <span class="sd">    :param outdir: directory to copy the geotifs to.</span>
 <span class="sd">    :return:</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -573,7 +670,8 @@
     <span class="n">datadir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">)</span>
     <span class="n">tifs</span> <span class="o">=</span> <span class="n">datadir</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*.tif&#39;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">tif</span> <span class="ow">in</span> <span class="n">tifs</span><span class="p">:</span>
-        <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">tif</span><span class="p">,</span> <span class="n">outdir</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="n">tif</span><span class="o">.</span><span class="n">name</span><span class="p">))</span></div>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">tif</span><span class="p">,</span> <span class="n">outdir</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="n">tif</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Copied geotifs to </span><span class="si">{</span><span class="n">outdir</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
 
 </pre></div>
 

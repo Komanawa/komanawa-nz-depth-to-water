@@ -23,10 +23,12 @@ a small repo that holds:
     Code documentation<autoapi/komanawa/nz_depth_to_water/index.rst>
     Dataset Technical Note<supporting_docs/Technial_note.rst>
 
+.. include:: supporting_docs/limitations.rst
+
 Data Access via Python
--------------------------
+========================
 Installation
-^^^^^^^^^^^^^
+---------------
 
 **Option 1 - pip**
 
@@ -43,7 +45,7 @@ clone the repository and install the package as you see fit.
 Fork the repository and modify and use the code as you see fit.  If you have any improvements, please submit a pull request.
 
 Code Example
-^^^^^^^^^^^^^^
+---------------
 
 .. code-block:: python
 
@@ -52,7 +54,7 @@ Code Example
 
 
 Export the data to a csv files
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+--------------------------------
 
 To export the data to a csv file, you can use the following code (assuming you have installed the package):
 

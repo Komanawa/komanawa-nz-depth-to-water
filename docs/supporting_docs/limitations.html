@@ -6,8 +6,9 @@
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Overview: module code &#8212; komanawa-nz-depth-to-water v0.1.3 documentation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Limitations &#8212; komanawa-nz-depth-to-water v0.1.3 documentation</title>
   
   
   
@@ -38,7 +39,7 @@
     <script src="../_static/documentation_options.js?v=cdbf2762"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/index';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'supporting_docs/limitations';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -142,7 +143,7 @@
 
 
 <li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../supporting_docs/Technial_note.html">
+  <a class="nav-link nav-internal" href="Technial_note.html">
     Dataset Technical Note
   </a>
 </li>
@@ -264,7 +265,7 @@
 
 
 <li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../supporting_docs/Technial_note.html">
+  <a class="nav-link nav-internal" href="Technial_note.html">
     Dataset Technical Note
   </a>
 </li>
@@ -354,7 +355,7 @@
         <i class="fa-solid fa-home"></i>
       </a>
     </li>
-    <li class="breadcrumb-item active" aria-current="page">Overview:...</li>
+    <li class="breadcrumb-item active" aria-current="page">Limitations</li>
   </ul>
 </nav>
 </div>
@@ -371,10 +372,22 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <h1>All modules for which code is available</h1>
-<ul><li><a href="komanawa/nz_depth_to_water/get_data.html">komanawa.nz_depth_to_water.get_data</a></li>
-<li><a href="komanawa/nz_depth_to_water/get_data_old.html">komanawa.nz_depth_to_water.get_data_old</a></li>
+  <section id="limitations">
+<h1>Limitations<a class="headerlink" href="#limitations" title="Link to this heading">#</a></h1>
+<p>While we have made every attempt to ensure the quality of the data and code in this repository, we do not provide any explicit or implicit guarantee of the datasets produced or methods provided here. In addition, by proving the base data, the data providers have also not provided any explicit or implicit guarantee of these data. Data errors will inevitably exist in the dataset, and we encourage users to report these errors to us so that we can correct them.</p>
+<p>We are aware of limitations of this work which are listed below:</p>
+<ul class="simple">
+<li><p>We have made a series of assumptions during the data processing; these are discussed above.</p></li>
+<li><p>The data is only as good as the data provided by the councils; we did not have the resources nor all the information to fully quality-assure the data.</p></li>
+<li><p>For many sites, the elevation of the measuring point is unknown. We have used LiDAR data to estimate the elevation of the ground, but this will likely reduce the accuracy of the groundwater elevation depending on the resolution of the LiDAR data.</p></li>
+<li><p>We have assumed that the depth to water from ground level is correct, and therefore any errors in the depth to water data will be reflected in the groundwater elevation values.</p></li>
+<li><p>There may be unknown regional data handling/reporting peculiarities that we were not aware of that could affect the data.</p></li>
+<li><p>The dataset is not exhaustive, and there may be more data available that has not been included in this dataset.</p></li>
 </ul>
+<p>Additionally the dataset is a static snapshot of the available data as of September 2023. Datasets typically are updated and improved over time, and this dataset may not reflect the best available data at the time of use. We encourage users to check the original data sources for the most up-to-date information. Should differences be found between this dataset and data accessed more recently from the original sources, this dataset should be assumed to be incorrect. We encourage users to report these differences via the issues page on the GitHub repository. We make no guarantee to address these issues; however open issues will serve a purpose by informing other users of potential issues with the dataset.</p>
+<p>Before using the data please ensure you fully understand these limitation, the limitations of the original data sources, and check for any potential issues raised by other users in the issues page of the GitHub repository.</p>
+</section>
+
 
                 </article>
               

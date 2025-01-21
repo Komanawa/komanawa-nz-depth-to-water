@@ -8,8 +8,130 @@ distribute, sublicense, and/or sell copies of the Software, and to
 permit persons to whom the Software is furnished to do so, subject to
 the following conditions:
 
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
+- The above copyright notice and this permission notice shall be
+  included in all copies or substantial portions of the Software.
+
+- The datasets are not to be redistributed or amalgamated to form larger data products without the
+  express permission of Komanawa Solutions Ltd. and the underlying data providers.
+
+- In addition some datasets may have their own licensing conditions that must be adhered to.
+  These conditions are as follows. Note that a lack of specific conditions does not imply any warranty or guarantee on
+  the data quality or accuracy.
+
+    - Data from Auckland Council:
+
+        "Terms and conditions for the supply and use of Auckland Council Data
+
+        GENERAL TERMS AND CONDITIONS
+        1. Auckland Council owns the copyright on the data.
+        2. Auckland Council shall be acknowledged as the source of the data used in any publication,
+        media statement or other documents, or oral statements which include the data and are made
+        available to third parties, including the general public.
+        3. The data is provided with the understanding that it is for the sole use of the recipient, or its
+        agents, and it is not intended that this data will be sold, lent or given to any third party other
+        than for the purposes it is provided for. Data may not be sold to any third party in an
+        unmodified form without agreement of Auckland Council.
+        4. For large and complex data requests, Auckland Council reserves the right to charge on an
+        actual cost recovery basis for the cost of staff time and any other direct expenses incurred in
+        extracting data from its own databases and transferring the recipient
+        5. The user of the attached data agrees to indemnify Auckland Council for any losses sustained
+        as a consequence of a breach of any of these conditions.
+        6. A copy of these terms and conditions shall accompany any of the attached data which is made
+        available to third parties.
+
+        DISCLAIMER
+        The attached data is supplied on the basis that it is accurate to the best of Auckland Council
+        knowledge and belief. While Auckland Council has exercised all reasonable skill and care in
+        compiling and providing this data, Auckland Council accepts no liability in contract, tort or
+        otherwise howsoever, for any loss, damage, injury or expense (whether direct, indirect or
+        consequential) arising out of the provision of this data or its use by you.
+
+        NOTE ON DATA
+        Data users are cautioned to consider carefully the nature of this data before using it for decisions
+        that concern personal or public safety or the conduct of business that involves monetary or
+        operational consequences.
+        Data users are cautioned to consider carefully using or interpreting this data for purposes other
+        than that for which it was collected. Auckland Council should be consulted to verify whether the
+        data is being correctly interpreted.
+
+        DATA QUALITY
+        Data provided may include both measured and synthesised data. Measured data may also
+        include data of different quality. Please request quality codes with your data set if you wish to
+        identify these types of data."
+
+    - Data from Bay of Plenty Regional Council:
+
+        Acknowledgement of Bay of Plenty Regional Council as the source of the data is required.
+
+    - Data from Environment Canterbury:
+
+        "Please note and apply the following terms of use to the data provided.
+        1. Copyright in this work is owned or licensed by Canterbury Regional Council (Environment Canterbury).
+        2. Copyright in this work is licenced for re-use under a Creative Commons Attribution 4.0 International licence.
+        3. Under the terms of that licence, you must attribute your use of the work to Environment Canterbury using this
+        attribution statement: “This work uses material sourced from [title of work], which is licensed under a Creative
+        Commons Attribution 4.0 International licence by Environment Canterbury.“
+        4. A copy of these Terms of Use must accompany any attached information which is made available to third
+        parties.
+        5. Environment Canterbury uses reasonable endeavours but does not warrant that this information is current,
+        complete or accurate. To the extent permitted by law, Environment Canterbury will not be liable for any loss,
+        liability, damage, cost or expense suffered or incurred by any person as a result of use, reference to or
+        reliance on this information."
+
+    - Data from Greater Wellington Regional Council
+
+        # todo
+
+    - Data from Hawke's Bay Regional Council:
+
+        Reference data source as Hawke's Bay Regional Council. (n.d.). Environment: Groundwater; and Our council:
+        Open data - Time series data. Retrieved 6 September 2023, from https://www.hbrc.govt.nz/
+
+    - Data from Horizons Regional Council:
+
+        Reference data source as Horizons Regional Council. (n.d.). Environment: Groundwater; and Our council:
+        Open data - Time series data. Retrieved 6 September 2023, from https://www.horizons.govt.nz/
+
+    - Data from Northland Regional Council:
+
+        # todo
+
+    - Data from Otago Regional Council:
+
+        Otago Regional Council. (n.d.). Water quality data. Retrieved 6 September 2023.
+        Datasets are subject to change over time and Otago Regional Council does not guarantee the accuracy
+        of the data, or commit to including future data improvements. The data is provided as is and should be
+        used as a guide only.
+
+    - Data from Environment Southland:
+
+        Southland Regional Council (Environment Southland) uses reasonable endeavours to ensure that the
+        information it provides is accurate, complete, and up-to-date. However, professional or specialist
+        advice should be obtained before taking or refraining from taking any action on the basis of this
+        information. Environment Southland does not give any guarantee, undertaking or warranty concerning
+        the accuracy, completeness, or up-to-date nature of the information and, to the extent permitted by
+        law, Environment Southland will not be liable for any loss, liability or costs suffered or incurred
+        as a result of any reliance placed on this information.  Please be aware that Environment Southland
+        may review or update the information that it holds, but is under no obligation to notify you of any
+        change to the information.  If you wish to ensure that any of the information is consistent with the
+         information currently held by Environment Southland, you will need to make an additional request.
+         If you share this information with others, you must attribute Environment Southland as the source
+         of the information and put the recipient on notice of this disclaimer.
+
+    - Data from Tauranga City Council:
+
+        Tauranga City Council does not make any representation or give any warranty as to the accuracy or
+        exhaustiveness of the information provided.  You are not to rely on the information provided and
+        must seek your  own advice as to its accuracy or exhaustiveness. You agree that Tauranga City Council
+         shall not be liable in tort,  under the Fair Trading Act 1986 or otherwise, for any loss, damage,
+         cost or expense (whether direct, indirect or  consequential) arising from reliance upon or use of
+         any information provided, or Council's failure to provide.
+
+    - Data from West Coast Regional Council:
+
+        # todo
+
+
 
 THE SOFTWARE AND DATA IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF

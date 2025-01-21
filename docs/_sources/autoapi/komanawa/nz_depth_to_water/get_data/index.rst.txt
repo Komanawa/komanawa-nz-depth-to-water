@@ -6,7 +6,7 @@ komanawa.nz_depth_to_water.get_data
 .. autoapi-nested-parse::
 
    created matt_dumont 
-   on: 7/05/24
+   on: 11/30/24
 
 
 
@@ -18,8 +18,13 @@ Functions
    komanawa.nz_depth_to_water.get_data.copy_geotifs
    komanawa.nz_depth_to_water.get_data.export_dtw_to_csv
    komanawa.nz_depth_to_water.get_data.get_distance_to_nearest
+   komanawa.nz_depth_to_water.get_data.get_metadata_string
+   komanawa.nz_depth_to_water.get_data.get_metdata_keys
+   komanawa.nz_depth_to_water.get_data.get_nc_dataset
    komanawa.nz_depth_to_water.get_data.get_npoint_in_radius
    komanawa.nz_depth_to_water.get_data.get_nz_depth_to_water
+   komanawa.nz_depth_to_water.get_data.get_water_level_keys
+   komanawa.nz_depth_to_water.get_data.nz_depth_to_water_dump
 
 
 Module Contents
@@ -28,18 +33,21 @@ Module Contents
 .. py:function:: copy_geotifs(outdir)
 
    copy the geotifs of distance to nearest [1|10] points and number of points within [1|5|10|20] km to the outdir.
+
    :param outdir: directory to copy the geotifs to.
    :return:
 
 
-.. py:function:: export_dtw_to_csv(outdir)
+.. py:function:: export_dtw_to_csv(outdir, source=None)
 
    Export the depth to water data to csv files.
 
+   :param outdir: str, the directory to save the csv files to.
+   :param source: None (get all data), str (get data from a specific source) see get_nz_depth_to_water for acceptable sources.
    :return:
 
 
-.. py:function:: get_distance_to_nearest(npoints)
+.. py:function:: get_distance_to_nearest(npoints) -> (numpy.ndarray, numpy.ndarray, numpy.ndarray)
 
    Get the distance to the nearest [1|10] points for each point in the model grid.
 
@@ -47,18 +55,58 @@ Module Contents
    :return: distance(m), mx, my (np.ndarray, np.ndarray, np.ndarray) gridded output
 
 
-.. py:function:: get_npoint_in_radius(distlim)
+.. py:function:: get_metadata_string(key) -> str
 
-   Get the number of points within [1|5|10|20] km of each point in the model grid.
+   Get the metadata string for a key.
+
+   :param key: str, the key to get the metadata string for. or None (dataset metadata)
+   :return: str, the metadata string.
+
+
+.. py:function:: get_metdata_keys() -> list
+
+   Get the metadata keys for the depth to water data for New Zealand.
+
+   :return: list, the metadata keys.
+
+
+.. py:function:: get_nc_dataset(to_path=None, rewrite=False) -> pathlib.Path
+
+   Get the netcdf dataset for the depth to water data for New Zealand.
+
+   :param to_path: str, optional, the path to save the dataset to. if None then saves to temp directory and returns the dataset path. This behavior prevents overwriting the original data.
+   :return: nc.Dataset
+
+
+.. py:function:: get_npoint_in_radius(distlim) -> (numpy.ndarray, numpy.ndarray, numpy.ndarray)
+
+   Get the number of points within [1000 | 5000 | 10,000 | 20,000] m of each point in the model grid.
 
    :param distlim: int, the distance limit in meters.
    :return: ndatapoints, mx, my (np.ndarray, np.ndarray, np.ndarray) gridded output
 
 
-.. py:function:: get_nz_depth_to_water()
+.. py:function:: get_nz_depth_to_water(source=None, convert_wl_dtw_flag=False, wl_water_elev_flag=False) -> (pandas.DataFrame, pandas.DataFrame)
 
-   load the depth to water data and metadata and return them as pandas DataFrames.
+   Get the depth to water data for New Zealand.
 
-   :return: water_level_data, metadata
+   acceptable_sources = (None, 'auk', 'bop', 'gdc', 'hbrc', 'hrc', 'mdc', 'nrc', 'ncc', 'orc', 'src', 'trc', 'tdc', 'wc', 'gwrc', 'wcrc', 'nzgd', 'ecan')
+
+   :param source: None (get all data), str (get data from a specific source)
+   :return: metadata: pd.DataFrame, water_level_data: pd.DataFrame
+
+
+.. py:function:: get_water_level_keys() -> list
+
+   Get the water level keys for the depth to water data for New Zealand.
+
+   :return: list, the water level keys.
+
+
+.. py:function:: nz_depth_to_water_dump() -> str
+
+   Get the metadata string for the depth to water data for New Zealand. equivalent to ncDump
+
+   :return: str, the metadata string.
 
 
