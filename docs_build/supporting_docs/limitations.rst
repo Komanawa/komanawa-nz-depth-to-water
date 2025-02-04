@@ -12,6 +12,8 @@ We are aware of limitations of this work which are listed below:
 - The dataset is not exhaustive, and there may be more data available that has not been included in this dataset.
 
 
-Additionally the dataset is a static snapshot of the available data as of September 2023. Datasets typically are updated and improved over time, and this dataset may not reflect the best available data at the time of use. We encourage users to check the original data sources for the most up-to-date information. Should differences be found between this dataset and data accessed more recently from the original sources, this dataset should be assumed to be incorrect. We encourage users to report these differences via the issues page on the GitHub repository. We make no guarantee to address these issues; however open issues will serve a purpose by informing other users of potential issues with the dataset.
+Additionally the dataset is a static snapshot of the available data as of September 2023. Datasets typically are updated and improved over time, and this dataset may not reflect the best available data at the time of use.
+We encourage users to check the original data sources for the most up-to-date information.
+**Should differences be found** between this dataset and data accessed more recently from the original sources, **this dataset should be assumed to be incorrect**. We encourage users to report these differences via the issues page on the GitHub repository. We make no guarantee to address these issues; however open issues will serve a purpose by informing other users of potential issues with the dataset.
 
 Before using the data please ensure you fully understand these limitation, the limitations of the original data sources, and check for any potential issues raised by other users in the issues page of the GitHub repository.
