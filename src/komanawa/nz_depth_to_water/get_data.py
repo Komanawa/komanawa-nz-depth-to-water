@@ -266,3 +266,8 @@ def copy_geotifs(outdir):
     for tif in tifs:
         shutil.copy(tif, outdir.joinpath(tif.name))
     print(f'Copied geotifs to {outdir}')
+
+
+if __name__ == '__main__':
+     meta, wld = get_nz_depth_to_water('gwrc')
+     pass

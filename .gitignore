@@ -174,3 +174,5 @@ out/*
 # sphinx autoapi build files
 /docs_build/autoapi/
 *.tif.aux.xml
+/build_dataset/generate_dataset/remove_metadata.txt
+/build_dataset/generate_dataset/remove_metadata.txt

@@ -5,7 +5,8 @@ While we have made every attempt to ensure the quality of the data and code in t
 We are aware of limitations of this work which are listed below:
 
 - We have made a series of assumptions during the data processing; these are discussed above.
-- The data is only as good as the data provided by the councils; we did not have the resources nor all the information to fully quality-assure the data.
+- The data is only as good as the data provided by the provider or sourced by Kо̄manawa; we did not have the resources nor all the information to fully quality-assure the data.
+- No data provider has provided any explicit or implicit guarantee of the data they have provided and cannot be held liable for any inaccuracies, errors, or omissions in the dataset.
 - For many sites, the elevation of the measuring point is unknown. We have used LiDAR data to estimate the elevation of the ground, but this will likely reduce the accuracy of the groundwater elevation depending on the resolution of the LiDAR data.
 - We have assumed that the depth to water from ground level is correct, and therefore any errors in the depth to water data will be reflected in the groundwater elevation values.
 - There may be unknown regional data handling/reporting peculiarities that we were not aware of that could affect the data.

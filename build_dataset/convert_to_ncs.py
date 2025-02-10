@@ -62,7 +62,7 @@ def convert_from_hdf_to_nc(savepath):
     print('wl_data rm dups', water_level_data.shape)
 
     # remove nelson stuff
-    bad_sites = list(metadata.index[metadata.source=='ncc'])
+    bad_sites = list(metadata.index[metadata.source == 'ncc'])
     bad_sites.remove('Nelson_at_Trafalgar_Park_ncc')
 
     metadata = metadata.drop(bad_sites)
@@ -71,16 +71,38 @@ def convert_from_hdf_to_nc(savepath):
     assert not np.isin(bad_sites, metadata.index).any(), 'bad sites still in metadata'
     assert not np.isin(bad_sites, water_level_data.site_name).any(), 'bad sites still in water_level_data'
 
-    check_dataset(water_level_data, metadata)
 
+    # manage northland sites
+    new_index = []
+    repacer={}
+    with open(proj_root.joinpath('remove_metadata.txt')) as f:  # todo copy at google_mount_point/Z21009FUT_FutureCoasts@ksl/Data/remove_metadata.txt
+        bads = f.readlines()
+    bads = [b.strip() for b in bads]
+    for nm in metadata.index:
+        for b in bads:
+            if b in nm:
+                repacer[nm] = y = nm.replace(f'({b})', '')
+                nm = y
+        new_index.append(nm)
+    metadata.index = new_index
+    metadata.index.name = 'site_name'
+    for onm, nnm in repacer.items():
+        idx = water_level_data.site_name == onm
+        water_level_data.loc[idx, 'site_name'] = nnm
+
+    assert 'MangawhaiHeadsGWatMoirPointRd(HideawayCamp)_nrc' not in metadata.index, 'bad site still in metadata'
+    assert 'MangawhaiHeadsGWatMoirPointRd(HideawayCamp)_nrc' not in water_level_data.site_name, 'bad site still in water_level_data'
+
+    for k,v in repacer.items():
+        print(k,v)
+    check_dataset(water_level_data, metadata)
 
     with nc.Dataset(savepath, 'w') as ds:
         make_nc_file(ds, water_level_data, metadata)
 
 
-
 def check_dataset(water_level_data, metadata):
-    assert metadata.index.is_unique, 'site_name is not unique'
+    assert metadata.index.is_unique, f'site_name is not unique: {metadata.index[metadata.index.duplicated(False)]}'
     assert set(metadata.index).issuperset(water_level_data.site_name), 'site_name is not subset of water_level_data'
     metadata_finite_keys = ['nztm_x', 'nztm_y', 'rl_elevation', 'source']
     for key in metadata_finite_keys:
@@ -90,7 +112,6 @@ def check_dataset(water_level_data, metadata):
         else:
             t = (~np.isfinite(metadata[key].astype(float)))
         assert t.sum() == 0, f'{key} has {t.sum()} non-finite values'
-
 
     wl_finite_keys = ['site_name', 'depth_to_water_cor',
                       'depth_to_water', 'gw_elevation', 'dtw_flag',
@@ -448,6 +469,7 @@ def make_nc_metadata_vars(ds, metadata):
 
 if (__name__ == '__main__'):
     # todo move into repo!!!
+    # todo purge old versions...
     convert_from_hdf_to_nc(Path(__file__).parents[1].joinpath('src/komanawa/nz_depth_to_water/data/nz_dtw_draft.nc'))
     from komanawa.nz_depth_to_water.get_data import _make_metadata_table_from_nc
 
