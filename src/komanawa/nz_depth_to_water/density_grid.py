@@ -4,8 +4,6 @@ on: 7/15/24
 """
 from pathlib import Path
 import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib.ticker as ticker
 
 class DensityGrid():
     shape = (1476, 1003)
@@ -53,6 +51,8 @@ class DensityGrid():
         return t['mx'], t['my']
 
     def plot_density(self, array, island, vmin, vmax, cbarlab, cmap='magma_r', log=False):
+        import matplotlib.pyplot as plt
+        import matplotlib.ticker as ticker
         import cartopy.crs as ccrs
         import cartopy.io.img_tiles as cimgt
         array = array.copy()

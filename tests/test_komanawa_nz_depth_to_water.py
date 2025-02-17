@@ -9,10 +9,6 @@ from komanawa.nz_depth_to_water.get_data import get_nz_depth_to_water, get_water
     get_nc_dataset, get_metadata_string, get_npoint_in_radius, get_distance_to_nearest, export_dtw_to_csv, \
     nz_depth_to_water_dump, copy_geotifs, _get_nc_path, _make_metadata_table_from_nc
 
-from komanawa.ksl_tools.code_optimisation_tools import set_warnings_to_traceback
-
-set_warnings_to_traceback()
-
 
 class TestKomanawaNzDepthToWater(unittest.TestCase):
     def test_get_keys(self):

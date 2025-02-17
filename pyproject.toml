@@ -23,7 +23,7 @@ license = { file = "LICENSE" }
 requires-python = ">=3.11"
 dependencies = [
     "pandas>=2.0.3",
-    "numpy==1.26.4",  # todo check with 2.0.0
+    "numpy>=1.26.4",
     "netCDF4>=1.7.1",
 ]
 
