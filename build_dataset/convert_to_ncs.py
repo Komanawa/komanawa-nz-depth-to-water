@@ -10,7 +10,7 @@ from pathlib import Path
 from build_dataset.generate_dataset.head_data_processing.merge_rows import merge_rows_if_possible
 from generate_dataset.head_data_processing.flag_mappers import dtw_flag, gwl_flag
 from generate_dataset.project_base import proj_root
-from komanawa.nz_depth_to_water.get_data_old import get_nz_depth_to_water
+from komanawa.nz_depth_to_water.get_data_old import _get_nz_depth_to_water
 
 base_date = pd.Timestamp('1899-01-01 00:00:00')
 time_metadata = {
@@ -26,7 +26,7 @@ max_precision = 1
 
 
 def convert_from_hdf_to_nc(savepath):
-    water_level_data, metadata = get_nz_depth_to_water()
+    water_level_data, metadata = _get_nz_depth_to_water()
     water_level_data['site_name'] = water_level_data['site_name'].str.replace(' ', '')
     metadata['site_name'] = metadata['site_name'].str.replace(' ', '')
     metadata = metadata.set_index('site_name')
@@ -75,7 +75,7 @@ def convert_from_hdf_to_nc(savepath):
     # manage northland sites
     new_index = []
     repacer={}
-    with open(proj_root.joinpath('remove_metadata.txt')) as f:  # todo copy at google_mount_point/Z21009FUT_FutureCoasts@ksl/Data/remove_metadata.txt
+    with open(proj_root.joinpath('remove_metadata.txt')) as f:  # copy at google_mount_point/Z21009FUT_FutureCoasts@ksl/Data/remove_metadata.txt
         bads = f.readlines()
     bads = [b.strip() for b in bads]
     for nm in metadata.index:
@@ -152,7 +152,11 @@ def make_nc_file(ds, wld, metadata):
     ds.funding = ('This work was made possible by Future Coasts Aotearoa (FCA) Funding from the Ministry of '
                   'Business Innovation and Employment (MBIE), managed by the National Institute of Water and '
                   'Atmospheric Research (NIWA), contract C01X2107.')
-    ds.license = 'Modified MIT'  # todo add final license...
+
+    with open(proj_root.parents[1].joinpath('LICENSE')) as f:
+        lis = f.readlines()
+
+    ds.license = lis
     ds.datum = 'NZVD2016 (New Zealand Vertical Datum 2016) for all elevation data'
     ds.units = f'meters for all elevation data, days since {base_date.isoformat()} for time data'
     ds.maximum_precision = 10 ** -max_precision
@@ -468,9 +472,8 @@ def make_nc_metadata_vars(ds, metadata):
 
 
 if (__name__ == '__main__'):
-    # todo move into repo!!!
-    # todo purge old versions...
-    convert_from_hdf_to_nc(Path(__file__).parents[1].joinpath('src/komanawa/nz_depth_to_water/data/nz_dtw_draft.nc'))
+    from komanawa.nz_depth_to_water.get_data import _get_nc_path
+    convert_from_hdf_to_nc(_get_nc_path(True))
     from komanawa.nz_depth_to_water.get_data import _make_metadata_table_from_nc
 
     _make_metadata_table_from_nc(proj_root.parents[1].joinpath('docs_build/metadata.rst'))

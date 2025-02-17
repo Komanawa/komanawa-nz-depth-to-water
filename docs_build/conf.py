@@ -28,7 +28,12 @@ extensions.append('autoapi.extension')
 # Auto API settings
 autoapi_implicit_namespaces = True  # Allow for implicit namespaces
 autoapi_keep_files = True  # Keep the generated files (for debugging)
-autoapi_ignore = []  # Ignore these files
+autoapi_ignore = [
+
+    '*/get_data_old.py',
+    '*/version.py',
+    '*/density_grid.py',
+]  # Ignore these files
 autoapi_python_class_content = 'both'  # Include both the class docstring and the __init__ docstring
 autoapi_dirs = ['../src/komanawa/']  # The directory to process
 autoapi_options = ['members', 'inherited-members', 'show-inheritance', 'show-module-summary', 'imported-members',

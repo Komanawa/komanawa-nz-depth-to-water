@@ -89,20 +89,20 @@ class TestKomanawaNzDepthToWater(unittest.TestCase):
             print('reading', ac)
             m, w = get_nz_depth_to_water(ac)
             assert w.duplicated().sum() == 0, w[w.duplicated(keep=False)].to_string()
-            assert m.duplicated().sum() == 0, ac  # m[m.duplicated(keep=False)].to_string()
+            assert m.reset_index().duplicated().sum() == 0, f'{ac}, {m[m.reset_index().duplicated(keep=False)].to_string()}'
             part_meta.append(m)
             assert (m['source'] == ac).all(), ac
             part_wl.append(w)
             wl_set = set(w['wl_site_name'])
-            meta_set = set(m['site_name'])
+            meta_set = set(m.index.astype(str).values)
             assert wl_set.issubset(meta_set), f'{ac}: {wl_set.symmetric_difference(meta_set)}'
         part_meta = pd.concat(part_meta)
         part_wl = pd.concat(part_wl)
         meta, wl = get_nz_depth_to_water()
         assert wl.duplicated().sum() == 0, wl[wl.duplicated(keep=False)]
-        assert meta.duplicated().sum() == 0, meta[meta.duplicated(keep=False)]
-        meta = meta.set_index('site_name').sort_index()
-        part_meta = part_meta.set_index('site_name').sort_index()
+        assert meta.reset_index().duplicated().sum() == 0, meta[meta.reset_index().duplicated(keep=False)]
+        meta = meta.sort_index()
+        part_meta = part_meta.sort_index()
         wl = wl.set_index(['wl_site_name', 'wl_date']).sort_index()
         part_wl = part_wl.set_index(['wl_site_name', 'wl_date']).sort_index()
         pd.testing.assert_frame_equal(meta, part_meta)
@@ -111,7 +111,7 @@ class TestKomanawaNzDepthToWater(unittest.TestCase):
     def test_get_nz_depth_to_water(self):
 
         meta, wl = get_nz_depth_to_water()
-        meta = meta.set_index('site_name').sort_index()
+        meta = meta.sort_index()
         wl['wl_date'] = pd.to_datetime(wl['wl_date']).dt.date
         wl = wl.set_index(['wl_site_name', 'wl_date']).sort_index()
 

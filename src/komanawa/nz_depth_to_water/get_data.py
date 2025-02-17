@@ -13,10 +13,10 @@ from komanawa.nz_depth_to_water.density_grid import DensityGrid
 import netCDF4 as nc
 
 
-def _get_nc_path():
+def _get_nc_path(_skiptest=False) -> Path:
     datapath = Path(__file__).parent.joinpath('data', 'nz_depth_to_water.nc')
-    datapath = Path(__file__).parent.joinpath('data/nz_dtw_draft.nc')  # todo DADB
-    assert datapath.exists(), f'{datapath} does not exist. should not get here'
+    if not _skiptest:
+        assert datapath.exists(), f'{datapath} does not exist. should not get here'
     return datapath
 
 
@@ -198,6 +198,7 @@ def get_nz_depth_to_water(source=None, convert_wl_dtw_flag=False, wl_water_elev_
                     elif k not in ['site_name']:
                         outdf.loc[np.isclose(outdf[k], ds[k].missing_value), k] = np.nan
                         outdf[k] *= ds[k].scale_factor + ds[k].add_offset
+    outmetadata['site_name'] = outmetadata['site_name'].astype(str)
     outmetadata = outmetadata.set_index('site_name',drop=True)
     return outmetadata, out_water_level_data,
 

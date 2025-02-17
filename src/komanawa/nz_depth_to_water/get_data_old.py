@@ -10,6 +10,8 @@ import pandas as pd
 
 warnings.warn(DeprecationWarning('This module is deprecated. Use the new version in nz_depth_to_water.get_data instead.'))
 
+# datafiles preserved at: large_archive/backed/Production_data_products/komanawa-nz_depth_to_water-org
+
 md_convert_cols = dict(bottom_bottomscreen=3,
                        dist_mp_to_ground_level=3,
                        nztm_x=1,
@@ -93,7 +95,7 @@ def _convert_from_int_to_raw(data, precision):
     return out
 
 
-def get_nz_depth_to_water():
+def _get_nz_depth_to_water():
     """
     load the depth to water data and metadata and return them as pandas DataFrames.
 

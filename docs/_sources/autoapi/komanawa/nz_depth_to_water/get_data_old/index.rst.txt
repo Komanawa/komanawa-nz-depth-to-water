@@ -10,21 +10,3 @@ komanawa.nz_depth_to_water.get_data_old
 
 
 
-Functions
----------
-
-.. autoapisummary::
-
-   komanawa.nz_depth_to_water.get_data_old.get_nz_depth_to_water
-
-
-Module Contents
----------------
-
-.. py:function:: get_nz_depth_to_water()
-
-   load the depth to water data and metadata and return them as pandas DataFrames.
-
-   :return: water_level_data, metadata
-
-

@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>komanawa.nz_depth_to_water.get_data &#8212; komanawa-nz-depth-to-water v0.1.3 documentation</title>
+    <title>komanawa.nz_depth_to_water.get_data &#8212; komanawa-nz-depth-to-water v0.1.4 documentation</title>
   
   
   
@@ -35,7 +35,7 @@
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341" />
   <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=3ee479438cf8b5e0d341"></script>
 
-    <script src="../../../_static/documentation_options.js?v=cdbf2762"></script>
+    <script src="../../../_static/documentation_options.js?v=0636b7af"></script>
     <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/komanawa/nz_depth_to_water/get_data';</script>
@@ -120,7 +120,7 @@
     <script>document.write(`<img src="" class="logo__image only-dark" alt=""/>`);</script>
   
   
-    <p class="title logo__title">Nz-Depth-To-Water v0.1.3 Overview</p>
+    <p class="title logo__title">Nz-Depth-To-Water v0.1.4 Overview</p>
   
 </a></div>
     
@@ -390,10 +390,10 @@
 <span class="kn">import</span> <span class="nn">netCDF4</span> <span class="k">as</span> <span class="nn">nc</span>
 
 
-<span class="k">def</span> <span class="nf">_get_nc_path</span><span class="p">():</span>
+<span class="k">def</span> <span class="nf">_get_nc_path</span><span class="p">(</span><span class="n">_skiptest</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
     <span class="n">datapath</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;nz_depth_to_water.nc&#39;</span><span class="p">)</span>
-    <span class="n">datapath</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s1">&#39;data/nz_dtw_draft.nc&#39;</span><span class="p">)</span>  <span class="c1"># todo DADB</span>
-    <span class="k">assert</span> <span class="n">datapath</span><span class="o">.</span><span class="n">exists</span><span class="p">(),</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">datapath</span><span class="si">}</span><span class="s1"> does not exist. should not get here&#39;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">_skiptest</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">datapath</span><span class="o">.</span><span class="n">exists</span><span class="p">(),</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">datapath</span><span class="si">}</span><span class="s1"> does not exist. should not get here&#39;</span>
     <span class="k">return</span> <span class="n">datapath</span>
 
 
@@ -673,6 +673,11 @@
         <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">tif</span><span class="p">,</span> <span class="n">outdir</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="n">tif</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Copied geotifs to </span><span class="si">{</span><span class="n">outdir</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
 
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+     <span class="n">meta</span><span class="p">,</span> <span class="n">wld</span> <span class="o">=</span> <span class="n">get_nz_depth_to_water</span><span class="p">(</span><span class="s1">&#39;gwrc&#39;</span><span class="p">)</span>
+     <span class="k">pass</span>
 </pre></div>
 
                 </article>

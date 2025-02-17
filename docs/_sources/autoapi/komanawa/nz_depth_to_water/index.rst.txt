@@ -15,11 +15,8 @@ Submodules
 .. toctree::
    :maxdepth: 1
 
-   /autoapi/komanawa/nz_depth_to_water/density_grid/index
    /autoapi/komanawa/nz_depth_to_water/export_to_csv/index
    /autoapi/komanawa/nz_depth_to_water/get_data/index
-   /autoapi/komanawa/nz_depth_to_water/get_data_old/index
-   /autoapi/komanawa/nz_depth_to_water/version/index
 
 
 Functions
