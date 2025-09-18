@@ -23,7 +23,10 @@ time_metadata = {
 complib = 'zlib'
 complevel = 9
 
+def _example_fix(wldata, metadata):
+    pass # nothign is wrong
 
+    return wldata, metadata
 
 def convert_from_hdf_to_nc(savepath, max_precision=1, orgdatadir=None):
     water_level_data, metadata = _get_nz_depth_to_water(orgdatadir)
@@ -43,6 +46,9 @@ def convert_from_hdf_to_nc(savepath, max_precision=1, orgdatadir=None):
     idx = ~np.isfinite(metadata.rl_elevation)
     metadata = metadata[~idx]
     water_level_data = water_level_data[water_level_data.site_name.isin(metadata.index)]
+
+    # todo fix mistakes here...
+    _example_fix(water_level_data, metadata)
 
     water_level_data = water_level_data[water_level_data.site_name.isin(metadata.index)]
     metadata.loc[metadata.reading_count.isna(), 'reading_count'] = 0
